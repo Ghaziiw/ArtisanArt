@@ -1,5 +1,6 @@
 import { betterAuth } from 'better-auth';
 import { Pool } from 'pg';
+import { z } from 'zod';
 
 export const auth = betterAuth({
   database: new Pool({
@@ -17,6 +18,14 @@ export const auth = betterAuth({
         type: 'string',
         required: false,
         defaultValue: 'client',
+        validator: {
+          input: z.enum(['admin', 'artisan', 'client']), // Validate role values
+        },
+      },
+      location: {
+        type: 'string',
+        required: false,
+        defaultValue: null,
       },
     },
   },
