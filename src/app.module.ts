@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { databaseConfig } from './config/database.config';
+import { AuthModule } from '@thallesp/nestjs-better-auth';
+import { auth } from './utils/auth';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    TypeOrmModule.forRoot(databaseConfig), // Database configuration
+    AuthModule.forRoot({ auth }), // BetterAuth configuration
+  ],
 })
 export class AppModule {}
