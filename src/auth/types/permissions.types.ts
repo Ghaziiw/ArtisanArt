@@ -51,5 +51,10 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.ORDERS_UPDATE,
     Permission.STATS_VIEW,
   ],
-  admin: [Permission.ADMIN_PANEL], // Admin has all permissions
+  admin: [
+    Permission.ADMIN_PANEL,
+    Permission.USERS_VIEW,
+    Permission.USERS_UPDATE,
+    Permission.USERS_DELETE,
+  ],
 };
