@@ -6,9 +6,9 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'user' }) // Name exact of the Better Auth table
+@Entity({ name: 'user', synchronize: false }) // Name exact of the Better Auth table
 export class UserEntity {
-  @PrimaryColumn('uuid')
+  @PrimaryColumn('text')
   id: string;
 
   @Column()

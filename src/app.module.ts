@@ -8,16 +8,22 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { APP_GUARD } from '@nestjs/core';
 import { UserModule } from './user/user.module';
+import { CraftsmanModule } from './craftsman/craftsman.module';
+import { UserEntity } from './user/user.entity';
+import { CraftsmanEntity } from './craftsman/craftsman.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      entities: [UserEntity, CraftsmanEntity],
+      synchronize: true,
+      // migrationsRun: false,
     }), // Database configuration
     AuthModule.forRoot({ auth }),
     UserModule, // Import UserModule
+    CraftsmanModule, // Import CraftsmanModule
   ],
   providers: [
     AppService,
