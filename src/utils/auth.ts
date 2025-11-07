@@ -11,6 +11,13 @@ export const auth = betterAuth({
     enabled: true,
     minPasswordLength: 8,
   },
+  // password: {
+  //   // Custom password verification using regex
+  //   verify: (password: string) => {
+  //     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  //     return passwordRegex.test(password);
+  //   },
+  // },
   user: {
     additionalFields: {
       // Additional custom field 'role' to the user table
@@ -21,6 +28,7 @@ export const auth = betterAuth({
         validator: {
           input: z.enum(['admin', 'artisan', 'client']), // Validate role values
         },
+        input: false, // Hide from user input forms
       },
       location: {
         type: 'string',

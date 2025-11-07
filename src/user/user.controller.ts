@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserEntity } from './user.entity';
 import { RequirePermissions } from 'src/auth/decorators/permissions.decorator';
@@ -17,6 +17,37 @@ export class UserController {
   @RequirePermissions(Permission.USERS_VIEW)
   getAll(): Promise<UserEntity[]> {
     return this.userService.findAll();
+  }
+
+  // PATCH /users/profile/me → update current user's profile
+  @Patch('/profile/me')
+  updateMyProfile(
+    @CurrentUser() user: AuthUser,
+    @Body() updateData: UpdateProfileDto,
+  ): Promise<UserEntity> {
+    return this.userService.updateProfile(user.id, updateData);
+  }
+
+  // GET /users/profile/me → get current user's profile
+  @Get('/profile/me')
+  getMyProfile(@CurrentUser() user: AuthUser): Promise<UserEntity | null> {
+    return this.userService.findOne(user.id);
+  }
+
+  // PATCH /users/profile/password → change current user's password
+  @Patch('/profile/password')
+  async updatePassword(
+    @CurrentUser() user: AuthUser,
+    @Body() body: { oldPassword: string; newPassword: string },
+    @Req() request: Request, // Ajoutez ceci
+  ) {
+    await this.userService.changePassword(
+      user.id,
+      body.oldPassword,
+      body.newPassword,
+      request.headers as unknown as Record<string, string>, // Passez les headers
+    );
+    return { message: 'Password changed successfully' };
   }
 
   // GET /users/:id → retrieve a user by ID
@@ -41,20 +72,5 @@ export class UserController {
     @Body() updateData: UpdateProfileDto,
   ): Promise<UserEntity> {
     return this.userService.updateProfile(id, updateData);
-  }
-
-  // PATCH /users/profile/me → update current user's profile
-  @Patch('/profile/me')
-  updateMyProfile(
-    @CurrentUser() user: AuthUser,
-    @Body() updateData: UpdateProfileDto,
-  ): Promise<UserEntity> {
-    return this.userService.updateProfile(user.id, updateData);
-  }
-
-  // GET /users/profile/me → get current user's profile
-  @Get('/profile/me')
-  getMyProfile(@CurrentUser() user: AuthUser): Promise<UserEntity | null> {
-    return this.userService.findOne(user.id);
   }
 }

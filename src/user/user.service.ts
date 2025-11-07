@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { DeleteResult } from 'typeorm';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { auth } from 'src/utils/auth';
 
 /**
  * Service responsible for managing user records using a TypeORM repository.
@@ -101,5 +102,42 @@ export class UserService {
     const updatedUser = await this.userRepository.save(user);
 
     return updatedUser;
+  }
+
+  // Change user password
+  async changePassword(
+    userId: string,
+    oldPassword: string,
+    newPassword: string,
+    headers: Record<string, string>, // Token headers for authentication
+  ) {
+    const user = await this.findOne(userId);
+
+    // Check if user exists
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    // Ensure new password is different from old password
+    if (oldPassword === newPassword) {
+      throw new BadRequestException(
+        'New password must be different from the old password',
+      );
+    }
+
+    try {
+      // Call Better Auth API to change password
+      await auth.api.changePassword({
+        headers: headers, // Ajoutez ceci
+        body: {
+          currentPassword: oldPassword,
+          newPassword: newPassword,
+        },
+      });
+    } catch (error: any) {
+      const message =
+        error instanceof Error ? error.message : 'Failed to change password';
+      throw new BadRequestException(message);
+    }
   }
 }
