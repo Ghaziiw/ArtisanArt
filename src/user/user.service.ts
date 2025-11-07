@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { DeleteResult } from 'typeorm/browser';
+import { DeleteResult } from 'typeorm';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 
 /**
  * Service responsible for managing user records using a TypeORM repository.
@@ -26,19 +27,27 @@ import { DeleteResult } from 'typeorm/browser';
  *
  * - findOne(id: string): Retrieve a single user by its identifier.
  *   @param id - The identifier of the user to retrieve.
- *   @returns Promise that resolves to the matched UserEntity or undefined if no user is found.
+ *   @returns Promise that resolves to the matched UserEntity or null if no user is found.
  *
- * - create(userData: Partial<UserEntity>): Create and persist a new user record.
- *   @param userData - Partial fields used to create a new UserEntity.
- *   @returns Promise that resolves to the persisted UserEntity instance.
+ * - deleteUserAdmin(userId: string): Delete a user record by ID (admin function).
+ *   @param userId - The identifier of the user to delete.
+ *   @returns Promise that resolves to a DeleteResult indicating the deletion outcome.
+ *
+ * - updateProfile(userId: string, updateData: UpdateProfileDto): Update a user's profile.
+ *   @param userId - The identifier of the user to update.
+ *   @param updateData - DTO containing the fields to update.
+ *   @returns Promise that resolves to the updated UserEntity instance.
+ *   @throws BadRequestException if user is not found or if email is already in use.
  *
  * Error handling:
  * - All methods return Promises and may reject with database or repository errors
  *   (e.g. connection issues, constraint violations). Callers should handle rejections
  *   accordingly.
+ * - updateProfile throws BadRequestException for validation errors.
  *
  * Example:
  * // const users = await userService.findAll();
+ * // const updatedUser = await userService.updateProfile('user-id', { name: 'John Doe' });
  */
 @Injectable()
 export class UserService {
@@ -61,5 +70,36 @@ export class UserService {
   // Delete a user by ID (admin function)
   async deleteUserAdmin(userId: string): Promise<DeleteResult> {
     return await this.userRepository.delete({ id: userId });
+  }
+
+  // Update a user's profile
+  async updateProfile(
+    userId: string,
+    updateData: UpdateProfileDto,
+  ): Promise<UserEntity> {
+    const user = await this.findOne(userId);
+
+    // Check if user exists
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    // Verify if email is being updated and is unique
+    if (updateData.email && updateData.email !== user.email) {
+      const existingUser = await this.userRepository.findOne({
+        where: { email: updateData.email },
+      });
+      if (existingUser) {
+        throw new BadRequestException('Email already in use');
+      }
+    }
+
+    // Merge update data into user entity
+    Object.assign(user, updateData);
+
+    // Save changes to TypeORM
+    const updatedUser = await this.userRepository.save(user);
+
+    return updatedUser;
   }
 }

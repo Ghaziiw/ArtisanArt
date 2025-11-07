@@ -16,11 +16,7 @@ import { UserModule } from './user/user.module';
       url: process.env.DATABASE_URL,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
     }), // Database configuration
-    AuthModule.forRoot({
-      auth,
-      isGlobal: true, // Make AuthModule global
-      disableGlobalAuthGuard: true, // Disable default global auth guard
-    }),
+    AuthModule.forRoot({ auth }),
     UserModule, // Import UserModule
   ],
   providers: [

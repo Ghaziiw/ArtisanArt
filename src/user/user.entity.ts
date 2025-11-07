@@ -1,4 +1,10 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity({ name: 'user' }) // Name exact of the Better Auth table
 export class UserEntity {
@@ -19,4 +25,10 @@ export class UserEntity {
 
   @Column({ nullable: true })
   role: 'admin' | 'artisan' | 'client';
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
