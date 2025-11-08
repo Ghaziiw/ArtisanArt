@@ -25,6 +25,10 @@ export enum Permission {
 
   // Admin Panel
   ADMIN_PANEL = 'admin:panel',
+
+  CRAFTSMAN_UPDATE = 'craftsman:update',
+  CRAFTSMAN_DELETE = 'craftsman:delete',
+  CRAFTSMAN_UPDATE_EXP = 'craftsman:update:exp',
 }
 
 /**
@@ -56,5 +60,15 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.USERS_VIEW,
     Permission.USERS_UPDATE,
     Permission.USERS_DELETE,
+    Permission.PRODUCTS_VIEW,
+    Permission.PRODUCTS_CREATE,
+    Permission.PRODUCTS_UPDATE,
+    Permission.PRODUCTS_DELETE,
+    Permission.ORDERS_VIEW_ALL,
+    Permission.ORDERS_UPDATE,
+    Permission.STATS_VIEW,
+    Permission.CRAFTSMAN_UPDATE,
+    Permission.CRAFTSMAN_DELETE,
+    Permission.CRAFTSMAN_UPDATE_EXP,
   ],
 };

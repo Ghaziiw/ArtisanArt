@@ -58,7 +58,6 @@ export class PermissionsGuard implements CanActivate {
    * @returns {Promise<boolean>} True if access is granted, otherwise throws an exception.
    */
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    // Retrieve the HTTP request
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
 
     // Check if the route is public
@@ -67,9 +66,7 @@ export class PermissionsGuard implements CanActivate {
       context.getClass(),
     ]);
 
-    if (isPublic) {
-      return true;
-    }
+    if (isPublic) return true;
 
     // Get session from BetterAuth
     const headers = expressHeadersToFetchHeaders(request.headers);
@@ -80,6 +77,10 @@ export class PermissionsGuard implements CanActivate {
       throw new UnauthorizedException('User not authenticated');
     }
 
+    // ✅ CORRECTION: Attach user to request BEFORE checking permissions
+    // This ensures @CurrentUser() decorator works even on routes without specific permissions
+    request.user = session.user;
+
     // Get required permissions from metadata
     const requiredPermissions =
       this.reflector.getAllAndOverride<Permission[]>(PERMISSIONS_KEY, [
@@ -87,7 +88,13 @@ export class PermissionsGuard implements CanActivate {
         context.getClass(),
       ]) || [];
 
-    if (requiredPermissions.length === 0) return true; // No specific permissions required
+    // If no specific permissions required, allow access (user is authenticated)
+    if (requiredPermissions.length === 0) {
+      const userRole = session.user.role as UserRole;
+      const userPermissions = ROLE_PERMISSIONS[userRole] || [];
+      request.permissions = userPermissions;
+      return true;
+    }
 
     // Check if user has all required permissions
     const userRole = session.user.role as UserRole;
@@ -101,8 +108,7 @@ export class PermissionsGuard implements CanActivate {
       throw new ForbiddenException('Insufficient permissions');
     }
 
-    // Attach user and permissions to the request object for further use
-    request.user = session.user;
+    // Attach permissions to the request object for further use
     request.permissions = userPermissions;
 
     return true;

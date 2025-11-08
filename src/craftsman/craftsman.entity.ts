@@ -41,7 +41,7 @@ export class CraftsmanEntity {
   facebook?: string;
 
   @Column({ type: 'timestamp', nullable: true })
-  expirationDate?: Date;
+  expirationDate?: Date | null;
 
   @Column({ type: 'decimal', nullable: false })
   deliveryPrice: number;

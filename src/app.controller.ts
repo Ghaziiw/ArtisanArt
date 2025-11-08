@@ -13,7 +13,6 @@ export class AppController {
   @Public()
   @Get()
   getHello(): string {
-    console.log('Hello endpoint accessed');
     return this.appService.getHello();
   }
 

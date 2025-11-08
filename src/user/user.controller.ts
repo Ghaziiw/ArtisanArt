@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserEntity } from './user.entity';
@@ -15,8 +16,10 @@ import { DeleteResult } from 'typeorm';
 import { ChangePasswordDto, UpdateProfileDto } from './dto/update-profile.dto';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import type { AuthUser } from 'src/auth/types/auth-user';
+import { PermissionsGuard } from 'src/auth/guards/permissions.guard';
 
 @Controller('users')
+@UseGuards(PermissionsGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -31,14 +34,14 @@ export class UserController {
   @Patch('/profile/me')
   updateMyProfile(
     @CurrentUser() user: AuthUser,
-    @Body() updateData: UpdateProfileDto,
+    @Body() updatedData: UpdateProfileDto,
   ): Promise<UserEntity> {
-    return this.userService.updateProfile(user.id, updateData);
+    return this.userService.updateProfile(user.id, updatedData);
   }
 
   // GET /users/profile/me → get current user's profile
   @Get('/profile/me')
-  getMyProfile(@CurrentUser() user: AuthUser): Promise<UserEntity | null> {
+  getMyProfile(@CurrentUser() user: AuthUser) {
     return this.userService.findOne(user.id);
   }
 
@@ -76,8 +79,8 @@ export class UserController {
   @RequirePermissions(Permission.USERS_UPDATE)
   updateUser(
     @Param('id') id: string,
-    @Body() updateData: UpdateProfileDto,
+    @Body() updatedData: UpdateProfileDto,
   ): Promise<UserEntity> {
-    return this.userService.updateProfile(id, updateData);
+    return this.userService.updateProfile(id, updatedData);
   }
 }

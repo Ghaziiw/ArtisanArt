@@ -40,15 +40,23 @@ import { auth } from 'src/utils/auth';
  *   @returns Promise that resolves to the updated UserEntity instance.
  *   @throws BadRequestException if user is not found or if email is already in use.
  *
+ * - changePassword(userId: string, passwordData: ChangePasswordDto, headers: Record<string, string>): Change a user's password.
+ *   @param userId - The identifier of the user whose password is being changed.
+ *   @param passwordData - DTO containing current and new password.
+ *   @param headers - Token headers for authentication with Better Auth API.
+ *   @returns Promise that resolves when password is successfully changed.
+ *   @throws BadRequestException if user is not found, passwords are the same, or password change fails.
+ *
  * Error handling:
  * - All methods return Promises and may reject with database or repository errors
  *   (e.g. connection issues, constraint violations). Callers should handle rejections
  *   accordingly.
- * - updateProfile throws BadRequestException for validation errors.
+ * - updateProfile and changePassword throw BadRequestException for validation errors.
  *
  * Example:
  * // const users = await userService.findAll();
  * // const updatedUser = await userService.updateProfile('user-id', { name: 'John Doe' });
+ * // await userService.changePassword('user-id', { currentPassword: 'old', newPassword: 'new' }, headers);
  */
 @Injectable()
 export class UserService {
@@ -76,7 +84,7 @@ export class UserService {
   // Update a user's profile
   async updateProfile(
     userId: string,
-    updateData: UpdateProfileDto,
+    updatedData: UpdateProfileDto,
   ): Promise<UserEntity> {
     const user = await this.findOne(userId);
 
@@ -86,9 +94,9 @@ export class UserService {
     }
 
     // Verify if email is being updated and is unique
-    if (updateData.email && updateData.email !== user.email) {
+    if (updatedData.email && updatedData.email !== user.email) {
       const existingUser = await this.userRepository.findOne({
-        where: { email: updateData.email },
+        where: { email: updatedData.email },
       });
       if (existingUser) {
         throw new BadRequestException('Email already in use');
@@ -96,7 +104,7 @@ export class UserService {
     }
 
     // Merge update data into user entity
-    Object.assign(user, updateData);
+    Object.assign(user, updatedData);
 
     // Save changes to TypeORM
     const updatedUser = await this.userRepository.save(user);

@@ -5,8 +5,67 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserEntity } from 'src/user/user.entity';
 import { CreateCraftsmanDto } from './dto/create-craftsman.dto';
 import { auth } from 'src/utils/auth';
-// import { CreateCraftsmanDto } from './dto/create-craftsman.dto';
+import { UpdateCraftsmanDto } from './dto/update-craftsman.dto';
 
+/**
+ * Service responsible for managing craftsman records using a TypeORM repository.
+ *
+ * This service provides basic CRUD-like operations for the CraftsmanEntity within
+ * the application database. It delegates persistence to an injected
+ * Repository<CraftsmanEntity> instance and manages associated user data.
+ *
+ * @remarks
+ * - Authentication and management of real authentication users is handled by
+ *   the external "Better Auth" module. This service should be used for
+ *   application-level craftsman records and related data, not for authentication
+ *   credential management.
+ *
+ * Constructor:
+ * @param craftsmanRepository - Injected TypeORM repository for CraftsmanEntity used for all persistence operations.
+ * @param userRepo - Injected TypeORM repository for UserEntity used for managing associated user data.
+ *
+ * Methods:
+ * - findAll(): Retrieve all craftsman records with their associated user data.
+ *   @returns Promise that resolves to an array of CraftsmanEntity objects.
+ *
+ * - createCraftsman(craftsmanDto: CreateCraftsmanDto): Create a new craftsman along with the associated user.
+ *   @param craftsmanDto - DTO containing the details of the craftsman to create.
+ *   @returns Promise that resolves to the created CraftsmanEntity instance.
+ *   @throws BadRequestException if user creation fails or craftsman creation fails.
+ *
+ * - findOneByUserId(userId: string): Retrieve a craftsman by user ID.
+ *   @param userId - The identifier of the user whose craftsman record to retrieve.
+ *   @returns Promise that resolves to the matched CraftsmanEntity or null if not found.
+ *
+ * - updateCraftsman(userId: string, updatedData: UpdateCraftsmanDto): Update a craftsman and associated user profile.
+ *   @param userId - The identifier of the craftsman to update.
+ *   @param updatedData - DTO containing the fields to update.
+ *   @returns Promise that resolves to the updated CraftsmanEntity instance.
+ *   @throws BadRequestException if craftsman is not found or if email is already in use.
+ *
+ * - deleteCraftsman(userId: string): Delete a craftsman by user ID.
+ *   @param userId - The identifier of the craftsman to delete.
+ *   @returns Promise that resolves to a message indicating the deletion outcome.
+ *   @throws BadRequestException if craftsman is not found.
+ *
+ * - updateCraftsmanExpDate(userId: string, newExpDate: Date | null): Update craftsman's expiration date.
+ *   @param userId - The identifier of the craftsman whose expiration date to update.
+ *   @param newExpDate - The new expiration date to set.
+ *   @returns Promise that resolves to the updated CraftsmanEntity instance.
+ *   @throws BadRequestException if craftsman is not found.
+ *
+ * Error handling:
+ * - All methods return Promises and may reject with database or repository errors
+ *   (e.g. connection issues, constraint violations). Callers should handle rejections
+ *   accordingly.
+ * - createCraftsman, updateCraftsman, and updateCraftsmanExpDate throw BadRequestException for validation errors.
+ *
+ * Example:
+ * // const craftsmen = await craftsmanService.findAll();
+ * // const newCraftsman = await craftsmanService.createCraftsman(craftsmanDto);
+ * // const updatedCraftsman = await craftsmanService.updateCraftsman('user-id', updatedData);
+ * // await craftsmanService.deleteCraftsman('user-id');
+ */
 @Injectable()
 export class CraftsmanService {
   constructor(
@@ -67,5 +126,100 @@ export class CraftsmanService {
       await this.userRepo.delete({ id: createdUser.id }); // Rollback user creation
       throw new BadRequestException('Craftsman not created');
     }
+  }
+
+  // Retrieve a craftsman by user ID
+  findOneByUserId(userId: string): Promise<CraftsmanEntity | null> {
+    return this.craftsmanRepository.findOne({
+      where: { userId },
+      relations: ['user'],
+    });
+  }
+
+  // Update a craftsman and associated user profile
+  async updateCraftsman(userId: string, updatedData: UpdateCraftsmanDto) {
+    const craftsman = await this.craftsmanRepository.findOne({
+      where: { userId },
+      relations: ['user'],
+    });
+
+    // Verify craftsman exists
+    if (!craftsman) {
+      throw new BadRequestException('Craftsman not found');
+    }
+
+    // Verify email uniqueness if it's being updated
+    if (updatedData.email && updatedData.email !== craftsman.user.email) {
+      const existingUser = await this.userRepo.findOne({
+        where: { email: updatedData.email },
+      });
+      if (existingUser) {
+        throw new BadRequestException('Email already in use');
+      }
+      craftsman.user.email = updatedData.email;
+    }
+
+    // Update user profile fields
+    if (updatedData.name) craftsman.user.name = updatedData.name;
+    if (updatedData.location) craftsman.user.location = updatedData.location;
+    if (updatedData.profileImage)
+      craftsman.user.image = updatedData.profileImage;
+
+    // Update craftsman-specific fields
+    Object.assign(craftsman, {
+      businessName: updatedData.businessName ?? craftsman.businessName,
+      bio: updatedData.bio ?? craftsman.bio,
+      specialty: updatedData.specialty ?? craftsman.specialty,
+      phone: updatedData.phone ?? craftsman.phone,
+      workshopAddress: updatedData.workshopAddress ?? craftsman.workshopAddress,
+      instagram: updatedData.instagram ?? craftsman.instagram,
+      facebook: updatedData.facebook ?? craftsman.facebook,
+      deliveryPrice: updatedData.deliveryPrice ?? craftsman.deliveryPrice,
+      profileImage: updatedData.profileImage ?? craftsman.profileImage,
+    });
+
+    // Save both user and craftsman entities
+    try {
+      await this.userRepo.save(craftsman.user);
+      await this.craftsmanRepository.save(craftsman);
+    } catch {
+      throw new BadRequestException('Failed to update craftsman');
+    }
+
+    // Return the updated craftsman with user data
+    return this.craftsmanRepository.findOne({
+      where: { userId },
+      relations: ['user'],
+    });
+  }
+
+  // Delete a craftsman by user ID
+  async deleteCraftsman(userId: string) {
+    const craftsman = await this.craftsmanRepository.findOne({
+      where: { userId },
+      relations: ['user'],
+    });
+
+    // Verify craftsman exists
+    if (!craftsman) throw new BadRequestException('Craftsman not found');
+
+    await this.craftsmanRepository.remove(craftsman);
+    return { message: 'Craftsman deleted successfully' };
+  }
+
+  // Update craftsman's expiration date
+  async updateCraftsmanExpDate(userId: string, newExpDate: Date | null) {
+    const craftsman = await this.craftsmanRepository.findOne({
+      where: { userId },
+      relations: ['user'],
+    });
+
+    // Verify craftsman exists
+    if (!craftsman) throw new BadRequestException('Craftsman not found');
+
+    craftsman.expirationDate = newExpDate;
+    await this.craftsmanRepository.save(craftsman);
+
+    return craftsman;
   }
 }
