@@ -45,19 +45,27 @@ export class CraftsmanService {
     await this.userRepo.save(createdUser);
 
     // Create the Craftsman with the user relation
-    const craftsman = this.craftsmanRepository.create({
-      user: createdUser,
-      businessName: craftsmanDto.businessName,
-      bio: craftsmanDto.bio,
-      specialty: craftsmanDto.specialty,
-      phone: craftsmanDto.phone,
-      workshopAddress: craftsmanDto.workshopAddress,
-      deliveryPrice: craftsmanDto.deliveryPrice,
-      instagram: craftsmanDto.instagram,
-      facebook: craftsmanDto.facebook,
-      profileImage: craftsmanDto.profileImage,
-    });
+    try {
+      const craftsman = this.craftsmanRepository.create({
+        user: createdUser,
+        businessName: craftsmanDto.businessName,
+        bio: craftsmanDto.bio,
+        specialty: craftsmanDto.specialty,
+        phone: craftsmanDto.phone,
+        workshopAddress: craftsmanDto.workshopAddress,
+        deliveryPrice: craftsmanDto.deliveryPrice,
+        instagram: craftsmanDto.instagram,
+        facebook: craftsmanDto.facebook,
+        profileImage: craftsmanDto.profileImage,
+      });
 
-    return this.craftsmanRepository.save(craftsman);
+      // Save the Craftsman entity
+      const savedCraftsman = await this.craftsmanRepository.save(craftsman);
+      return savedCraftsman;
+    } catch {
+      // If craftsman creation fails, rollback user creation
+      await this.userRepo.delete({ id: createdUser.id }); // Rollback user creation
+      throw new BadRequestException('Craftsman not created');
+    }
   }
 }
