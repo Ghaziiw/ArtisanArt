@@ -4,14 +4,14 @@ import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { auth } from './utils/auth';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
-import { CraftsmanModule } from './craftsman/craftsman.module';
-import { UserEntity } from './user/user.entity';
-import { CraftsmanEntity } from './craftsman/craftsman.entity';
-import { ProductEntity } from './product/product.entity';
-import { CategoryEntity } from './category/category.entity';
-import { CategoryModule } from './category/category.module';
-import { ProductModule } from './product/product.module';
+import { UserModule } from './modules/user/user.module';
+import { CraftsmanModule } from './modules/craftsman/craftsman.module';
+import { UserEntity } from './modules/user/user.entity';
+import { CraftsmanEntity } from './modules/craftsman/craftsman.entity';
+import { ProductEntity } from './modules/product/product.entity';
+import { CategoryEntity } from './modules/category/category.entity';
+import { CategoryModule } from './modules/category/category.module';
+import { ProductModule } from './modules/product/product.module';
 
 @Module({
   imports: [

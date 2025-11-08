@@ -18,6 +18,8 @@ import { ChangePasswordDto, UpdateProfileDto } from './dto/update-profile.dto';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import type { AuthUser } from 'src/auth/types/auth-user';
 import { PermissionsGuard } from 'src/auth/guards/permissions.guard';
+import { Query } from '@nestjs/common';
+import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
 
 @Controller('users')
 @UseGuards(PermissionsGuard)
@@ -27,8 +29,11 @@ export class UserController {
   // GET /users → retrieve all users
   @Get()
   @RequirePermissions(Permission.USERS_VIEW)
-  getAll(): Promise<UserEntity[]> {
-    return this.userService.findAll();
+  getAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 20,
+  ): Promise<Pagination<UserEntity, IPaginationMeta>> {
+    return this.userService.findAll(page, limit);
   }
 
   // PATCH /users/profile/me → update current user's profile

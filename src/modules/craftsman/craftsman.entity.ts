@@ -1,5 +1,5 @@
 import { IsString, Matches } from 'class-validator';
-import { UserEntity } from 'src/user/user.entity';
+import { UserEntity } from 'src/modules/user/user.entity';
 import { Entity, Column, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 
 @Entity('craftsmen')

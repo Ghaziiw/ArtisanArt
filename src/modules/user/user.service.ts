@@ -5,6 +5,12 @@ import { UserEntity } from './user.entity';
 import { DeleteResult } from 'typeorm';
 import { ChangePasswordDto, UpdateProfileDto } from './dto/update-profile.dto';
 import { auth } from 'src/utils/auth';
+import {
+  paginate,
+  Pagination,
+  IPaginationOptions,
+  IPaginationMeta,
+} from 'nestjs-typeorm-paginate';
 
 /**
  * Service responsible for managing user records using a TypeORM repository.
@@ -67,8 +73,16 @@ export class UserService {
   ) {}
 
   // Retrieve all users
-  findAll(): Promise<UserEntity[]> {
-    return this.userRepository.find();
+  async findAll(
+    page: number,
+    limit: number,
+  ): Promise<Pagination<UserEntity, IPaginationMeta>> {
+    const options: IPaginationOptions = { page, limit };
+
+    return await paginate<UserEntity, IPaginationMeta>(
+      this.userRepository,
+      options,
+    );
   }
 
   // Retrieve a user by ID

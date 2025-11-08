@@ -1,11 +1,11 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CraftsmanEntity } from './craftsman.entity';
+import { CraftsmanEntity } from '../craftsman/craftsman.entity';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { UserEntity } from 'src/user/user.entity';
+import { UserEntity } from 'src/modules/user/user.entity';
 import { CreateCraftsmanDto } from './dto/create-craftsman.dto';
 import { auth } from 'src/utils/auth';
-import { UpdateCraftsmanDto } from './dto/update-craftsman.dto';
+import { UpdateCraftsmanDto } from '../craftsman/dto/update-craftsman.dto';
 
 /**
  * Service responsible for managing craftsman records using a TypeORM repository.

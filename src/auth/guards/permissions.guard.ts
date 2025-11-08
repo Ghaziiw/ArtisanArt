@@ -77,7 +77,6 @@ export class PermissionsGuard implements CanActivate {
       throw new UnauthorizedException('User not authenticated');
     }
 
-    // ✅ CORRECTION: Attach user to request BEFORE checking permissions
     // This ensures @CurrentUser() decorator works even on routes without specific permissions
     request.user = session.user;
 
