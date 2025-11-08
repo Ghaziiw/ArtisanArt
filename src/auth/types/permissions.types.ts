@@ -30,6 +30,9 @@ export enum Permission {
   CRAFTSMAN_UPDATE = 'craftsman:update',
   CRAFTSMAN_DELETE = 'craftsman:delete',
   CRAFTSMAN_UPDATE_EXP = 'craftsman:update:exp',
+  CATEGORIES_CREATE = 'categories:create',
+  CATEGORIES_UPDATE = 'categories:update',
+  CATEGORIES_DELETE = 'categories:delete',
 }
 
 /**
@@ -72,5 +75,8 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.CRAFTSMAN_DELETE,
     Permission.CRAFTSMAN_UPDATE_EXP,
     Permission.USERS_CREATE,
+    Permission.CATEGORIES_CREATE,
+    Permission.CATEGORIES_UPDATE,
+    Permission.CATEGORIES_DELETE,
   ],
 };

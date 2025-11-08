@@ -22,7 +22,7 @@ import { Permission } from 'src/auth/types/permissions.types';
 @Controller('craftsmen')
 @UseGuards(PermissionsGuard)
 export class CraftsmanController {
-  constructor(private readonly craftsmanService: CraftsmanService) {}
+  constructor(private readonly craftsmanService: CraftsmanService) {} // Inject CraftsmanService
 
   // GET /craftsmen → retrieve all craftsmen
   @Get()

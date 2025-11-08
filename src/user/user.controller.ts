@@ -22,7 +22,7 @@ import { PermissionsGuard } from 'src/auth/guards/permissions.guard';
 @Controller('users')
 @UseGuards(PermissionsGuard)
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) {} // Inject UserService
 
   // GET /users → retrieve all users
   @Get()
