@@ -68,7 +68,6 @@ export class PermissionsGuard implements CanActivate {
     ]);
 
     if (isPublic) {
-      console.log('✅ Route publique - aucun cookie requis');
       return true;
     }
 

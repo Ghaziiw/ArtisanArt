@@ -1,10 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Patch, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Req,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserEntity } from './user.entity';
 import { RequirePermissions } from 'src/auth/decorators/permissions.decorator';
 import { Permission } from 'src/auth/types/permissions.types';
 import { DeleteResult } from 'typeorm';
-import { UpdateProfileDto } from './dto/update-profile.dto';
+import { ChangePasswordDto, UpdateProfileDto } from './dto/update-profile.dto';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import type { AuthUser } from 'src/auth/types/auth-user';
 
@@ -38,13 +46,12 @@ export class UserController {
   @Patch('/profile/password')
   async updatePassword(
     @CurrentUser() user: AuthUser,
-    @Body() body: { oldPassword: string; newPassword: string },
+    @Body() passwordData: ChangePasswordDto,
     @Req() request: Request, // Ajoutez ceci
   ) {
     await this.userService.changePassword(
       user.id,
-      body.oldPassword,
-      body.newPassword,
+      passwordData,
       request.headers as unknown as Record<string, string>, // Passez les headers
     );
     return { message: 'Password changed successfully' };

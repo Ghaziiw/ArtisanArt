@@ -1,3 +1,4 @@
+import { IsString, Matches } from 'class-validator';
 import { UserEntity } from 'src/user/user.entity';
 import { Entity, Column, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 
@@ -10,19 +11,23 @@ export class CraftsmanEntity {
 
   // @Column('text') // Foreign key column
   @PrimaryColumn('text')
-  userId: string;
+  userId?: string;
 
   // Craftsman profile information
   @Column({ nullable: false })
   businessName: string;
 
   @Column('text', { nullable: true })
-  bio: string;
+  bio?: string;
 
   @Column({ nullable: true })
-  specialty: string; // Ex: "Poterie", "Bijouterie", "Textile"
+  specialty?: string; // Ex: "Poterie", "Bijouterie", "Textile"
 
-  @Column({ nullable: false })
+  @Column({ type: 'varchar', length: 8, nullable: false })
+  @IsString()
+  @Matches(/^[1-9][0-9]{7}$/, {
+    message: 'Phone number must be exactly 8 digits and cannot start with 0',
+  })
   phone: string;
 
   @Column({ nullable: false })
@@ -30,17 +35,17 @@ export class CraftsmanEntity {
 
   // Social media
   @Column({ nullable: true })
-  instagram: string;
+  instagram?: string;
 
   @Column({ nullable: true })
-  facebook: string;
+  facebook?: string;
 
   @Column({ type: 'timestamp', nullable: true })
-  expirationDate: Date;
+  expirationDate?: Date;
 
-  @Column({ type: 'decimal', nullable: true })
+  @Column({ type: 'decimal', nullable: false })
   deliveryPrice: number;
 
   @Column({ nullable: true })
-  profileImage: string;
+  profileImage?: string;
 }

@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { DeleteResult } from 'typeorm';
-import { UpdateProfileDto } from './dto/update-profile.dto';
+import { ChangePasswordDto, UpdateProfileDto } from './dto/update-profile.dto';
 import { auth } from 'src/utils/auth';
 
 /**
@@ -107,8 +107,7 @@ export class UserService {
   // Change user password
   async changePassword(
     userId: string,
-    oldPassword: string,
-    newPassword: string,
+    passwordData: ChangePasswordDto,
     headers: Record<string, string>, // Token headers for authentication
   ) {
     const user = await this.findOne(userId);
@@ -119,7 +118,7 @@ export class UserService {
     }
 
     // Ensure new password is different from old password
-    if (oldPassword === newPassword) {
+    if (passwordData.currentPassword === passwordData.newPassword) {
       throw new BadRequestException(
         'New password must be different from the old password',
       );
@@ -130,8 +129,8 @@ export class UserService {
       await auth.api.changePassword({
         headers: headers, // Ajoutez ceci
         body: {
-          currentPassword: oldPassword,
-          newPassword: newPassword,
+          currentPassword: passwordData.currentPassword,
+          newPassword: passwordData.newPassword,
         },
       });
     } catch (error: any) {
