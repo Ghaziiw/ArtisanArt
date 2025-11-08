@@ -147,4 +147,10 @@ export class UserService {
       throw new BadRequestException(message);
     }
   }
+
+  // Create a new user
+  async createUser(userData: Partial<UserEntity>): Promise<UserEntity> {
+    const newUser = this.userRepository.create(userData);
+    return this.userRepository.save(newUser);
+  }
 }

@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Patch,
+  Post,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -82,5 +83,12 @@ export class UserController {
     @Body() updatedData: UpdateProfileDto,
   ): Promise<UserEntity> {
     return this.userService.updateProfile(id, updatedData);
+  }
+
+  // POST /users → create a new user (admin only)
+  @Post()
+  @RequirePermissions(Permission.USERS_CREATE)
+  createUser(@Body() userData: Partial<UserEntity>): Promise<UserEntity> {
+    return this.userService.createUser(userData);
   }
 }

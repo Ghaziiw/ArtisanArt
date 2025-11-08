@@ -19,6 +19,7 @@ export enum Permission {
   USERS_VIEW = 'users:view',
   USERS_UPDATE = 'users:update',
   USERS_DELETE = 'users:delete',
+  USERS_CREATE = 'users:create',
 
   // Statistics
   STATS_VIEW = 'stats:view',
@@ -70,5 +71,6 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.CRAFTSMAN_UPDATE,
     Permission.CRAFTSMAN_DELETE,
     Permission.CRAFTSMAN_UPDATE_EXP,
+    Permission.USERS_CREATE,
   ],
 };

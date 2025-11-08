@@ -1,5 +1,4 @@
 import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 
 export class UpdateProfileDto {
   @IsOptional()

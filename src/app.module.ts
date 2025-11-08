@@ -8,18 +8,24 @@ import { UserModule } from './user/user.module';
 import { CraftsmanModule } from './craftsman/craftsman.module';
 import { UserEntity } from './user/user.entity';
 import { CraftsmanEntity } from './craftsman/craftsman.entity';
+import { ProductEntity } from './product/product.entity';
+import { CategoryEntity } from './category/category.entity';
+import { CategoryModule } from './category/category.module';
+import { ProductModule } from './product/product.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [UserEntity, CraftsmanEntity],
+      entities: [UserEntity, CraftsmanEntity, CategoryEntity, ProductEntity],
       synchronize: true,
       // migrationsRun: false,
     }), // Database configuration
     UserModule, // Import UserModule
     CraftsmanModule, // Import CraftsmanModule
+    CategoryModule, // Import CategoryModule
+    ProductModule, // Import ProductModule
     AuthModule.forRoot({
       auth,
       isGlobal: true, // Make auth module global
