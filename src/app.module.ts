@@ -18,6 +18,8 @@ import { CommentsModule } from './modules/comment/comments.module';
 import { Comment } from './modules/comment/comment.entity';
 import { OrdersModule } from './modules/order/orders.module';
 import { Order } from './modules/order/order.entity';
+import { QuantityModule } from './modules/quantity/quantity.module';
+import { Quantity } from './modules/quantity/quantity.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -31,6 +33,7 @@ import { Order } from './modules/order/order.entity';
         Offer,
         Comment,
         Order,
+        Quantity,
       ],
       synchronize: true,
       // migrationsRun: false,
@@ -42,6 +45,7 @@ import { Order } from './modules/order/order.entity';
     OffersModule,
     CommentsModule,
     OrdersModule,
+    QuantityModule,
     AuthModule.forRoot({
       auth,
       isGlobal: true, // Make auth module global
