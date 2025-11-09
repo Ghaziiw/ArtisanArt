@@ -14,6 +14,8 @@ import { CategoryModule } from './modules/category/category.module';
 import { ProductModule } from './modules/product/product.module';
 import { OffersModule } from './modules/offer/offers.module';
 import { Offer } from './modules/offer/offer.entity';
+import { CommentsModule } from './modules/comment/comments.module';
+import { Comment } from './modules/comment/comment.entity';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -25,6 +27,7 @@ import { Offer } from './modules/offer/offer.entity';
         CategoryEntity,
         ProductEntity,
         Offer,
+        Comment,
       ],
       synchronize: true,
       // migrationsRun: false,
@@ -34,6 +37,7 @@ import { Offer } from './modules/offer/offer.entity';
     CategoryModule, // Import CategoryModule
     ProductModule, // Import ProductModule
     OffersModule,
+    CommentsModule,
     AuthModule.forRoot({
       auth,
       isGlobal: true, // Make auth module global
