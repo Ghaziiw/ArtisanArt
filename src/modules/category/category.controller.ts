@@ -11,7 +11,7 @@ import {
 import { PermissionsGuard } from 'src/auth/guards/permissions.guard';
 import { CategoryService } from './category.service';
 import { Public } from 'src/auth/decorators/public.decorator';
-import { CategoryEntity } from './category.entity';
+import { Category } from './category.entity';
 import { CategoryDto } from './dto/category.dto';
 import { RequirePermissions } from 'src/auth/decorators/permissions.decorator';
 import { Permission } from 'src/auth/types/permissions.types';
@@ -24,7 +24,7 @@ export class CategoryController {
   // GET /categories → retrieve all categories
   @Public()
   @Get()
-  findAll(): Promise<CategoryEntity[]> {
+  findAll(): Promise<Category[]> {
     return this.categoryService.findAll();
   }
 
@@ -38,7 +38,7 @@ export class CategoryController {
   // GET /categories/:id → retrieve a category by ID
   @Public()
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<CategoryEntity> {
+  findOne(@Param('id') id: string): Promise<Category> {
     return this.categoryService.findOne(id);
   }
 
@@ -48,7 +48,7 @@ export class CategoryController {
   update(
     @Param('id') id: string,
     @Body() updateCategoryDto: CategoryDto,
-  ): Promise<CategoryEntity> {
+  ): Promise<Category> {
     return this.categoryService.updateCategory(id, updateCategoryDto);
   }
 

@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CraftsmanEntity } from '../craftsman/craftsman.entity';
+import { Craftsman } from '../craftsman/craftsman.entity';
 import { CraftsmanService } from './craftsman.service';
 import { CraftsmanController } from './craftsman.controller';
-import { UserEntity } from 'src/modules/user/user.entity';
+import { User } from 'src/modules/user/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CraftsmanEntity, UserEntity])],
+  imports: [TypeOrmModule.forFeature([Craftsman, User])],
   providers: [CraftsmanService],
   controllers: [CraftsmanController],
   exports: [CraftsmanService],

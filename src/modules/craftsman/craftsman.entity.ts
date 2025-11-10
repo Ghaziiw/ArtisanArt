@@ -1,13 +1,13 @@
 import { IsString, Matches } from 'class-validator';
-import { UserEntity } from 'src/modules/user/user.entity';
+import { User } from 'src/modules/user/user.entity';
 import { Entity, Column, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 
 @Entity('craftsmen')
-export class CraftsmanEntity {
+export class Craftsman {
   // Foreign key relation one-to-one with User
-  @OneToOne(() => UserEntity, { eager: true, onDelete: 'CASCADE' })
+  @OneToOne(() => User, { eager: true, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
-  user: UserEntity;
+  user: User;
 
   // @Column('text') // Foreign key column
   @PrimaryColumn('text')

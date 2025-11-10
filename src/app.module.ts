@@ -6,10 +6,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './modules/user/user.module';
 import { CraftsmanModule } from './modules/craftsman/craftsman.module';
-import { UserEntity } from './modules/user/user.entity';
-import { CraftsmanEntity } from './modules/craftsman/craftsman.entity';
-import { ProductEntity } from './modules/product/product.entity';
-import { CategoryEntity } from './modules/category/category.entity';
+import { User } from './modules/user/user.entity';
+import { Craftsman } from './modules/craftsman/craftsman.entity';
+import { Product } from './modules/product/product.entity';
+import { Category } from './modules/category/category.entity';
 import { CategoryModule } from './modules/category/category.module';
 import { ProductModule } from './modules/product/product.module';
 import { OffersModule } from './modules/offer/offers.module';
@@ -28,10 +28,10 @@ import { ShoppingcartsModule } from './modules/shoppingcart/shoppingcarts.module
       type: 'postgres',
       url: process.env.DATABASE_URL,
       entities: [
-        UserEntity,
-        CraftsmanEntity,
-        CategoryEntity,
-        ProductEntity,
+        User,
+        Craftsman,
+        Category,
+        Product,
         Offer,
         Comment,
         Order,
