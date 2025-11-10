@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Category } from 'src/modules/category/category.entity';
+import { IsUUID, Min } from 'class-validator';
 
 @Entity({ name: 'products' })
 export class Product {
@@ -22,9 +23,11 @@ export class Product {
   description: string;
 
   @Column('decimal', { precision: 10, scale: 2 })
+  @Min(0, { message: 'Price must be at least 0' })
   price: number;
 
   @Column({ default: 0 })
+  @Min(0, { message: 'Stock must be at least 0' })
   stock: number;
 
   @ManyToOne(() => Category, (category) => category.products, {
@@ -35,6 +38,9 @@ export class Product {
   @JoinColumn({ name: 'categoryId' })
   category: Category;
 
+  @IsUUID()
+  categoryId: string;
+
   @Column('simple-array', { nullable: true })
   images: string[];
 
@@ -44,6 +50,7 @@ export class Product {
   artisan: User;
 
   @Column({ name: 'artisanId' })
+  @IsUUID()
   artisanId: string;
 
   @CreateDateColumn()
