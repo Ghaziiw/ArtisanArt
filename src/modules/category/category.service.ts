@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CategoryEntity } from './category.entity';
+import { Category } from './category.entity';
 import { CategoryDto } from './dto/category.dto';
 
 /**
@@ -55,21 +55,19 @@ import { CategoryDto } from './dto/category.dto';
 @Injectable()
 export class CategoryService {
   constructor(
-    @InjectRepository(CategoryEntity)
-    private readonly categoryRepository: Repository<CategoryEntity>, // Repository TypeORM for CategoryEntity
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>, // Repository TypeORM for Category
   ) {}
 
   // Retrieve all categories ordered by name
-  async findAll(): Promise<CategoryEntity[]> {
+  async findAll(): Promise<Category[]> {
     return await this.categoryRepository.find({
       order: { name: 'ASC' },
     });
   }
 
   // Create a new category
-  async createCategory(
-    createCategoryDto: CategoryDto,
-  ): Promise<CategoryEntity> {
+  async createCategory(createCategoryDto: CategoryDto): Promise<Category> {
     // Check if category name already exists
     const existingCategory = await this.categoryRepository.findOne({
       where: { name: createCategoryDto.name },
@@ -86,7 +84,7 @@ export class CategoryService {
   }
 
   // Retrieve a category by ID
-  async findOne(id: string): Promise<CategoryEntity> {
+  async findOne(id: string): Promise<Category> {
     const category = await this.categoryRepository.findOne({
       where: { id },
       relations: ['products'],
@@ -103,7 +101,7 @@ export class CategoryService {
   async updateCategory(
     id: string,
     updateCategoryDto: CategoryDto,
-  ): Promise<CategoryEntity> {
+  ): Promise<Category> {
     const category = await this.findOne(id);
 
     // Check if new name conflicts with existing category

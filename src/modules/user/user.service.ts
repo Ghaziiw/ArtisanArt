@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserEntity } from './user.entity';
+import { User } from './user.entity';
 import { DeleteResult } from 'typeorm';
 import { ChangePasswordDto, UpdateProfileDto } from './dto/update-profile.dto';
 import { auth } from 'src/utils/auth';
@@ -66,27 +66,24 @@ import {
  */
 @Injectable()
 export class UserService {
-  // Injection du repository UserEntity
+  // Injection du repository User
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>, // Repository TypeORM pour UserEntity
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>, // Repository TypeORM pour User
   ) {}
 
   // Retrieve all users
   async findAll(
     page: number,
     limit: number,
-  ): Promise<Pagination<UserEntity, IPaginationMeta>> {
+  ): Promise<Pagination<User, IPaginationMeta>> {
     const options: IPaginationOptions = { page, limit };
 
-    return await paginate<UserEntity, IPaginationMeta>(
-      this.userRepository,
-      options,
-    );
+    return await paginate<User, IPaginationMeta>(this.userRepository, options);
   }
 
   // Retrieve a user by ID
-  findOne(id: string): Promise<UserEntity | null> {
+  findOne(id: string): Promise<User | null> {
     return this.userRepository.findOne({ where: { id } });
   }
 
@@ -99,7 +96,7 @@ export class UserService {
   async updateProfile(
     userId: string,
     updatedData: UpdateProfileDto,
-  ): Promise<UserEntity> {
+  ): Promise<User> {
     const user = await this.findOne(userId);
 
     // Check if user exists
@@ -163,7 +160,7 @@ export class UserService {
   }
 
   // Create a new user
-  async createUser(userData: Partial<UserEntity>): Promise<UserEntity> {
+  async createUser(userData: Partial<User>): Promise<User> {
     const newUser = this.userRepository.create(userData);
     return this.userRepository.save(newUser);
   }

@@ -10,7 +10,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserEntity } from './user.entity';
+import { User } from './user.entity';
 import { RequirePermissions } from 'src/auth/decorators/permissions.decorator';
 import { Permission } from 'src/auth/types/permissions.types';
 import { DeleteResult } from 'typeorm';
@@ -32,7 +32,7 @@ export class UserController {
   getAll(
     @Query('page') page = 1,
     @Query('limit') limit = 20,
-  ): Promise<Pagination<UserEntity, IPaginationMeta>> {
+  ): Promise<Pagination<User, IPaginationMeta>> {
     return this.userService.findAll(page, limit);
   }
 
@@ -41,7 +41,7 @@ export class UserController {
   updateMyProfile(
     @CurrentUser() user: AuthUser,
     @Body() updatedData: UpdateProfileDto,
-  ): Promise<UserEntity> {
+  ): Promise<User> {
     return this.userService.updateProfile(user.id, updatedData);
   }
 
@@ -69,7 +69,7 @@ export class UserController {
   // GET /users/:id → retrieve a user by ID
   @Get(':id')
   @RequirePermissions(Permission.USERS_VIEW)
-  getOne(@Param('id') id: string): Promise<UserEntity | null> {
+  getOne(@Param('id') id: string): Promise<User | null> {
     return this.userService.findOne(id);
   }
 
@@ -86,14 +86,14 @@ export class UserController {
   updateUser(
     @Param('id') id: string,
     @Body() updatedData: UpdateProfileDto,
-  ): Promise<UserEntity> {
+  ): Promise<User> {
     return this.userService.updateProfile(id, updatedData);
   }
 
   // POST /users → create a new user (admin only)
   @Post()
   @RequirePermissions(Permission.USERS_CREATE)
-  createUser(@Body() userData: Partial<UserEntity>): Promise<UserEntity> {
+  createUser(@Body() userData: Partial<User>): Promise<User> {
     return this.userService.createUser(userData);
   }
 }

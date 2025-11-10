@@ -7,11 +7,11 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { UserEntity } from '../user/user.entity';
-import { CategoryEntity } from 'src/modules/category/category.entity';
+import { User } from '../user/user.entity';
+import { Category } from 'src/modules/category/category.entity';
 
 @Entity({ name: 'products' })
-export class ProductEntity {
+export class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -27,21 +27,21 @@ export class ProductEntity {
   @Column({ default: 0 })
   stock: number;
 
-  @ManyToOne(() => CategoryEntity, (category) => category.products, {
+  @ManyToOne(() => Category, (category) => category.products, {
     eager: true,
     onDelete: 'SET NULL',
     nullable: true,
   })
   @JoinColumn({ name: 'categoryId' })
-  category: CategoryEntity;
+  category: Category;
 
   @Column('simple-array', { nullable: true })
   images: string[];
 
-  // Relation Many-to-One avec UserEntity (artisan)
-  @ManyToOne(() => UserEntity, { eager: true })
+  // Relation Many-to-One avec User (artisan)
+  @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: 'artisanId' })
-  artisan: UserEntity;
+  artisan: User;
 
   @Column({ name: 'artisanId' })
   artisanId: string;

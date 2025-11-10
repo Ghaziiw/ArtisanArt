@@ -1,8 +1,8 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CraftsmanEntity } from '../craftsman/craftsman.entity';
+import { Craftsman } from '../craftsman/craftsman.entity';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { UserEntity } from 'src/modules/user/user.entity';
+import { User } from 'src/modules/user/user.entity';
 import { CreateCraftsmanDto } from './dto/create-craftsman.dto';
 import { auth } from 'src/utils/auth';
 import { UpdateCraftsmanDto } from '../craftsman/dto/update-craftsman.dto';
@@ -69,14 +69,14 @@ import { UpdateCraftsmanDto } from '../craftsman/dto/update-craftsman.dto';
 @Injectable()
 export class CraftsmanService {
   constructor(
-    @InjectRepository(CraftsmanEntity)
-    private readonly craftsmanRepository: Repository<CraftsmanEntity>, // Repository TypeORM for CraftsmanEntity
-    @InjectRepository(UserEntity)
-    private userRepo: Repository<UserEntity>, // Repository TypeORM for UserEntity
+    @InjectRepository(Craftsman)
+    private readonly craftsmanRepository: Repository<Craftsman>, // Repository TypeORM for Craftsman
+    @InjectRepository(User)
+    private userRepo: Repository<User>, // Repository TypeORM for User
   ) {}
 
   // Retrieve all craftsmen with their associated user data
-  async findAll(): Promise<CraftsmanEntity[]> {
+  async findAll(): Promise<Craftsman[]> {
     return this.craftsmanRepository.find({ relations: ['user'] });
   }
 
@@ -129,7 +129,7 @@ export class CraftsmanService {
   }
 
   // Retrieve a craftsman by user ID
-  findOneByUserId(userId: string): Promise<CraftsmanEntity | null> {
+  findOneByUserId(userId: string): Promise<Craftsman | null> {
     return this.craftsmanRepository.findOne({
       where: { userId },
       relations: ['user'],

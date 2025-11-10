@@ -1,9 +1,9 @@
 import { MinLength } from 'class-validator';
-import { ProductEntity } from '../product/product.entity';
+import { Product } from '../product/product.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity({ name: 'categories' })
-export class CategoryEntity {
+export class Category {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -11,6 +11,6 @@ export class CategoryEntity {
   @MinLength(2, { message: 'Name must be at least 2 characters long' })
   name: string;
 
-  @OneToMany(() => ProductEntity, (product) => product.category)
-  products: ProductEntity[];
+  @OneToMany(() => Product, (product) => product.category)
+  products: Product[];
 }
