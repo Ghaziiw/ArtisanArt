@@ -33,6 +33,9 @@ export enum Permission {
   CATEGORIES_CREATE = 'categories:create',
   CATEGORIES_UPDATE = 'categories:update',
   CATEGORIES_DELETE = 'categories:delete',
+  OFFERS_CREATE = 'offers:create',
+  OFFERS_UPDATE = 'offers:update',
+  OFFERS_DELETE = 'offers:delete',
 }
 
 /**
@@ -58,6 +61,9 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.ORDERS_VIEW_ALL,
     Permission.ORDERS_UPDATE,
     Permission.STATS_VIEW,
+    Permission.OFFERS_CREATE,
+    Permission.OFFERS_UPDATE,
+    Permission.OFFERS_DELETE,
   ],
   admin: [
     Permission.ADMIN_PANEL,

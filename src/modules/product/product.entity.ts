@@ -6,10 +6,12 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  OneToOne,
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Category } from 'src/modules/category/category.entity';
 import { IsUUID, Min } from 'class-validator';
+import type { Offer } from '../offer/offer.entity';
 
 @Entity({ name: 'products' })
 export class Product {
@@ -38,6 +40,7 @@ export class Product {
   @JoinColumn({ name: 'categoryId' })
   category: Category;
 
+  @Column({ name: 'categoryId', nullable: true })
   @IsUUID()
   categoryId: string;
 
@@ -58,4 +61,7 @@ export class Product {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToOne('Offer', (offer: Offer) => offer.product)
+  offer: Offer;
 }
