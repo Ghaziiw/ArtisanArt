@@ -13,6 +13,7 @@ import { Category } from 'src/modules/category/category.entity';
 import { IsUUID, Min } from 'class-validator';
 import type { Offer } from '../offer/offer.entity';
 
+
 @Entity({ name: 'products' })
 export class Product {
   @PrimaryGeneratedColumn('uuid')
@@ -43,6 +44,7 @@ export class Product {
   @Column({ name: 'categoryId', nullable: true })
   @IsUUID()
   categoryId: string;
+
 
   @Column('simple-array', { nullable: true })
   images: string[];
