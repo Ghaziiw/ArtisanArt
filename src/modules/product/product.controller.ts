@@ -38,6 +38,7 @@ export class ProductController {
     return this.productService.findOne(id);
   }
 
+  // POST /products → create a new product
   @Post()
   @RequirePermissions(Permission.PRODUCTS_CREATE)
   async create(
@@ -47,6 +48,7 @@ export class ProductController {
     return await this.productService.createProduct(productData, user.id);
   }
 
+  // PATCH /products/:id → update an existing product
   @Patch(':id')
   @RequirePermissions(Permission.PRODUCTS_UPDATE)
   async update(
@@ -57,6 +59,7 @@ export class ProductController {
     return await this.productService.update(id, updateProductDto, user.id);
   }
 
+  // DELETE /products/:id → delete a product
   @Delete(':id')
   @RequirePermissions(Permission.PRODUCTS_DELETE)
   async delete(

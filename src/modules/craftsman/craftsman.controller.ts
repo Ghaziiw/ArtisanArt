@@ -18,6 +18,7 @@ import { Craftsman } from '../craftsman/craftsman.entity';
 import { UpdateCraftsmanDto } from '../craftsman/dto/update-craftsman.dto';
 import { RequirePermissions } from 'src/auth/decorators/permissions.decorator';
 import { Permission } from 'src/auth/types/permissions.types';
+import { UpdateCraftsmanExpDateDto } from './dto/update-craftsman-exp-date.dto';
 
 @Controller('craftsmen')
 @UseGuards(PermissionsGuard)
@@ -82,12 +83,9 @@ export class CraftsmanController {
   @RequirePermissions(Permission.CRAFTSMAN_UPDATE_EXP)
   async updateCraftsmanExpDate(
     @Param('id') id: string,
-    @Body() newExpDate: string,
+    @Body() newExpDate: UpdateCraftsmanExpDateDto,
   ) {
-    return this.craftsmanService.updateCraftsmanExpDate(
-      id,
-      new Date(newExpDate),
-    );
+    return this.craftsmanService.updateCraftsmanExpDate(id, newExpDate);
   }
 
   // DELETE /craftsmen/profile/me → delete current craftsman's profile

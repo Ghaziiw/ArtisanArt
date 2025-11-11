@@ -6,6 +6,7 @@ import { User } from 'src/modules/user/user.entity';
 import { CreateCraftsmanDto } from './dto/create-craftsman.dto';
 import { auth } from 'src/utils/auth';
 import { UpdateCraftsmanDto } from '../craftsman/dto/update-craftsman.dto';
+import { UpdateCraftsmanExpDateDto } from './dto/update-craftsman-exp-date.dto';
 
 /**
  * Service responsible for managing craftsman records using a TypeORM repository.
@@ -208,7 +209,10 @@ export class CraftsmanService {
   }
 
   // Update craftsman's expiration date
-  async updateCraftsmanExpDate(userId: string, newExpDate: Date | null) {
+  async updateCraftsmanExpDate(
+    userId: string,
+    newExpDate: UpdateCraftsmanExpDateDto,
+  ) {
     const craftsman = await this.craftsmanRepository.findOne({
       where: { userId },
       relations: ['user'],
@@ -217,7 +221,9 @@ export class CraftsmanService {
     // Verify craftsman exists
     if (!craftsman) throw new BadRequestException('Craftsman not found');
 
-    craftsman.expirationDate = newExpDate;
+    craftsman.expirationDate = newExpDate.newExpDate
+      ? new Date(newExpDate.newExpDate)
+      : null;
     await this.craftsmanRepository.save(craftsman);
 
     return craftsman;

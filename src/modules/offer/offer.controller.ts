@@ -24,18 +24,21 @@ import { UpdateOfferDto } from './dto/update-offer.dto';
 export class OffersController {
   constructor(private readonly offersService: OffersService) {}
 
+  // GET /offers → retrieve all offers
   @Get()
   @Public()
   async findAll() {
     return this.offersService.findAll();
   }
 
+  // GET /offers/:productId → retrieve an offer by product ID
   @Get(':productId')
   @Public()
   async findOne(productId: string) {
     return this.offersService.findOne(productId);
   }
 
+  // POST /offers → create a new offer
   @Post()
   @RequirePermissions(Permission.OFFERS_CREATE)
   async create(
@@ -45,6 +48,7 @@ export class OffersController {
     return this.offersService.createOffer(createOfferDto, user.id);
   }
 
+  // PATCH /offers/:productId → update an existing offer
   @Patch(':productId')
   @RequirePermissions(Permission.OFFERS_UPDATE)
   async update(
@@ -55,6 +59,7 @@ export class OffersController {
     return this.offersService.updateOffer(productId, updateOfferDto, user.id);
   }
 
+  // DELETE /offers/:productId → delete an offer by product ID
   @Delete(':productId')
   @RequirePermissions(Permission.OFFERS_DELETE)
   async delete(
