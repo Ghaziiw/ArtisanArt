@@ -1,4 +1,17 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateOfferDto } from './create-offer.dto';
+import { IsNumber, Min, Max, IsDateString, IsOptional } from 'class-validator';
 
-export class UpdateOfferDto extends PartialType(CreateOfferDto) {}
+export class UpdateOfferDto {
+  @IsOptional()
+  @IsNumber()
+  @Min(0, { message: 'Percentage must be at least 0' })
+  @Max(100, { message: 'Percentage cannot exceed 100' })
+  percentage?: number;
+
+  @IsOptional()
+  @IsDateString()
+  startDate?: string;
+
+  @IsOptional()
+  @IsDateString()
+  endDate?: string;
+}

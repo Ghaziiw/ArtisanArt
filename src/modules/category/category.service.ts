@@ -90,6 +90,7 @@ export class CategoryService {
       relations: ['products'],
     });
 
+    // If category not found, throw NotFoundException
     if (!category) {
       throw new NotFoundException(`Category with ID ${id} not found`);
     }
