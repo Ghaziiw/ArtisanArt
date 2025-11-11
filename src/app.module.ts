@@ -12,44 +12,23 @@ import { Product } from './modules/product/product.entity';
 import { Category } from './modules/category/category.entity';
 import { CategoryModule } from './modules/category/category.module';
 import { ProductModule } from './modules/product/product.module';
-import { OffersModule } from './modules/offer/offers.module';
+import { OffersModule } from './modules/offer/offer.module';
 import { Offer } from './modules/offer/offer.entity';
-import { CommentsModule } from './modules/comment/comments.module';
-import { Comment } from './modules/comment/comment.entity';
-import { OrdersModule } from './modules/order/orders.module';
-import { Order } from './modules/order/order.entity';
-import { QuantityModule } from './modules/quantity/quantity.module';
-import { Quantity } from './modules/quantity/quantity.entity';
-import { ShoppingCart } from './modules/shoppingcart/shoppingcart.entity';
-import { ShoppingcartsModule } from './modules/shoppingcart/shoppingcarts.module';
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [
-        User,
-        Craftsman,
-        Category,
-        Product,
-        Offer,
-        Comment,
-        Order,
-        Quantity,
-        ShoppingCart,
-      ],
+      entities: [User, Craftsman, Category, Product, Offer],
       synchronize: true,
       // migrationsRun: false,
     }), // Database configuration
-    UserModule, // Import UserModule
-    CraftsmanModule, // Import CraftsmanModule
-    CategoryModule, // Import CategoryModule
-    ProductModule, // Import ProductModule
+    UserModule,
+    CraftsmanModule,
+    CategoryModule,
+    ProductModule,
     OffersModule,
-    CommentsModule,
-    OrdersModule,
-    QuantityModule,
-    ShoppingcartsModule,
     AuthModule.forRoot({
       auth,
       isGlobal: true, // Make auth module global
