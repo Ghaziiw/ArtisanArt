@@ -102,6 +102,8 @@ export class ProductService {
 
     Object.assign(product, updateProductDto);
 
+    product.updatedAt = new Date();
+
     return await this.productRepository.save(product);
   }
 
