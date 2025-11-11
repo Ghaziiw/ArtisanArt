@@ -40,7 +40,7 @@ import { UpdateOfferDto } from './dto/update-offer.dto';
  * - createOffer, updateOffer, and deleteOffer throw ForbiddenException if the user lacks permission.
  */
 @Injectable()
-export class OffersService {
+export class OfferService {
   constructor(
     @InjectRepository(Offer)
     private readonly offerRepository: Repository<Offer>, // Repository TypeORM pour Offer

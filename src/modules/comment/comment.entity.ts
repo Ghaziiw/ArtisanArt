@@ -4,35 +4,47 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
-  Check,
+  CreateDateColumn,
 } from 'typeorm';
-
-import { UserEntity } from 'src/modules/user/user.entity';
-import { ProductEntity } from 'src/modules/product/product.entity';
+import { User } from '../user/user.entity';
+import { Product } from '../product/product.entity';
+import { IsUUID, Max, Min } from 'class-validator';
 
 @Entity('comments')
 export class Comment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ nullable: false })
+  @Column({ type: 'text', nullable: false })
   content: string;
 
-  @Check(`"mark" BETWEEN 1 AND 5`)
   @Column({ nullable: false })
+  @Min(1, { message: 'Mark must be at least 1' })
+  @Max(5, { message: 'Mark cannot exceed 5' })
   mark: number;
 
-  @ManyToOne(() => UserEntity, {
+  @ManyToOne(() => User, {
     eager: true,
-    onDelete: 'CASCADE',
+    onDelete: 'SET NULL',
   })
   @JoinColumn({ name: 'userId' })
-  user: UserEntity;
+  user: User;
 
-  @ManyToOne(() => ProductEntity, {
+  @Column({ name: 'userId' })
+  @IsUUID()
+  userId: string;
+
+  @ManyToOne(() => Product, {
     eager: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'productId' })
-  product: ProductEntity;
+  product: Product;
+
+  @Column({ name: 'productId' })
+  @IsUUID()
+  productId: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }
