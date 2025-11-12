@@ -18,6 +18,9 @@ import { CommentModule } from './modules/comment/comment.module';
 import { Comment } from './modules/comment/comment.entity';
 import { ShoppingCart } from './modules/shoppingcart/shoppingcart.entity';
 import { ShoppingCartModule } from './modules/shoppingcart/shoppingcart.module';
+import { Order } from './modules/order/order.entity';
+import { OrderModule } from './modules/order/order.module';
+import { OrderItem } from './modules/order/order-item.entity';
 
 @Module({
   imports: [
@@ -32,6 +35,8 @@ import { ShoppingCartModule } from './modules/shoppingcart/shoppingcart.module';
         Offer,
         Comment,
         ShoppingCart,
+        Order,
+        OrderItem,
       ],
       synchronize: true,
       // migrationsRun: false,
@@ -43,6 +48,7 @@ import { ShoppingCartModule } from './modules/shoppingcart/shoppingcart.module';
     OfferModule,
     CommentModule,
     ShoppingCartModule,
+    OrderModule,
     AuthModule.forRoot({
       auth,
       isGlobal: true, // Make auth module global
