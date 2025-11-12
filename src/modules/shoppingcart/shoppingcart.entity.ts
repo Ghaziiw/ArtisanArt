@@ -1,36 +1,43 @@
 import {
   Entity,
-  PrimaryGeneratedColumn,
   Column,
   ManyToOne,
-  Unique,
-  Check,
   JoinColumn,
+  CreateDateColumn,
+  PrimaryColumn,
 } from 'typeorm';
-import { UserEntity } from '../user/user.entity';
-import { ProductEntity } from 'src/modules/product/product.entity';
+import { User } from '../user/user.entity';
+import { Product } from '../product/product.entity';
+import { IsUUID, Min } from 'class-validator';
 
-@Entity('shoppingcarts')
+@Entity('shoppingCarts')
 export class ShoppingCart {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryColumn('uuid', { name: 'userId' })
+  @IsUUID()
+  userId: string;
 
-  @Unique(['user', 'product'])
-  @ManyToOne(() => UserEntity, {
+  @PrimaryColumn('uuid', { name: 'productId' })
+  @IsUUID()
+  productId: string;
+
+  @ManyToOne(() => User, {
     eager: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'userId' })
-  user: UserEntity;
+  user: User;
 
-  @ManyToOne(() => ProductEntity, {
+  @ManyToOne(() => Product, {
     eager: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'productId' })
-  product: ProductEntity;
+  product: Product;
 
-  @Check(`"quantity" > 0`)
   @Column({ default: 1, nullable: false })
+  @Min(1, { message: 'Quantity must be at least 1' })
   quantity: number;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

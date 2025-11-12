@@ -36,6 +36,7 @@ export enum Permission {
   OFFERS_CREATE = 'offers:create',
   OFFERS_UPDATE = 'offers:update',
   OFFERS_DELETE = 'offers:delete',
+  ADD_TO_CART = 'shoppingcart:add',
 }
 
 /**
@@ -52,6 +53,7 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.ORDERS_VIEW,
     Permission.ORDERS_CREATE,
     Permission.ORDERS_CANCEL,
+    Permission.ADD_TO_CART,
   ],
   artisan: [
     Permission.PRODUCTS_VIEW,
