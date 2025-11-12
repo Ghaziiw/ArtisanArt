@@ -12,6 +12,7 @@ import { User } from '../user/user.entity';
 import { Category } from 'src/modules/category/category.entity';
 import { IsUUID, Min } from 'class-validator';
 import type { Offer } from '../offer/offer.entity';
+import { Exclude } from 'class-transformer'; // To exclude relations from serialization
 
 @Entity({ name: 'products' })
 export class Product {
@@ -50,6 +51,7 @@ export class Product {
   // Relation Many-to-One avec User (artisan)
   @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: 'artisanId' })
+  @Exclude()
   artisan: User;
 
   @Column({ name: 'artisanId' })

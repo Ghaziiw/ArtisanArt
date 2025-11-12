@@ -7,11 +7,6 @@ export interface ArtisanCartGroup {
     deliveryPrice: number;
     phone: string;
     workshopAddress: string;
-    user: {
-      id: string;
-      name: string;
-      image?: string;
-    };
   };
   items: ShoppingCart[];
   subtotal: number;

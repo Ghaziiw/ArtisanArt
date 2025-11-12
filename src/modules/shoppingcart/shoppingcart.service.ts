@@ -215,11 +215,6 @@ export class ShoppingCartService {
           deliveryPrice: deliveryPrice,
           phone: craftsman.phone,
           workshopAddress: craftsman.workshopAddress,
-          user: {
-            id: craftsman.user.id,
-            name: craftsman.user.name,
-            image: craftsman.user.image,
-          },
         },
         items,
         subtotal: parseFloat(subtotal.toFixed(2)),
