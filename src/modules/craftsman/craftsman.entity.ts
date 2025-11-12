@@ -11,7 +11,7 @@ export class Craftsman {
 
   // @Column('text') // Foreign key column
   @PrimaryColumn('text')
-  userId?: string;
+  userId: string;
 
   // Craftsman profile information
   @Column({ nullable: false })

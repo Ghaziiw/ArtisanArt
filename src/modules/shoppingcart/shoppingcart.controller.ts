@@ -30,7 +30,7 @@ export class ShoppingCartController {
 
   // POST /shoppingcarts → add a product to the current user's cart
   @Post()
-  @RequirePermissions(Permission.ADD_TO_CART)
+  @RequirePermissions(Permission.MANAGE_SHOPPING_CART)
   async addToCart(
     @CurrentUser() user: AuthUser,
     @Body() cartData: CreateShoppingcartDto,
@@ -40,7 +40,7 @@ export class ShoppingCartController {
 
   // PATCH /shoppingcarts/:productId → update quantity of a product in the cart
   @Patch(':productId')
-  @RequirePermissions(Permission.ADD_TO_CART)
+  @RequirePermissions(Permission.MANAGE_SHOPPING_CART)
   async updateCartItem(
     @Param('productId') productId: string,
     @CurrentUser() user: AuthUser,
@@ -55,8 +55,15 @@ export class ShoppingCartController {
 
   // DELETE /shoppingcarts → clear the current user's cart
   @Delete()
-  @RequirePermissions(Permission.ADD_TO_CART)
+  @RequirePermissions(Permission.MANAGE_SHOPPING_CART)
   async clearCart(@CurrentUser() user: AuthUser) {
     return this.shoppingCartService.clearCart(user.id);
+  }
+
+  // GET /shoppingcarts/artisan-grouped → retrieve cart items grouped by artisan
+  @Get('artisan-grouped')
+  @RequirePermissions(Permission.MANAGE_SHOPPING_CART)
+  async getArtisanGroupedCart(@CurrentUser() user: AuthUser) {
+    return this.shoppingCartService.getCartGroupedByArtisan(user.id);
   }
 }
