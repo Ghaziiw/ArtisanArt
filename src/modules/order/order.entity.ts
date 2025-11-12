@@ -53,4 +53,7 @@ export class Order {
     message: 'Phone number must be exactly 8 digits and cannot start with 0',
   })
   phone: string;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  deliveryPrice: number;
 }

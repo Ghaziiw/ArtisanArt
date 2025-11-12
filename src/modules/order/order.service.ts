@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './order.entity';
 import { OrderItem } from './order-item.entity';
@@ -34,12 +38,12 @@ export class OrderService {
       throw new NotFoundException('Shopping cart is empty');
     }
 
-    // Group products by artisan
-    const artisanGroups = cartItems.reduce(
+    // Group products by craftsman
+    const craftsmanGroups = cartItems.reduce(
       (groups, item) => {
-        const artisanId = item.product.artisanId;
-        if (!groups[artisanId]) groups[artisanId] = [];
-        groups[artisanId].push(item);
+        const craftsmanId = item.product.craftsmanId;
+        if (!groups[craftsmanId]) groups[craftsmanId] = [];
+        groups[craftsmanId].push(item);
         return groups;
       },
       {} as Record<string, ShoppingCart[]>,
@@ -47,18 +51,42 @@ export class OrderService {
 
     const orders: Order[] = [];
 
-    // Create an order for each artisan group
-    for (const artisanId in artisanGroups) {
-      const items = artisanGroups[artisanId];
+    // Create an order for each craftsman group
+    for (const craftsmanId in craftsmanGroups) {
+      const items = craftsmanGroups[craftsmanId];
+      const deliveryPrice: number = Number(
+        items[0].product.craftsman.deliveryPrice,
+      );
+
+      // Verify stock availability
+      for (const item of items) {
+        const product = item.product;
+
+        if (product.stock < item.quantity) {
+          throw new BadRequestException(
+            `Not enough stock for product ${product.name}`,
+          );
+        }
+      }
+
+      // Deduct stock quantities
+      for (const item of items) {
+        const product = item.product;
+
+        product.stock -= item.quantity;
+        await this.cartRepository.manager.save(product);
+      }
 
       const order = this.orderRepository.create({
         userId,
         status: OrderStatus.PENDING,
         ...placeOrderDto,
+        deliveryPrice,
         items: items.map((item) =>
           this.orderItemRepository.create({
             productId: item.productId,
             quantity: item.quantity,
+            priceAtOrder: item.product.price,
           }),
         ),
       });

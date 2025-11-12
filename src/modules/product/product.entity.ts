@@ -8,11 +8,11 @@ import {
   JoinColumn,
   OneToOne,
 } from 'typeorm';
-import { User } from '../user/user.entity';
 import { Category } from 'src/modules/category/category.entity';
 import { IsUUID, Min } from 'class-validator';
 import type { Offer } from '../offer/offer.entity';
 import { Exclude } from 'class-transformer'; // To exclude relations from serialization
+import { Craftsman } from '../craftsman/craftsman.entity';
 
 @Entity({ name: 'products' })
 export class Product {
@@ -49,14 +49,14 @@ export class Product {
   images: string[];
 
   // Relation Many-to-One avec User (artisan)
-  @ManyToOne(() => User, { eager: true })
-  @JoinColumn({ name: 'artisanId' })
+  @ManyToOne(() => Craftsman, { eager: true })
+  @JoinColumn({ name: 'craftsmanId' })
   @Exclude()
-  artisan: User;
+  craftsman: Craftsman;
 
-  @Column({ name: 'artisanId' })
+  @Column({ name: 'craftsmanId' })
   @IsUUID()
-  artisanId: string;
+  craftsmanId: string;
 
   @CreateDateColumn()
   createdAt: Date;

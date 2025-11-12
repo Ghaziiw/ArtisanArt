@@ -21,4 +21,7 @@ export class OrderItem {
   @Column()
   @Min(1, { message: 'Quantity must be at least 1' })
   quantity: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  priceAtOrder: number;
 }

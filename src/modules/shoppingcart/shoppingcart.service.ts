@@ -178,11 +178,11 @@ export class ShoppingCartService {
 
     // Populate the map
     for (const item of cartItems) {
-      const artisanId = item.product.artisanId;
-      if (!groupedByArtisan.has(artisanId)) {
-        groupedByArtisan.set(artisanId, []);
+      const craftsmanId = item.product.craftsmanId;
+      if (!groupedByArtisan.has(craftsmanId)) {
+        groupedByArtisan.set(craftsmanId, []);
       }
-      groupedByArtisan.get(artisanId)!.push(item);
+      groupedByArtisan.get(craftsmanId)!.push(item);
     }
 
     // Create artisan groups with calculations

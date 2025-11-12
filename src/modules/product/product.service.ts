@@ -61,7 +61,7 @@ export class ProductService {
   // Create a new product with the associated artisan
   async createProduct(
     productData: CreateProductDto,
-    artisanId: string,
+    craftsmanId: string,
   ): Promise<Product> {
     const categoryId = await this.categoryRepository.findOneBy({
       id: productData.categoryId,
@@ -74,7 +74,7 @@ export class ProductService {
 
     const product = this.productRepository.create({
       ...productData,
-      artisanId,
+      craftsmanId,
     });
 
     return this.productRepository.save(product);
@@ -84,7 +84,7 @@ export class ProductService {
   async update(
     id: string,
     updateProductDto: UpdateProductDto,
-    artisanId: string,
+    craftsmanId: string,
   ): Promise<Product> {
     const product = await this.findOne(id);
 
@@ -94,7 +94,7 @@ export class ProductService {
     }
 
     // Check if user is the owner or admin
-    if (product.artisanId !== artisanId) {
+    if (product.craftsmanId !== craftsmanId) {
       throw new ForbiddenException(
         'You do not have permission to update this product',
       );
@@ -108,7 +108,7 @@ export class ProductService {
   }
 
   // Delete a product
-  async deleteProduct(id: string, artisanId: string) {
+  async deleteProduct(id: string, craftsmanId: string) {
     const product = await this.findOne(id);
 
     // Verify product exists
@@ -117,7 +117,7 @@ export class ProductService {
     }
 
     // Check if user is the owner or admin
-    if (product.artisanId !== artisanId) {
+    if (product.craftsmanId !== craftsmanId) {
       throw new ForbiddenException(
         'You do not have permission to delete this product',
       );
