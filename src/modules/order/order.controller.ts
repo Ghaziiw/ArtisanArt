@@ -12,6 +12,7 @@ import { PlaceOrderDto } from './dto/create-order.dto';
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
+  // POST /orders/checkout → place an order based on the current user's cart
   @Post('checkout')
   @RequirePermissions(Permission.ORDERS_CREATE)
   async checkout(

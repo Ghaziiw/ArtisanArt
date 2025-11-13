@@ -60,10 +60,10 @@ export class ShoppingCartController {
     return this.shoppingCartService.clearCart(user.id);
   }
 
-  // GET /shoppingcarts/artisan-grouped → retrieve cart items grouped by artisan
-  @Get('artisan-grouped')
+  // GET /shoppingcarts/craftsman-grouped → retrieve cart items grouped by craftsman
+  @Get('craftsman-grouped')
   @RequirePermissions(Permission.MANAGE_SHOPPING_CART)
-  async getArtisanGroupedCart(@CurrentUser() user: AuthUser) {
-    return this.shoppingCartService.getCartGroupedByArtisan(user.id);
+  async getCraftsmanGroupedCart(@CurrentUser() user: AuthUser) {
+    return this.shoppingCartService.getCartGroupedByCraftsman(user.id);
   }
 }

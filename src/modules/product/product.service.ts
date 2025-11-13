@@ -54,7 +54,7 @@ export class ProductService {
   async findOne(id: string): Promise<Product | null> {
     return this.productRepository.findOne({
       where: { id },
-      relations: ['category', 'artisan'],
+      relations: ['category', 'craftsman'],
     });
   }
 

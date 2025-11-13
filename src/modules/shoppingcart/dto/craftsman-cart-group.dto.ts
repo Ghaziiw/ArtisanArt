@@ -1,7 +1,7 @@
 import { ShoppingCart } from '../shoppingcart.entity';
 
-export interface ArtisanCartGroup {
-  artisan: {
+export interface CraftsmanCartGroup {
+  craftsman: {
     id: string;
     businessName: string;
     deliveryPrice: number;

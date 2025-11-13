@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 import { Product } from '../product/product.entity';
 import { CreateShoppingcartDto } from './dto/create-shoppingcart.dto';
 import { UpdateShoppingcartDto } from './dto/update-shoppingcart.dto';
-import { ArtisanCartGroup } from './dto/artisan-cart-group.dto';
+import { CraftsmanCartGroup } from './dto/craftsman-cart-group.dto';
 import { Craftsman } from '../craftsman/craftsman.entity';
 
 /**
@@ -152,49 +152,49 @@ export class ShoppingCartService {
     return { message: 'Cart cleared successfully' };
   }
 
-  // Get cart items grouped by artisan with totals
-  async getCartGroupedByArtisan(userId: string): Promise<{
-    artisanGroups: ArtisanCartGroup[];
+  // Get cart items grouped by craftsman with totals
+  async getCartGroupedByCraftsman(userId: string): Promise<{
+    craftsmanGroups: CraftsmanCartGroup[];
     grandTotal: number;
     totalItems: number;
   }> {
     const cartItems = await this.shoppingCartRepository.find({
       where: { userId },
-      relations: ['product', 'product.artisan', 'product.category'],
+      relations: ['product', 'product.craftsman', 'product.category'],
       order: { createdAt: 'DESC' },
     });
 
     // If cart is empty
     if (cartItems.length === 0) {
       return {
-        artisanGroups: [],
+        craftsmanGroups: [],
         grandTotal: 0,
         totalItems: 0,
       };
     }
 
-    // Group items by artisan
-    const groupedByArtisan = new Map<string, ShoppingCart[]>();
+    // Group items by craftsman
+    const groupedByCraftsman = new Map<string, ShoppingCart[]>();
 
     // Populate the map
     for (const item of cartItems) {
       const craftsmanId = item.product.craftsmanId;
-      if (!groupedByArtisan.has(craftsmanId)) {
-        groupedByArtisan.set(craftsmanId, []);
+      if (!groupedByCraftsman.has(craftsmanId)) {
+        groupedByCraftsman.set(craftsmanId, []);
       }
-      groupedByArtisan.get(craftsmanId)!.push(item);
+      groupedByCraftsman.get(craftsmanId)!.push(item);
     }
 
-    // Create artisan groups with calculations
-    const artisanGroups: ArtisanCartGroup[] = [];
+    // Create craftsman groups with calculations
+    const craftsmanGroups: CraftsmanCartGroup[] = [];
     let grandTotal = 0;
     let totalItems = 0;
 
-    // Iterate over each artisan group to calculate totals and gather details
-    for (const [artisanId, items] of groupedByArtisan.entries()) {
+    // Iterate over each craftsman group to calculate totals and gather details
+    for (const [craftsmanId, items] of groupedByCraftsman.entries()) {
       // Get craftsman details with delivery price
       const craftsman = await this.craftsmanRepository.findOne({
-        where: { userId: artisanId },
+        where: { userId: craftsmanId },
         relations: ['user'],
       });
 
@@ -208,8 +208,8 @@ export class ShoppingCartService {
       const deliveryPrice = Number(craftsman.deliveryPrice);
       const total = subtotal + deliveryPrice;
 
-      artisanGroups.push({
-        artisan: {
+      craftsmanGroups.push({
+        craftsman: {
           id: craftsman.userId,
           businessName: craftsman.businessName,
           deliveryPrice: deliveryPrice,
@@ -227,7 +227,7 @@ export class ShoppingCartService {
     }
 
     return {
-      artisanGroups,
+      craftsmanGroups,
       grandTotal: parseFloat(grandTotal.toFixed(2)),
       totalItems,
     };
