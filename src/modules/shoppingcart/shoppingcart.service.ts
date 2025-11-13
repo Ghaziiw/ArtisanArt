@@ -26,7 +26,7 @@ import { Craftsman } from '../craftsman/craftsman.entity';
  * - getMyCart(userId: string): Retrieves the current user's cart items.
  * - updateQuantity(productId: string, updateData: UpdateShoppingcartDto, userId: string): Updates the quantity of a product in the cart.
  * - clearCart(userId: string): Clears all items from the user's cart.
- * - getCartGroupedByArtisan(userId: string): Retrieves cart items grouped by artisan with totals.
+ * - getCartGroupedByCraftsman(userId: string): Retrieves cart items grouped by craftsman with totals.
  *
  * Error Handling:
  * - Throws NotFoundException if the product or cart item does not exist.

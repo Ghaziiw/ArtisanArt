@@ -11,6 +11,7 @@ import { User } from '../user/user.entity';
 import { IsEnum, IsString, Length, Matches } from 'class-validator';
 import { OrderStatus } from './enums/order-status.enum';
 import { TunisianState } from './enums/tunisian-state.enum';
+import { OrderItem } from './order-item.entity';
 
 @Entity('orders')
 export class Order {
@@ -28,7 +29,7 @@ export class Order {
   status: OrderStatus;
 
   @OneToMany('OrderItem', 'order', { cascade: true, eager: true })
-  items: any[];
+  items: OrderItem[];
 
   @CreateDateColumn()
   createdAt: Date;

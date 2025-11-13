@@ -14,6 +14,8 @@ export enum Permission {
   ORDERS_CREATE = 'orders:create',
   ORDERS_UPDATE = 'orders:update',
   ORDERS_CANCEL = 'orders:cancel',
+  CRAFTSMAN_ORDERS_VIEW = 'orders:craftsman:view',
+  ORDERS_UPDATE_STATUS = 'orders:update:status',
 
   // Users
   USERS_VIEW = 'users:view',
@@ -67,6 +69,8 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.OFFERS_UPDATE,
     Permission.OFFERS_DELETE,
     Permission.MANAGE_SHOPPING_CART,
+    Permission.CRAFTSMAN_ORDERS_VIEW,
+    Permission.ORDERS_UPDATE_STATUS,
   ],
   admin: [
     Permission.ADMIN_PANEL,
