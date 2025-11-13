@@ -93,7 +93,6 @@ export class CraftsmanService {
       },
     });
 
-    // Change role to artisan
     const createdUser = await this.userRepo.findOne({
       where: { id: user.user?.id },
     });
@@ -101,6 +100,7 @@ export class CraftsmanService {
     if (!createdUser)
       throw new BadRequestException('User not found after creation');
 
+    // Change role to artisan
     createdUser.role = 'artisan';
     await this.userRepo.save(createdUser);
 

@@ -16,13 +16,28 @@ import { OfferModule } from './modules/offer/offer.module';
 import { Offer } from './modules/offer/offer.entity';
 import { CommentModule } from './modules/comment/comment.module';
 import { Comment } from './modules/comment/comment.entity';
+import { ShoppingCart } from './modules/shoppingcart/shoppingcart.entity';
+import { ShoppingCartModule } from './modules/shoppingcart/shoppingcart.module';
+import { Order } from './modules/order/order.entity';
+import { OrderModule } from './modules/order/order.module';
+import { OrderItem } from './modules/order/order-item.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [User, Craftsman, Category, Product, Offer, Comment],
+      entities: [
+        User,
+        Craftsman,
+        Category,
+        Product,
+        Offer,
+        Comment,
+        ShoppingCart,
+        Order,
+        OrderItem,
+      ],
       synchronize: true,
       // migrationsRun: false,
     }), // Database configuration
@@ -32,6 +47,8 @@ import { Comment } from './modules/comment/comment.entity';
     ProductModule,
     OfferModule,
     CommentModule,
+    ShoppingCartModule,
+    OrderModule,
     AuthModule.forRoot({
       auth,
       isGlobal: true, // Make auth module global

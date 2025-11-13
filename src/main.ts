@@ -1,7 +1,7 @@
 import 'dotenv/config';
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, Reflector } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -16,6 +16,9 @@ async function bootstrap() {
     }),
   );
 
+  // Enable Class Serializer Interceptor globally
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
   await app.listen(process.env.PORT ?? 3000); // Use PORT from environment or default to 3000
 }
-bootstrap();
+void bootstrap();
