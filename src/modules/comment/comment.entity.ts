@@ -35,7 +35,7 @@ export class Comment {
   userId: string;
 
   @ManyToOne(() => Product, {
-    eager: true,
+    eager: false,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'productId' })

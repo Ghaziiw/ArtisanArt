@@ -1,6 +1,7 @@
 import { Entity, Column, ManyToOne, JoinColumn, PrimaryColumn } from 'typeorm';
 import { Product } from '../product/product.entity';
 import { Min } from 'class-validator';
+import { Order } from './order.entity';
 
 @Entity('orderItems')
 export class OrderItem {
@@ -10,9 +11,9 @@ export class OrderItem {
   @PrimaryColumn('uuid', { name: 'orderId' })
   orderId: string;
 
-  @ManyToOne('Order', 'items', { onDelete: 'CASCADE' })
+  @ManyToOne(() => Order, 'items', { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'orderId' })
-  order: any;
+  order: Order;
 
   @ManyToOne(() => Product, { eager: true })
   @JoinColumn({ name: 'productId' })

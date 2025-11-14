@@ -47,12 +47,14 @@ export class ProductService {
 
   // Retrieve all products with their categories
   async findAll(): Promise<Product[]> {
-    return this.productRepository.find({ relations: ['category'] });
+    return await this.productRepository.find({
+      relations: ['category', 'craftsman'],
+    });
   }
 
   // Retrieve a product by ID with its category and artisan
   async findOne(id: string): Promise<Product | null> {
-    return this.productRepository.findOne({
+    return await this.productRepository.findOne({
       where: { id },
       relations: ['category', 'craftsman'],
     });

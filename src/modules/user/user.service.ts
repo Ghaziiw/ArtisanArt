@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -11,6 +15,7 @@ import {
   IPaginationOptions,
   IPaginationMeta,
 } from 'nestjs-typeorm-paginate';
+import { CreateProfileDto } from './dto/create-user.dto';
 
 /**
  * Service responsible for managing user records using a TypeORM repository.
@@ -83,8 +88,12 @@ export class UserService {
   }
 
   // Retrieve a user by ID
-  findOne(id: string): Promise<User | null> {
-    return this.userRepository.findOne({ where: { id } });
+  async findOne(id: string): Promise<User | null> {
+    const user = await this.userRepository.findOne({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
   }
 
   // Delete a user by ID (admin function)
@@ -160,8 +169,27 @@ export class UserService {
   }
 
   // Create a new user
-  async createUser(userData: Partial<User>): Promise<User> {
-    const newUser = this.userRepository.create(userData);
-    return this.userRepository.save(newUser);
+  async createAdminUser(userData: CreateProfileDto): Promise<User> {
+    const user = await auth.api.signUpEmail({
+      body: {
+        email: userData.email,
+        password: userData.password,
+        name: userData.name,
+        location: userData.location,
+        image: userData.image,
+      },
+    });
+
+    const createdUser = await this.userRepository.findOne({
+      where: { id: user.user?.id },
+    });
+
+    if (!createdUser)
+      throw new BadRequestException('User not found after creation');
+
+    createdUser.role = 'admin';
+    await this.userRepository.save(createdUser);
+
+    return createdUser;
   }
 }

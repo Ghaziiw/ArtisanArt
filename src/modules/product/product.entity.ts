@@ -49,9 +49,8 @@ export class Product {
   images: string[];
 
   // Relation Many-to-One avec User (artisan)
-  @ManyToOne(() => Craftsman, { eager: true })
+  @ManyToOne(() => Craftsman, { eager: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'craftsmanId' })
-  @Exclude()
   craftsman: Craftsman;
 
   @Column({ name: 'craftsmanId' })

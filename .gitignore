@@ -57,3 +57,4 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 cookies.txt
 /better-auth_migrations
+/curl_commands_doc.md

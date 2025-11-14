@@ -85,7 +85,7 @@ export class ShoppingCartService {
       }
 
       existingCartItem.quantity = newQuantity;
-      return this.shoppingCartRepository.save(existingCartItem);
+      await this.shoppingCartRepository.save(existingCartItem);
     }
 
     // Create new cart item
@@ -97,17 +97,17 @@ export class ShoppingCartService {
 
     await this.shoppingCartRepository.save(cartItem);
 
-    return this.shoppingCartRepository.findOne({
+    return await this.shoppingCartRepository.findOne({
       where: { userId, productId: cartData.productId },
-      relations: ['user', 'product'],
+      relations: ['product', 'product.craftsman'],
     });
   }
 
   // Retrieve the current user's cart items
   async getMyCart(userId: string): Promise<ShoppingCart[]> {
-    return this.shoppingCartRepository.find({
+    return await this.shoppingCartRepository.find({
       where: { userId },
-      relations: ['product', 'product.category'],
+      relations: ['product', 'product.craftsman'],
       order: { createdAt: 'DESC' },
     });
   }
@@ -160,7 +160,7 @@ export class ShoppingCartService {
   }> {
     const cartItems = await this.shoppingCartRepository.find({
       where: { userId },
-      relations: ['product', 'product.craftsman', 'product.category'],
+      relations: ['product', 'product.craftsman'],
       order: { createdAt: 'DESC' },
     });
 

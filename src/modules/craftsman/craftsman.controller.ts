@@ -49,7 +49,7 @@ export class CraftsmanController {
   // GET /craftsmen/profile/me → get current craftsman's profile
   @Get('/profile/me')
   getMyProfile(@CurrentUser() user: AuthUser): Promise<Craftsman | null> {
-    return this.craftsmanService.findOneByUserId(user.id);
+    return this.craftsmanService.findOneByUserId(user.id, true);
   }
 
   // PATCH /craftsmen/profile/me → update current craftsman's profile

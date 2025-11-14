@@ -35,7 +35,7 @@ export class OfferController {
   // GET /offers/:productId → retrieve an offer by product ID
   @Get(':productId')
   @Public()
-  async findOne(productId: string) {
+  async findOne(@Param('productId', ParseUUIDPipe) productId: string) {
     return this.offerService.findOne(productId);
   }
 

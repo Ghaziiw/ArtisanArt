@@ -5,7 +5,7 @@ import { Entity, Column, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 @Entity('craftsmen')
 export class Craftsman {
   // Foreign key relation one-to-one with User
-  @OneToOne(() => User, { eager: true, onDelete: 'CASCADE' })
+  @OneToOne(() => User, { eager: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'userId' })
   user: User;
 

@@ -119,7 +119,7 @@ export class OrderService {
       // Fetch complete order with items
       const completeOrder = await manager.findOne(Order, {
         where: { id: savedOrder.id },
-        relations: ['items', 'items.product'],
+        relations: ['items', 'items.product', 'items.product.craftsman'],
       });
 
       return completeOrder;
@@ -210,7 +210,7 @@ export class OrderService {
   async getUserOrders(userId: string): Promise<Order[]> {
     return await this.orderRepository.find({
       where: { userId },
-      relations: ['items', 'items.product'],
+      relations: ['items', 'items.product', 'items.product.craftsman'],
       order: { createdAt: 'DESC' },
     });
   }
@@ -218,7 +218,7 @@ export class OrderService {
   async getCraftsmanOrders(craftsmanId: string): Promise<Order[]> {
     return await this.orderRepository.find({
       where: { items: { product: { craftsmanId } } },
-      relations: ['items', 'items.product', 'items.product.craftsman'],
+      relations: ['items', 'items.product'],
       order: { createdAt: 'DESC' },
     });
   }
