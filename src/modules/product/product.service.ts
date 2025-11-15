@@ -67,7 +67,7 @@ export class ProductService {
   // Retrieve all products with their categories
   async findAll(): Promise<Product[]> {
     const products = await this.productRepository.find({
-      relations: ['category', 'craftsman', 'offer'],
+      relations: ['category', 'craftsman', 'offer', 'category'],
     });
 
     return products.map((product) => this.removeInvalidOffer(product));
@@ -77,7 +77,7 @@ export class ProductService {
   async findOne(id: string): Promise<Product | null> {
     const product = await this.productRepository.findOne({
       where: { id },
-      relations: ['category', 'craftsman', 'offer', 'comments'],
+      relations: ['category', 'craftsman', 'offer', 'comments', 'category'],
     });
 
     return product ? this.removeInvalidOffer(product) : null;

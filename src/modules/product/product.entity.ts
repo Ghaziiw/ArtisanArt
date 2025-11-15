@@ -36,7 +36,7 @@ export class Product {
   stock: number;
 
   @ManyToOne(() => Category, (category) => category.products, {
-    eager: true,
+    eager: false,
     onDelete: 'SET NULL',
     nullable: true,
   })
@@ -53,7 +53,7 @@ export class Product {
   // Relation Many-to-One avec User (artisan)
   @ManyToOne(() => Craftsman, { eager: false, onDelete: 'CASCADE' })
   @JoinColumn({ name: 'craftsmanId' })
-  craftsman: Craftsman;
+  craftsman?: Craftsman;
 
   @Column({ name: 'craftsmanId' })
   @IsUUID()

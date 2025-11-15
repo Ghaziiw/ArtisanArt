@@ -10,6 +10,8 @@ import { Repository, DataSource } from 'typeorm';
 import { ShoppingCart } from '../shoppingcart/shoppingcart.entity';
 import { OrderStatus } from './enums/order-status.enum';
 import { PlaceOrderDto } from './dto/create-order.dto';
+import { ProductService } from '../product/product.service';
+import { ViewOrderDto } from './dto/view-order.dto';
 
 /**
  * OrderService handles operations related to orders,
@@ -45,6 +47,7 @@ export class OrderService {
     @InjectRepository(ShoppingCart)
     private readonly cartRepository: Repository<ShoppingCart>,
     private readonly dataSource: DataSource,
+    private readonly productService: ProductService,
   ) {}
 
   /**
@@ -54,13 +57,19 @@ export class OrderService {
     userId: string,
     craftsmanId: string,
     placeOrderDto: PlaceOrderDto,
-  ): Promise<Order | null> {
+  ): Promise<ViewOrderDto | null> {
     return await this.dataSource.transaction(async (manager) => {
       // Get cart items for this specific craftsman
       const cartItems = await manager.find(ShoppingCart, {
         where: { userId },
-        relations: ['product', 'product.craftsman'],
+        relations: ['product', 'product.offer', 'product.craftsman'],
       });
+
+      for (const item of cartItems) {
+        if (item.product) {
+          this.productService.removeInvalidOffer(item.product);
+        }
+      }
 
       // Filter items from the specific craftsman
       const craftsmanItems = cartItems.filter(
@@ -76,9 +85,8 @@ export class OrderService {
       // Validate stock availability
       this.validateStock(craftsmanItems);
 
-      const deliveryPrice = Number(
-        craftsmanItems[0].product.craftsman.deliveryPrice,
-      );
+      const deliveryPrice =
+        craftsmanItems[0].product.craftsman?.deliveryPrice ?? 0;
 
       // Deduct stock quantities
       for (const item of craftsmanItems) {
@@ -101,14 +109,19 @@ export class OrderService {
       const savedOrder = await manager.save(Order, order);
 
       // Create order items
-      const orderItems = craftsmanItems.map((item) =>
-        this.orderItemRepository.create({
+      const orderItems = craftsmanItems.map((item) => {
+        const pourcentageDiscount = item.product.offer
+          ? item.product.offer.percentage
+          : 0;
+        const priceAtOrder =
+          item.product.price * (1 - pourcentageDiscount / 100);
+        return this.orderItemRepository.create({
           orderId: savedOrder.id,
           productId: item.productId,
           quantity: item.quantity,
-          priceAtOrder: item.product.price,
-        }),
-      );
+          priceAtOrder: priceAtOrder,
+        });
+      });
 
       // Save order items
       await manager.save(OrderItem, orderItems);
@@ -119,10 +132,23 @@ export class OrderService {
       // Fetch complete order with items
       const completeOrder = await manager.findOne(Order, {
         where: { id: savedOrder.id },
-        relations: ['items', 'items.product', 'items.product.craftsman'],
+        relations: ['items', 'items.product'],
       });
 
-      return completeOrder;
+      if (!completeOrder) {
+        throw new NotFoundException('Order not found after creation');
+      }
+
+      const craftsman = craftsmanItems[0].product.craftsman;
+
+      if (!craftsman) {
+        throw new NotFoundException('Craftsman not found for order');
+      }
+
+      return {
+        order: completeOrder,
+        craftsman,
+      };
     });
   }
 
@@ -133,7 +159,7 @@ export class OrderService {
   async placeAllOrders(
     userId: string,
     placeOrderDto: PlaceOrderDto,
-  ): Promise<Order[]> {
+  ): Promise<ViewOrderDto[]> {
     // Retrieve cart items for the user with craftsman info
     const cartItems = await this.cartRepository.find({
       where: { userId },
@@ -147,7 +173,7 @@ export class OrderService {
     // Group products by craftsman
     const craftsmanGroups = this.groupByCraftsman(cartItems);
 
-    const orders: Order[] = [];
+    const orders: ViewOrderDto[] = [];
 
     // Create an order for each craftsman group
     for (const craftsmanId of Object.keys(craftsmanGroups)) {
@@ -207,18 +233,38 @@ export class OrderService {
   /**
    * Get all orders for a user
    */
-  async getUserOrders(userId: string): Promise<Order[]> {
-    return await this.orderRepository.find({
+  async getUserOrders(userId: string): Promise<ViewOrderDto[]> {
+    const orders = await this.orderRepository.find({
       where: { userId },
       relations: ['items', 'items.product', 'items.product.craftsman'],
       order: { createdAt: 'DESC' },
+    });
+
+    return orders.map((order) => {
+      const craftsman = order.items[0]?.product?.craftsman;
+
+      if (!craftsman) {
+        throw new NotFoundException('Craftsman not found for order');
+      }
+
+      // Delete craftsman info from products to reduce payload
+      for (const item of order.items) {
+        if (item.product) {
+          item.product.craftsman = undefined;
+        }
+      }
+
+      return {
+        order,
+        craftsman,
+      };
     });
   }
 
   async getCraftsmanOrders(craftsmanId: string): Promise<Order[]> {
     return await this.orderRepository.find({
       where: { items: { product: { craftsmanId } } },
-      relations: ['items', 'items.product'],
+      relations: ['items', 'items.product', 'user'],
       order: { createdAt: 'DESC' },
     });
   }
@@ -229,7 +275,7 @@ export class OrderService {
   async getOrderById(orderId: string, userId: string): Promise<Order> {
     const order = await this.orderRepository.findOne({
       where: { id: orderId, userId },
-      relations: ['items', 'items.product', 'items.product.craftsman'],
+      relations: ['items', 'items.product', 'items.product.craftsman', 'user'],
     });
 
     if (!order) {
