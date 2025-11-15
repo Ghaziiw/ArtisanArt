@@ -18,6 +18,7 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import type { AuthUser } from 'src/auth/types/auth-user';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { CraftsmanExpirationGuard } from 'src/auth/guards/craftsman-expiration.guard';
 
 @Controller('products')
 @UseGuards(PermissionsGuard)
@@ -41,6 +42,7 @@ export class ProductController {
   // POST /products → create a new product
   @Post()
   @RequirePermissions(Permission.PRODUCTS_CREATE)
+  @UseGuards(CraftsmanExpirationGuard)
   async create(
     @CurrentUser() user: AuthUser,
     @Body() productData: CreateProductDto,
@@ -51,6 +53,7 @@ export class ProductController {
   // PATCH /products/:id → update an existing product
   @Patch(':id')
   @RequirePermissions(Permission.PRODUCTS_UPDATE)
+  @UseGuards(CraftsmanExpirationGuard)
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateProductDto: UpdateProductDto,
@@ -62,6 +65,7 @@ export class ProductController {
   // DELETE /products/:id → delete a product
   @Delete(':id')
   @RequirePermissions(Permission.PRODUCTS_DELETE)
+  @UseGuards(CraftsmanExpirationGuard)
   async delete(
     @Param('id', ParseUUIDPipe) id: string,
     @CurrentUser() user: AuthUser,
