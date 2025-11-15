@@ -7,12 +7,14 @@ import {
   ManyToOne,
   JoinColumn,
   OneToOne,
+  OneToMany,
 } from 'typeorm';
 import { Category } from 'src/modules/category/category.entity';
 import { IsUUID, Min } from 'class-validator';
 import type { Offer } from '../offer/offer.entity';
 import { Exclude } from 'class-transformer'; // To exclude relations from serialization
 import { Craftsman } from '../craftsman/craftsman.entity';
+import { Comment } from '../comment/comment.entity';
 
 @Entity({ name: 'products' })
 export class Product {
@@ -64,5 +66,8 @@ export class Product {
   updatedAt: Date;
 
   @OneToOne('Offer', (offer: Offer) => offer.product)
-  offer: Offer;
+  offer?: Offer;
+
+  @OneToMany(() => Comment, (comment) => comment.product, { eager: false })
+  comments: Comment[];
 }

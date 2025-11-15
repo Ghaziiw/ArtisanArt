@@ -21,7 +21,7 @@ export class ShoppingCart {
   productId: string;
 
   @ManyToOne(() => User, {
-    eager: true,
+    eager: false,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'userId' })

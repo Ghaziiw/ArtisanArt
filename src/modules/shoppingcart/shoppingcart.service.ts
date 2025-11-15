@@ -11,6 +11,7 @@ import { CreateShoppingcartDto } from './dto/create-shoppingcart.dto';
 import { UpdateShoppingcartDto } from './dto/update-shoppingcart.dto';
 import { CraftsmanCartGroup } from './dto/craftsman-cart-group.dto';
 import { Craftsman } from '../craftsman/craftsman.entity';
+import { ProductService } from '../product/product.service';
 
 /**
  * ShoppingCartService handles operations related to the shopping cart,
@@ -41,6 +42,7 @@ export class ShoppingCartService {
     private readonly productRepository: Repository<Product>,
     @InjectRepository(Craftsman)
     private readonly craftsmanRepository: Repository<Craftsman>,
+    private readonly productService: ProductService,
   ) {}
 
   // Add a product to the user's cart
@@ -97,19 +99,39 @@ export class ShoppingCartService {
 
     await this.shoppingCartRepository.save(cartItem);
 
-    return await this.shoppingCartRepository.findOne({
+    const cartItemWithRelations = await this.shoppingCartRepository.findOne({
       where: { userId, productId: cartData.productId },
-      relations: ['product', 'product.craftsman'],
+      relations: ['product', 'product.craftsman', 'product.offer'],
     });
+
+    if (!cartItemWithRelations) {
+      return null;
+    }
+
+    // Remove invalid offer from product before returning
+    if (cartItemWithRelations.product) {
+      this.productService.removeInvalidOffer(cartItemWithRelations.product);
+    }
+
+    return cartItemWithRelations;
   }
 
   // Retrieve the current user's cart items
   async getMyCart(userId: string): Promise<ShoppingCart[]> {
-    return await this.shoppingCartRepository.find({
+    const cartItems = await this.shoppingCartRepository.find({
       where: { userId },
-      relations: ['product', 'product.craftsman'],
+      relations: ['product', 'product.craftsman', 'product.offer'],
       order: { createdAt: 'DESC' },
     });
+
+    // Remove invalid offers from products
+    for (const item of cartItems) {
+      if (item.product) {
+        this.productService.removeInvalidOffer(item.product);
+      }
+    }
+
+    return cartItems;
   }
 
   // Update the quantity of a product in the cart
@@ -160,9 +182,16 @@ export class ShoppingCartService {
   }> {
     const cartItems = await this.shoppingCartRepository.find({
       where: { userId },
-      relations: ['product', 'product.craftsman'],
+      relations: ['product', 'product.offer'],
       order: { createdAt: 'DESC' },
     });
+
+    // Remove invalid offers from products
+    for (const item of cartItems) {
+      if (item.product) {
+        this.productService.removeInvalidOffer(item.product);
+      }
+    }
 
     // If cart is empty
     if (cartItems.length === 0) {
@@ -202,7 +231,11 @@ export class ShoppingCartService {
 
       // Calculate subtotal for this artisan
       const subtotal = items.reduce((sum, item) => {
-        return sum + Number(item.product.price) * item.quantity;
+        const pourcentage = item.product.offer
+          ? (item.product.offer.percentage || 0) / 100
+          : 0;
+        const discountedPrice = Number(item.product.price) * (1 - pourcentage);
+        return sum + discountedPrice * item.quantity;
       }, 0);
 
       const deliveryPrice = Number(craftsman.deliveryPrice);

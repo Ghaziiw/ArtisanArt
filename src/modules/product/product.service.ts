@@ -45,19 +45,42 @@ export class ProductService {
     private readonly categoryRepository: Repository<Category>, // Repository TypeORM pour Category
   ) {}
 
+  // Helper method to remove invalid offers from a product
+  public removeInvalidOffer(product: Product): Product {
+    if (!product.offer) return product;
+
+    const now = new Date();
+    const { startDate, endDate } = product.offer;
+
+    const start = new Date(startDate);
+    const end = endDate ? new Date(endDate) : null;
+
+    const isValid = start <= now && (!end || end >= now);
+
+    if (!isValid) {
+      product.offer = undefined; // Remove invalid offer
+    }
+
+    return product;
+  }
+
   // Retrieve all products with their categories
   async findAll(): Promise<Product[]> {
-    return await this.productRepository.find({
-      relations: ['category', 'craftsman'],
+    const products = await this.productRepository.find({
+      relations: ['category', 'craftsman', 'offer'],
     });
+
+    return products.map((product) => this.removeInvalidOffer(product));
   }
 
   // Retrieve a product by ID with its category and artisan
   async findOne(id: string): Promise<Product | null> {
-    return await this.productRepository.findOne({
+    const product = await this.productRepository.findOne({
       where: { id },
-      relations: ['category', 'craftsman'],
+      relations: ['category', 'craftsman', 'offer', 'comments'],
     });
+
+    return product ? this.removeInvalidOffer(product) : null;
   }
 
   // Create a new product with the associated artisan
