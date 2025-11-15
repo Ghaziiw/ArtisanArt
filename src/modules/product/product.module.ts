@@ -5,8 +5,14 @@ import { ProductService } from './product.service';
 import { Product } from './product.entity';
 import { Offer } from '../offer/offer.entity';
 import { CategoryModule } from '../category/category.module';
+import { CraftsmanExpirationModule } from 'src/auth/guards/craftsman-expiration.module';
+import { Craftsman } from '../craftsman/craftsman.entity';
 @Module({
-  imports: [TypeOrmModule.forFeature([Product, Offer]), CategoryModule],
+  imports: [
+    TypeOrmModule.forFeature([Product, Offer, Craftsman]), // Craftsman added for guard usage
+    CategoryModule, // Import CategoryModule to use CategoryService
+    CraftsmanExpirationModule, // Import CraftsmanExpirationModule to use CraftsmanExpirationGuard
+  ],
   providers: [ProductService],
   controllers: [ProductController],
   exports: [ProductService, TypeOrmModule],
