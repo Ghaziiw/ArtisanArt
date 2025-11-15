@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ShoppingCartService } from './shoppingcart.service';
@@ -24,8 +25,12 @@ export class ShoppingCartController {
 
   // GET /shoppingcarts → retrieve current user's cart items
   @Get()
-  async getCartItems(@CurrentUser() user: AuthUser) {
-    return this.shoppingCartService.getMyCart(user.id);
+  async getCartItems(
+    @CurrentUser() user: AuthUser,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+  ) {
+    return this.shoppingCartService.getMyCart(user.id, page, limit);
   }
 
   // POST /shoppingcarts → add a product to the current user's cart

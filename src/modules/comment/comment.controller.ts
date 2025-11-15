@@ -5,6 +5,7 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
@@ -30,8 +31,12 @@ export class CommentController {
   // GET /comments/product/:productId → retrieve comments by product ID
   @Get(':productId')
   @Public()
-  async getCommentsByProductId(@Param('productId') productId: string) {
-    return this.commentService.findByProductId(productId);
+  async getCommentsByProductId(
+    @Param('productId') productId: string,
+    @Query('page') page = 1,
+    @Query('limit') limit = 20,
+  ) {
+    return this.commentService.findByProductId(productId, page, limit);
   }
 
   // POST /comments → create a new comment

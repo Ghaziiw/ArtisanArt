@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
 import { Category } from '../category/category.entity';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
 
 /**
  * Service responsible for managing product records using a TypeORM repository.
@@ -65,12 +66,28 @@ export class ProductService {
   }
 
   // Retrieve all products with their categories
-  async findAll(): Promise<Product[]> {
+  async findAll(
+    page: number,
+    limit: number,
+  ): Promise<Pagination<Product, IPaginationMeta>> {
+    const skip = (page - 1) * limit;
+
     const products = await this.productRepository.find({
       relations: ['category', 'craftsman', 'offer', 'category'],
+      skip,
+      take: limit,
     });
 
-    return products.map((product) => this.removeInvalidOffer(product));
+    return {
+      items: products.map((product) => this.removeInvalidOffer(product)),
+      meta: {
+        totalItems: products.length,
+        itemCount: products.length,
+        itemsPerPage: limit,
+        totalPages: Math.ceil(products.length / limit),
+        currentPage: page,
+      },
+    };
   }
 
   // Retrieve a product by ID with its category and artisan

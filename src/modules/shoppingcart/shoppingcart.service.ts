@@ -12,6 +12,7 @@ import { UpdateShoppingcartDto } from './dto/update-shoppingcart.dto';
 import { CraftsmanCartGroup } from './dto/craftsman-cart-group.dto';
 import { Craftsman } from '../craftsman/craftsman.entity';
 import { ProductService } from '../product/product.service';
+import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
 
 /**
  * ShoppingCartService handles operations related to the shopping cart,
@@ -117,12 +118,21 @@ export class ShoppingCartService {
   }
 
   // Retrieve the current user's cart items
-  async getMyCart(userId: string): Promise<ShoppingCart[]> {
-    const cartItems = await this.shoppingCartRepository.find({
-      where: { userId },
-      relations: ['product', 'product.craftsman', 'product.offer'],
-      order: { createdAt: 'DESC' },
-    });
+  async getMyCart(
+    userId: string,
+    page: number,
+    limit: number,
+  ): Promise<Pagination<ShoppingCart, IPaginationMeta>> {
+    const skip = (page - 1) * limit;
+
+    const [cartItems, totalItems] =
+      await this.shoppingCartRepository.findAndCount({
+        where: { userId },
+        relations: ['product', 'product.craftsman', 'product.offer'],
+        order: { createdAt: 'DESC' },
+        skip,
+        take: limit,
+      });
 
     // Remove invalid offers from products
     for (const item of cartItems) {
@@ -131,7 +141,18 @@ export class ShoppingCartService {
       }
     }
 
-    return cartItems;
+    const totalPages = Math.ceil(totalItems / limit);
+
+    return {
+      items: cartItems,
+      meta: {
+        totalItems,
+        itemCount: cartItems.length,
+        itemsPerPage: limit,
+        totalPages,
+        currentPage: page,
+      },
+    };
   }
 
   // Update the quantity of a product in the cart
