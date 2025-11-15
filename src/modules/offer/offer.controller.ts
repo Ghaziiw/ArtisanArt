@@ -19,6 +19,7 @@ import { CreateOfferDto } from './dto/create-offer.dto';
 import { PermissionsGuard } from 'src/auth/guards/permissions.guard';
 import { UpdateOfferDto } from './dto/update-offer.dto';
 import { Offer } from './offer.entity';
+import { CraftsmanExpirationGuard } from 'src/auth/guards/craftsman-expiration.guard';
 
 @Controller('offers')
 @UseGuards(PermissionsGuard)
@@ -35,13 +36,14 @@ export class OfferController {
   // GET /offers/:productId → retrieve an offer by product ID
   @Get(':productId')
   @Public()
-  async findOne(productId: string) {
+  async findOne(@Param('productId', ParseUUIDPipe) productId: string) {
     return this.offerService.findOne(productId);
   }
 
   // POST /offers → create a new offer
   @Post()
   @RequirePermissions(Permission.OFFERS_CREATE)
+  @UseGuards(CraftsmanExpirationGuard)
   async create(
     @CurrentUser() user: AuthUser,
     @Body() createOfferDto: CreateOfferDto,
@@ -52,6 +54,7 @@ export class OfferController {
   // PATCH /offers/:productId → update an existing offer
   @Patch(':productId')
   @RequirePermissions(Permission.OFFERS_UPDATE)
+  @UseGuards(CraftsmanExpirationGuard)
   async update(
     @Body() updateOfferDto: UpdateOfferDto,
     @CurrentUser() user: AuthUser,
@@ -63,6 +66,7 @@ export class OfferController {
   // DELETE /offers/:productId → delete an offer by product ID
   @Delete(':productId')
   @RequirePermissions(Permission.OFFERS_DELETE)
+  @UseGuards(CraftsmanExpirationGuard)
   async delete(
     @Param('productId', ParseUUIDPipe) productId: string,
     @CurrentUser() user: AuthUser,

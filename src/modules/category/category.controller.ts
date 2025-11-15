@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   UseGuards,
@@ -38,7 +39,7 @@ export class CategoryController {
   // GET /categories/:id → retrieve a category by ID
   @Public()
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Category> {
+  findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Category> {
     return this.categoryService.findOne(id);
   }
 
@@ -46,7 +47,7 @@ export class CategoryController {
   @Patch(':id')
   @RequirePermissions(Permission.CATEGORIES_UPDATE)
   update(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateCategoryDto: CategoryDto,
   ): Promise<Category> {
     return this.categoryService.updateCategory(id, updateCategoryDto);
@@ -55,7 +56,7 @@ export class CategoryController {
   // DELETE /categories/:id → delete a category
   @Delete(':id')
   @RequirePermissions(Permission.CATEGORIES_DELETE)
-  delete(@Param('id') id: string): Promise<void> {
+  delete(@Param('id', ParseUUIDPipe) id: string) {
     return this.categoryService.deleteCategory(id);
   }
 }

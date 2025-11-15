@@ -3,6 +3,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseUUIDPipe,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -45,7 +46,7 @@ export class CommentController {
   // DELETE /comments/:commentId → delete a comment by ID
   @Delete(':commentId')
   async deleteComment(
-    @Param('commentId') commentId: string,
+    @Param('commentId', ParseUUIDPipe) commentId: string,
     @CurrentUser() user: AuthUser,
   ) {
     return this.commentService.delete(commentId, user.id);

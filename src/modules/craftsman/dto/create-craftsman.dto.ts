@@ -14,9 +14,11 @@ export class CreateCraftsmanDto {
   @IsString()
   name: string;
 
+  @IsOptional()
   @IsString()
   image?: string;
 
+  @IsOptional()
   @IsString()
   location?: string;
 

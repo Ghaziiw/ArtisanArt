@@ -1,3 +1,4 @@
+import { IsEmail, IsUrl } from 'class-validator';
 import {
   Entity,
   PrimaryColumn,
@@ -12,12 +13,14 @@ export class User {
   id: string;
 
   @Column()
+  @IsEmail()
   email: string;
 
   @Column({ nullable: true })
   name: string;
 
   @Column({ nullable: true })
+  @IsUrl()
   image: string;
 
   @Column({ nullable: true })

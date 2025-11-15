@@ -15,11 +15,13 @@ export class CommentService {
   ) {}
 
   async findAll(): Promise<Comment[]> {
-    return this.commentRepository.find();
+    return await this.commentRepository.find();
   }
 
   async findByProductId(productId: string): Promise<Comment[]> {
-    return this.commentRepository.find({ where: { productId } });
+    return await this.commentRepository.find({
+      where: { productId },
+    });
   }
 
   // Create a new comment

@@ -16,6 +16,7 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import type { AuthUser } from 'src/auth/types/auth-user';
 import { PlaceOrderDto } from './dto/create-order.dto';
 import { OrderStatus } from './enums/order-status.enum';
+import { CraftsmanExpirationGuard } from 'src/auth/guards/craftsman-expiration.guard';
 
 @Controller('orders')
 @UseGuards(PermissionsGuard)
@@ -67,6 +68,7 @@ export class OrderController {
   // GET /orders/craftsman → retrieve all orders for the current craftsman
   @Get('craftsman')
   @RequirePermissions(Permission.CRAFTSMAN_ORDERS_VIEW)
+  @UseGuards(CraftsmanExpirationGuard)
   getCraftsmanOrders(@CurrentUser() craftsman: AuthUser) {
     return this.orderService.getCraftsmanOrders(craftsman.id);
   }
@@ -84,6 +86,7 @@ export class OrderController {
   // PATCH /orders/:orderId/status → update order status by craftsman
   @Patch(':orderId/status')
   @RequirePermissions(Permission.ORDERS_UPDATE_STATUS)
+  @UseGuards(CraftsmanExpirationGuard)
   async updateOrderStatus(
     @Param('orderId', ParseUUIDPipe) orderId: string,
     @Body('status') status: OrderStatus,
