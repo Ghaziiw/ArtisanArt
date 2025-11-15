@@ -1,7 +1,11 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Craftsman } from '../craftsman/craftsman.entity';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from 'src/modules/user/user.entity';
 import { CreateCraftsmanDto } from './dto/create-craftsman.dto';
 import { auth } from 'src/utils/auth';
@@ -77,8 +81,10 @@ export class CraftsmanService {
   ) {}
 
   // Retrieve all craftsmen with their associated user data
-  async findAll(): Promise<Craftsman[]> {
-    return this.craftsmanRepository.find({ relations: ['user'] });
+  async findAll(withUser = false): Promise<Craftsman[]> {
+    return await this.craftsmanRepository.find({
+      relations: withUser ? ['user'] : [],
+    });
   }
 
   // Create a new craftsman along with the associated user
@@ -130,11 +136,15 @@ export class CraftsmanService {
   }
 
   // Retrieve a craftsman by user ID
-  findOneByUserId(userId: string): Promise<Craftsman | null> {
-    return this.craftsmanRepository.findOne({
+  async findOneByUserId(userId: string, withUser = false): Promise<Craftsman> {
+    const craftsman = await this.craftsmanRepository.findOne({
       where: { userId },
-      relations: ['user'],
+      relations: withUser ? ['user'] : [],
     });
+    if (!craftsman) {
+      throw new NotFoundException('Craftsman not found');
+    }
+    return craftsman;
   }
 
   // Update a craftsman and associated user profile
@@ -205,6 +215,11 @@ export class CraftsmanService {
     if (!craftsman) throw new BadRequestException('Craftsman not found');
 
     await this.craftsmanRepository.remove(craftsman);
+
+    // Update role back to user
+    craftsman.user.role = 'client';
+    await this.userRepo.save(craftsman.user);
+
     return { message: 'Craftsman deleted successfully' };
   }
 

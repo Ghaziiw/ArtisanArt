@@ -9,7 +9,6 @@ import {
 import { User } from '../user/user.entity';
 import { Product } from '../product/product.entity';
 import { IsUUID, Min } from 'class-validator';
-import { Exclude } from 'class-transformer'; // To exclude relations from serialization
 
 @Entity('shoppingCarts')
 export class ShoppingCart {
@@ -22,15 +21,14 @@ export class ShoppingCart {
   productId: string;
 
   @ManyToOne(() => User, {
-    eager: true,
+    eager: false,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'userId' })
-  @Exclude()
   user: User;
 
   @ManyToOne(() => Product, {
-    eager: true,
+    eager: false,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'productId' })

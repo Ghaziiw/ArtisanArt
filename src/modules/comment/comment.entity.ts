@@ -7,7 +7,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { User } from '../user/user.entity';
-import { Product } from '../product/product.entity';
+import type { Product } from '../product/product.entity';
 import { IsUUID, Max, Min } from 'class-validator';
 
 @Entity('comments')
@@ -34,8 +34,8 @@ export class Comment {
   @IsUUID()
   userId: string;
 
-  @ManyToOne(() => Product, {
-    eager: true,
+  @ManyToOne('Product', 'comments', {
+    eager: false,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'productId' })

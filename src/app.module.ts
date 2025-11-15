@@ -61,6 +61,10 @@ import { OrderItem } from './modules/order/order-item.entity';
     //   provide: APP_GUARD, // Apply PermissionsGuard globally
     //   useClass: PermissionsGuard, // Custom permissions guard
     // },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: CraftsmanExpirationGuard,
+    // },
   ],
   controllers: [AppController], // Import the AppController
 })

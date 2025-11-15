@@ -20,6 +20,7 @@ import type { AuthUser } from 'src/auth/types/auth-user';
 import { PermissionsGuard } from 'src/auth/guards/permissions.guard';
 import { Query } from '@nestjs/common';
 import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
+import { CreateProfileDto } from './dto/create-user.dto';
 
 @Controller('users')
 @UseGuards(PermissionsGuard)
@@ -90,10 +91,10 @@ export class UserController {
     return this.userService.updateProfile(id, updatedData);
   }
 
-  // POST /users → create a new user (admin only)
-  @Post()
-  @RequirePermissions(Permission.USERS_CREATE)
-  createUser(@Body() userData: Partial<User>): Promise<User> {
-    return this.userService.createUser(userData);
+  // POST /users/admin → create a new admin user (admin only)
+  @Post('/admin')
+  @RequirePermissions(Permission.ADMIN_USER_CREATE)
+  createAdminUser(@Body() userData: CreateProfileDto): Promise<User> {
+    return this.userService.createAdminUser(userData);
   }
 }

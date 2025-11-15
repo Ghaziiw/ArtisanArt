@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { CreateOfferDto } from './dto/create-offer.dto';
 import { Product } from '../product/product.entity';
 import { UpdateOfferDto } from './dto/update-offer.dto';
+import { plainToInstance } from 'class-transformer';
 
 /**
  * Service for managing offers.
@@ -68,7 +69,7 @@ export class OfferService {
     }
 
     // Verify user permission
-    if (product.artisanId !== userId) {
+    if (product.craftsmanId !== userId) {
       throw new ForbiddenException(
         'You do not have permission to create an offer for this product',
       );
@@ -96,7 +97,9 @@ export class OfferService {
       product,
     });
 
-    return this.offerRepository.save(offer);
+    const savedOffer = await this.offerRepository.save(offer);
+
+    return plainToInstance(Offer, savedOffer, { groups: [] });
   }
 
   // Update an existing offer
@@ -116,7 +119,7 @@ export class OfferService {
     }
 
     // Verify user permission
-    if (offer.product.artisanId !== userId) {
+    if (offer.product.craftsmanId !== userId) {
       throw new ForbiddenException(
         'You do not have permission to update this offer',
       );
@@ -128,7 +131,7 @@ export class OfferService {
     const endDate = offerData.endDate ? new Date(offerData.endDate) : null;
 
     // Validate dates
-    if (endDate && startDate && endDate <= startDate) {
+    if (endDate && startDate && endDate < startDate) {
       throw new BadRequestException('End date must be after start date');
     }
 
@@ -149,7 +152,7 @@ export class OfferService {
     }
 
     // Verify user permission
-    if (offer.product.artisanId !== userId) {
+    if (offer.product.craftsmanId !== userId) {
       throw new ForbiddenException(
         'You do not have permission to delete this offer',
       );
