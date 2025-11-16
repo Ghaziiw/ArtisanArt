@@ -4,6 +4,11 @@ import { Repository } from 'typeorm';
 import { Product } from '../product/product.entity';
 import { Comment } from './comment.entity';
 import { CreateCommentDto } from './dto/create-comment.dto';
+import {
+  IPaginationOptions,
+  paginate,
+  Pagination,
+} from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class CommentService {
@@ -18,9 +23,18 @@ export class CommentService {
     return await this.commentRepository.find();
   }
 
-  async findByProductId(productId: string): Promise<Comment[]> {
-    return await this.commentRepository.find({
+  async findByProductId(
+    productId: string,
+    page: number,
+    limit: number,
+  ): Promise<Pagination<Comment>> {
+    const options: IPaginationOptions = { page, limit };
+
+    // Passe la condition dans le 3e argument
+    return paginate<Comment>(this.commentRepository, options, {
       where: { productId },
+      order: { createdAt: 'DESC' },
+      relations: ['user'],
     });
   }
 

@@ -8,6 +8,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { PermissionsGuard } from 'src/auth/guards/permissions.guard';
 import { ProductService } from './product.service';
@@ -28,8 +29,8 @@ export class ProductController {
   // GET /products → retrieve all products
   @Get()
   @Public()
-  findAll() {
-    return this.productService.findAll();
+  findAll(@Query('page') page = 1, @Query('limit') limit = 20) {
+    return this.productService.findAll(page, limit);
   }
 
   // GET /products/:id → retrieve a product by ID

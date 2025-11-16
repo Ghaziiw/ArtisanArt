@@ -11,6 +11,7 @@ import { CreateCraftsmanDto } from './dto/create-craftsman.dto';
 import { auth } from 'src/utils/auth';
 import { UpdateCraftsmanDto } from '../craftsman/dto/update-craftsman.dto';
 import { UpdateCraftsmanExpDateDto } from './dto/update-craftsman-exp-date.dto';
+import { IPaginationMeta, paginate, Pagination } from 'nestjs-typeorm-paginate';
 
 /**
  * Service responsible for managing craftsman records using a TypeORM repository.
@@ -81,9 +82,13 @@ export class CraftsmanService {
   ) {}
 
   // Retrieve all craftsmen with their associated user data
-  async findAll(withUser = false): Promise<Craftsman[]> {
-    return await this.craftsmanRepository.find({
-      relations: withUser ? ['user'] : [],
+  async findAll(
+    page: number,
+    limit: number,
+  ): Promise<Pagination<Craftsman, IPaginationMeta>> {
+    return await paginate<Craftsman>(this.craftsmanRepository, {
+      page,
+      limit,
     });
   }
 

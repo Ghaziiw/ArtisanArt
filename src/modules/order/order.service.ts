@@ -12,6 +12,7 @@ import { OrderStatus } from './enums/order-status.enum';
 import { PlaceOrderDto } from './dto/create-order.dto';
 import { ProductService } from '../product/product.service';
 import { ViewOrderDto } from './dto/view-order.dto';
+import { IPaginationMeta, paginate, Pagination } from 'nestjs-typeorm-paginate';
 
 /**
  * OrderService handles operations related to orders,
@@ -233,40 +234,67 @@ export class OrderService {
   /**
    * Get all orders for a user
    */
-  async getUserOrders(userId: string): Promise<ViewOrderDto[]> {
-    const orders = await this.orderRepository.find({
+  async getUserOrders(
+    userId: string,
+    page: number,
+    limit: number,
+  ): Promise<Pagination<ViewOrderDto, IPaginationMeta>> {
+    const skip = (page - 1) * limit;
+    const [orders, totalItems] = await this.orderRepository.findAndCount({
       where: { userId },
       relations: ['items', 'items.product', 'items.product.craftsman'],
       order: { createdAt: 'DESC' },
+      skip,
+      take: limit,
     });
 
-    return orders.map((order) => {
-      const craftsman = order.items[0]?.product?.craftsman;
+    return {
+      items: orders.map((order) => {
+        const craftsman = order.items[0]?.product?.craftsman;
 
-      if (!craftsman) {
-        throw new NotFoundException('Craftsman not found for order');
-      }
-
-      // Delete craftsman info from products to reduce payload
-      for (const item of order.items) {
-        if (item.product) {
-          item.product.craftsman = undefined;
+        if (!craftsman) {
+          throw new NotFoundException('Craftsman not found for order');
         }
-      }
 
-      return {
-        order,
-        craftsman,
-      };
-    });
+        // Delete craftsman info from products to reduce payload
+        for (const item of order.items) {
+          if (item.product) {
+            item.product.craftsman = undefined;
+          }
+        }
+
+        return {
+          order,
+          craftsman,
+        };
+      }),
+      meta: {
+        totalItems: totalItems,
+        itemCount: orders.length,
+        itemsPerPage: limit,
+        totalPages: Math.ceil(totalItems / limit),
+        currentPage: page,
+      },
+    };
   }
 
-  async getCraftsmanOrders(craftsmanId: string): Promise<Order[]> {
-    return await this.orderRepository.find({
-      where: { items: { product: { craftsmanId } } },
-      relations: ['items', 'items.product', 'user'],
-      order: { createdAt: 'DESC' },
-    });
+  async getCraftsmanOrders(
+    craftsmanId: string,
+    page: number,
+    limit: number,
+  ): Promise<Pagination<Order, IPaginationMeta>> {
+    return await paginate<Order, IPaginationMeta>(
+      this.orderRepository,
+      {
+        page,
+        limit,
+      },
+      {
+        where: { items: { product: { craftsmanId } } },
+        relations: ['items', 'items.product', 'user'],
+        order: { createdAt: 'DESC' },
+      },
+    );
   }
 
   /**

@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { CraftsmanService } from './craftsman.service';
@@ -28,8 +29,8 @@ export class CraftsmanController {
   // GET /craftsmen → retrieve all craftsmen
   @Get()
   @Public()
-  findAll() {
-    return this.craftsmanService.findAll();
+  findAll(@Query('page') page = 1, @Query('limit') limit = 20) {
+    return this.craftsmanService.findAll(page, limit);
   }
 
   // GET /craftsmen/:id → retrieve a craftsman by user ID
