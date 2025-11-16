@@ -10,6 +10,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { Category } from '../category/category.entity';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
+import { ProductFilterDto } from './dto/product-filter.dto';
 
 /**
  * Service responsible for managing product records using a TypeORM repository.
@@ -69,22 +70,70 @@ export class ProductService {
   async findAll(
     page: number,
     limit: number,
+    filters: ProductFilterDto,
   ): Promise<Pagination<Product, IPaginationMeta>> {
     const skip = (page - 1) * limit;
 
-    const products = await this.productRepository.find({
-      relations: ['category', 'craftsman', 'offer', 'category'],
-      skip,
-      take: limit,
-    });
+    const qb = this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.category', 'category')
+      .leftJoinAndSelect('product.craftsman', 'craftsman')
+      .leftJoinAndSelect('product.offer', 'offer');
+
+    // --- Filter by craftsman name ---
+    if (filters.craftsmanName) {
+      qb.andWhere('craftsman.name ILIKE :craftsmanName', {
+        craftsmanName: `%${filters.craftsmanName}%`,
+      });
+    }
+
+    // --- Sort by price ---
+    if (filters.sortByPrice) {
+      qb.orderBy(
+        'product.price',
+        filters.sortByPrice.toUpperCase() as 'ASC' | 'DESC',
+      );
+    } else {
+      qb.orderBy('product.createdAt', 'DESC');
+    }
+
+    // --- Filter by category ID ---
+    if (filters.categoryId) {
+      qb.andWhere('category.id = :categoryId', {
+        categoryId: filters.categoryId,
+      });
+    }
+
+    // --- Filter by name ---
+    if (filters.name) {
+      qb.andWhere('product.name ILIKE :name', { name: `%${filters.name}%` });
+    }
+
+    // --- Filter by minPrice ---
+    if (filters.minPrice) {
+      qb.andWhere('product.price >= :minPrice', {
+        minPrice: parseFloat(filters.minPrice),
+      });
+    }
+
+    // --- Filter by maxPrice ---
+    if (filters.maxPrice) {
+      qb.andWhere('product.price <= :maxPrice', {
+        maxPrice: parseFloat(filters.maxPrice),
+      });
+    }
+
+    qb.skip(skip).take(limit);
+
+    const [products, totalItems] = await qb.getManyAndCount();
 
     return {
       items: products.map((product) => this.removeInvalidOffer(product)),
       meta: {
-        totalItems: products.length,
+        totalItems,
         itemCount: products.length,
         itemsPerPage: limit,
-        totalPages: Math.ceil(products.length / limit),
+        totalPages: Math.ceil(totalItems / limit),
         currentPage: page,
       },
     };

@@ -20,6 +20,7 @@ import { UpdateCraftsmanDto } from '../craftsman/dto/update-craftsman.dto';
 import { RequirePermissions } from 'src/auth/decorators/permissions.decorator';
 import { Permission } from 'src/auth/types/permissions.types';
 import { UpdateCraftsmanExpDateDto } from './dto/update-craftsman-exp-date.dto';
+import { CraftsmanFilterDto } from './dto/craftsman-filter.dto';
 
 @Controller('craftsmen')
 @UseGuards(PermissionsGuard)
@@ -29,8 +30,25 @@ export class CraftsmanController {
   // GET /craftsmen → retrieve all craftsmen
   @Get()
   @Public()
-  findAll(@Query('page') page = 1, @Query('limit') limit = 20) {
-    return this.craftsmanService.findAll(page, limit);
+  findAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 20,
+    @Query() rawQuery: Record<string, any>,
+  ) {
+    const filters: CraftsmanFilterDto = rawQuery;
+    return this.craftsmanService.findAll(page, limit, filters);
+  }
+
+  // GET /craftsmen/admin → retrieve all craftsmen (admin view)
+  @Get('/admin')
+  @RequirePermissions(Permission.CRAFTSMAN_VIEW)
+  findAllAdmin(
+    @Query('page') page = 1,
+    @Query('limit') limit = 20,
+    @Query() rawQuery: Record<string, any>,
+  ) {
+    const filters: CraftsmanFilterDto = rawQuery;
+    return this.craftsmanService.findAll(page, limit, filters, true);
   }
 
   // GET /craftsmen/:id → retrieve a craftsman by user ID

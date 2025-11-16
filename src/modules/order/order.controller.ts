@@ -18,6 +18,7 @@ import type { AuthUser } from 'src/auth/types/auth-user';
 import { PlaceOrderDto } from './dto/create-order.dto';
 import { OrderStatus } from './enums/order-status.enum';
 import { CraftsmanExpirationGuard } from 'src/auth/guards/craftsman-expiration.guard';
+import { OrderFilterDto } from './dto/order-filter.dto';
 
 @Controller('orders')
 @UseGuards(PermissionsGuard)
@@ -56,8 +57,10 @@ export class OrderController {
     @CurrentUser() user: AuthUser,
     @Param('page') page = 1,
     @Param('limit') limit = 20,
+    @Query() rawQuery: Record<string, any>,
   ) {
-    return this.orderService.getUserOrders(user.id, page, limit);
+    const filters: OrderFilterDto = rawQuery;
+    return this.orderService.getUserOrders(user.id, page, limit, filters);
   }
 
   // GET /orders/cancel/:orderId → cancel an order by ID
@@ -78,8 +81,15 @@ export class OrderController {
     @CurrentUser() craftsman: AuthUser,
     @Query('page') page = 1,
     @Query('limit') limit = 20,
+    @Query() rawQuery: Record<string, any>,
   ) {
-    return this.orderService.getCraftsmanOrders(craftsman.id, page, limit);
+    const filters: OrderFilterDto = rawQuery;
+    return this.orderService.getCraftsmanOrders(
+      craftsman.id,
+      page,
+      limit,
+      filters,
+    );
   }
 
   // GET /orders/:orderId → retrieve order details by ID
