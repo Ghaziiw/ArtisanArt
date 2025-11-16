@@ -21,6 +21,7 @@ import { PermissionsGuard } from 'src/auth/guards/permissions.guard';
 import { Query } from '@nestjs/common';
 import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
 import { CreateProfileDto } from './dto/create-user.dto';
+import { UserFilterDto } from './dto/user-filter.dto';
 
 @Controller('users')
 @UseGuards(PermissionsGuard)
@@ -33,8 +34,10 @@ export class UserController {
   getAll(
     @Query('page') page = 1,
     @Query('limit') limit = 20,
+    @Query() rawQuery: Record<string, any>,
   ): Promise<Pagination<User, IPaginationMeta>> {
-    return this.userService.findAll(page, limit);
+    const filters: UserFilterDto = rawQuery;
+    return this.userService.findAll(page, limit, filters);
   }
 
   // PATCH /users/profile/me → update current user's profile

@@ -40,6 +40,7 @@ export enum Permission {
   OFFERS_DELETE = 'offers:delete',
   MANAGE_SHOPPING_CART = 'shoppingcart:manage',
   ADMIN_USER_CREATE = 'admin:users:create',
+  CRAFTSMAN_VIEW = 'craftsman:view',
 }
 
 /**
@@ -92,5 +93,6 @@ export const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
     Permission.CATEGORIES_UPDATE,
     Permission.CATEGORIES_DELETE,
     Permission.ADMIN_USER_CREATE,
+    Permission.CRAFTSMAN_VIEW,
   ],
 };

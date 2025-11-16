@@ -20,6 +20,7 @@ import type { AuthUser } from 'src/auth/types/auth-user';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { CraftsmanExpirationGuard } from 'src/auth/guards/craftsman-expiration.guard';
+import { ProductFilterDto } from './dto/product-filter.dto';
 
 @Controller('products')
 @UseGuards(PermissionsGuard)
@@ -29,8 +30,13 @@ export class ProductController {
   // GET /products → retrieve all products
   @Get()
   @Public()
-  findAll(@Query('page') page = 1, @Query('limit') limit = 20) {
-    return this.productService.findAll(page, limit);
+  findAll(
+    @Query('page') page = 1,
+    @Query('limit') limit = 20,
+    @Query() rawQuery: Record<string, any>,
+  ) {
+    const filters: ProductFilterDto = rawQuery;
+    return this.productService.findAll(page, limit, filters);
   }
 
   // GET /products/:id → retrieve a product by ID

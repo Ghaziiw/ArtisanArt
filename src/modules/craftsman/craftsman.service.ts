@@ -12,6 +12,7 @@ import { auth } from 'src/utils/auth';
 import { UpdateCraftsmanDto } from '../craftsman/dto/update-craftsman.dto';
 import { UpdateCraftsmanExpDateDto } from './dto/update-craftsman-exp-date.dto';
 import { IPaginationMeta, paginate, Pagination } from 'nestjs-typeorm-paginate';
+import { CraftsmanFilterDto } from './dto/craftsman-filter.dto';
 
 /**
  * Service responsible for managing craftsman records using a TypeORM repository.
@@ -85,8 +86,38 @@ export class CraftsmanService {
   async findAll(
     page: number,
     limit: number,
+    filters: CraftsmanFilterDto,
+    isAdmin = false,
   ): Promise<Pagination<Craftsman, IPaginationMeta>> {
-    return await paginate<Craftsman>(this.craftsmanRepository, {
+    const qb = this.craftsmanRepository.createQueryBuilder('craftsman');
+
+    // --- Filter by business name ---
+    if (filters.businessName) {
+      qb.andWhere('craftsman.businessName LIKE :businessName', {
+        businessName: `%${filters.businessName}%`,
+      });
+    }
+
+    // --- Filter by specialty ---
+    if (filters.specialty) {
+      qb.andWhere('craftsman.specialty LIKE :specialty', {
+        specialty: `%${filters.specialty}%`,
+      });
+    }
+
+    // --- Filter by expiration date range ---
+    if (filters.expirationDateMin && isAdmin) {
+      qb.andWhere('craftsman.expirationDate >= :expMin', {
+        expMin: filters.expirationDateMin,
+      });
+    }
+    if (filters.expirationDateMax && isAdmin) {
+      qb.andWhere('craftsman.expirationDate <= :expMax', {
+        expMax: filters.expirationDateMax,
+      });
+    }
+
+    return await paginate<Craftsman>(qb, {
       page,
       limit,
     });
