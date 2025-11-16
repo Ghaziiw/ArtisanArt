@@ -16,6 +16,7 @@ import {
   IPaginationMeta,
 } from 'nestjs-typeorm-paginate';
 import { CreateProfileDto } from './dto/create-user.dto';
+import { UserFilterDto } from './dto/user-filter.dto';
 
 /**
  * Service responsible for managing user records using a TypeORM repository.
@@ -81,10 +82,37 @@ export class UserService {
   async findAll(
     page: number,
     limit: number,
+    filters: UserFilterDto,
   ): Promise<Pagination<User, IPaginationMeta>> {
     const options: IPaginationOptions = { page, limit };
 
-    return await paginate<User, IPaginationMeta>(this.userRepository, options);
+    const qb = this.userRepository.createQueryBuilder('user');
+
+    // --- Email LIKE ---
+    if (filters.email)
+      qb.andWhere('user.email ILIKE :email', { email: `%${filters.email}%` });
+
+    // --- Name LIKE ---
+    if (filters.name)
+      qb.andWhere('user.name ILIKE :name', { name: `%${filters.name}%` });
+    // --- Role égal ---
+    if (filters.role) qb.andWhere('user.role = :role', { role: filters.role });
+
+    // --- createdAt >= createdAtMin ---
+    if (filters.createdAtMin)
+      qb.andWhere('user.createdAt >= :minDate', {
+        minDate: filters.createdAtMin,
+      });
+
+    // --- createdAt <= createdAtMax ---
+    if (filters.createdAtMax)
+      qb.andWhere('user.createdAt <= :maxDate', {
+        maxDate: filters.createdAtMax,
+      });
+
+    qb.orderBy('user.createdAt', 'DESC');
+
+    return paginate<User>(qb, options);
   }
 
   // Retrieve a user by ID

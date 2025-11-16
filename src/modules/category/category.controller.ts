@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { PermissionsGuard } from 'src/auth/guards/permissions.guard';
@@ -25,8 +26,8 @@ export class CategoryController {
   // GET /categories → retrieve all categories
   @Public()
   @Get()
-  findAll(): Promise<Category[]> {
-    return this.categoryService.findAll();
+  findAll(@Query('page') page = 1, @Query('limit') limit = 20) {
+    return this.categoryService.findAll(page, limit);
   }
 
   // POST /categories → create a new category

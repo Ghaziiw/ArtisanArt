@@ -7,6 +7,12 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './category.entity';
 import { CategoryDto } from './dto/category.dto';
+import {
+  IPaginationMeta,
+  IPaginationOptions,
+  paginate,
+  Pagination,
+} from 'nestjs-typeorm-paginate';
 
 /**
  * Service for managing categories.
@@ -60,8 +66,12 @@ export class CategoryService {
   ) {}
 
   // Retrieve all categories ordered by name
-  async findAll(): Promise<Category[]> {
-    return await this.categoryRepository.find({
+  async findAll(
+    page: number,
+    limit: number,
+  ): Promise<Pagination<Category, IPaginationMeta>> {
+    const options: IPaginationOptions = { page, limit };
+    return paginate<Category>(this.categoryRepository, options, {
       order: { name: 'ASC' },
     });
   }

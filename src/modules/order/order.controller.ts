@@ -7,6 +7,7 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { PermissionsGuard } from 'src/auth/guards/permissions.guard';
 import { OrderService } from './order.service';
@@ -17,6 +18,7 @@ import type { AuthUser } from 'src/auth/types/auth-user';
 import { PlaceOrderDto } from './dto/create-order.dto';
 import { OrderStatus } from './enums/order-status.enum';
 import { CraftsmanExpirationGuard } from 'src/auth/guards/craftsman-expiration.guard';
+import { OrderFilterDto } from './dto/order-filter.dto';
 
 @Controller('orders')
 @UseGuards(PermissionsGuard)
@@ -51,8 +53,14 @@ export class OrderController {
   // GET /orders → retrieve all orders for the current user
   @Get()
   @RequirePermissions(Permission.ORDERS_VIEW)
-  async getUserOrders(@CurrentUser() user: AuthUser) {
-    return this.orderService.getUserOrders(user.id);
+  async getUserOrders(
+    @CurrentUser() user: AuthUser,
+    @Param('page') page = 1,
+    @Param('limit') limit = 20,
+    @Query() rawQuery: Record<string, any>,
+  ) {
+    const filters: OrderFilterDto = rawQuery;
+    return this.orderService.getUserOrders(user.id, page, limit, filters);
   }
 
   // GET /orders/cancel/:orderId → cancel an order by ID
@@ -69,8 +77,19 @@ export class OrderController {
   @Get('craftsman')
   @RequirePermissions(Permission.CRAFTSMAN_ORDERS_VIEW)
   @UseGuards(CraftsmanExpirationGuard)
-  getCraftsmanOrders(@CurrentUser() craftsman: AuthUser) {
-    return this.orderService.getCraftsmanOrders(craftsman.id);
+  getCraftsmanOrders(
+    @CurrentUser() craftsman: AuthUser,
+    @Query('page') page = 1,
+    @Query('limit') limit = 20,
+    @Query() rawQuery: Record<string, any>,
+  ) {
+    const filters: OrderFilterDto = rawQuery;
+    return this.orderService.getCraftsmanOrders(
+      craftsman.id,
+      page,
+      limit,
+      filters,
+    );
   }
 
   // GET /orders/:orderId → retrieve order details by ID

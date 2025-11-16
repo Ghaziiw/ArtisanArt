@@ -12,6 +12,8 @@ import { OrderStatus } from './enums/order-status.enum';
 import { PlaceOrderDto } from './dto/create-order.dto';
 import { ProductService } from '../product/product.service';
 import { ViewOrderDto } from './dto/view-order.dto';
+import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
+import { OrderFilterDto } from './dto/order-filter.dto';
 
 /**
  * OrderService handles operations related to orders,
@@ -233,40 +235,128 @@ export class OrderService {
   /**
    * Get all orders for a user
    */
-  async getUserOrders(userId: string): Promise<ViewOrderDto[]> {
-    const orders = await this.orderRepository.find({
-      where: { userId },
-      relations: ['items', 'items.product', 'items.product.craftsman'],
-      order: { createdAt: 'DESC' },
-    });
+  async getUserOrders(
+    userId: string,
+    page: number,
+    limit: number,
+    filters: OrderFilterDto,
+  ): Promise<Pagination<ViewOrderDto, IPaginationMeta>> {
+    const skip = (page - 1) * limit;
 
-    return orders.map((order) => {
-      const craftsman = order.items[0]?.product?.craftsman;
+    const qb = this.orderRepository
+      .createQueryBuilder('order')
+      .leftJoinAndSelect('order.items', 'item')
+      .leftJoinAndSelect('item.product', 'product')
+      .leftJoinAndSelect('product.craftsman', 'craftsman')
+      .where('order.userId = :userId', { userId });
 
-      if (!craftsman) {
-        throw new NotFoundException('Craftsman not found for order');
-      }
+    // Filter by status
+    if (filters.status) {
+      qb.andWhere('order.status = :status', { status: filters.status });
+    }
 
-      // Delete craftsman info from products to reduce payload
-      for (const item of order.items) {
+    // Filter by createdAt range
+    if (filters.createdAtMin) {
+      qb.andWhere('order.createdAt >= :createdAtMin', {
+        createdAtMin: filters.createdAtMin,
+      });
+    }
+    if (filters.createdAtMax) {
+      qb.andWhere('order.createdAt <= :createdAtMax', {
+        createdAtMax: filters.createdAtMax,
+      });
+    }
+
+    // Filter by craftsmanName
+    if (filters.craftsmanName) {
+      qb.andWhere('craftsman.businessName ILIKE :craftsmanName', {
+        craftsmanName: `%${filters.craftsmanName}%`,
+      });
+    }
+
+    // Pagination
+    qb.skip(skip).take(limit).orderBy('order.createdAt', 'DESC');
+
+    const [orders, totalItems] = await qb.getManyAndCount();
+
+    return {
+      items: orders.map((order) => {
+        const craftsman = order.items[0]?.product?.craftsman;
+        if (!craftsman) {
+          throw new NotFoundException('Craftsman not found for order');
+        }
+
+        // Remove craftsman from products to reduce payload
+        order.items.forEach((item) => {
+          if (item.product) item.product.craftsman = undefined;
+        });
+
+        return { order, craftsman };
+      }),
+      meta: {
+        totalItems,
+        itemCount: orders.length,
+        itemsPerPage: limit,
+        totalPages: Math.ceil(totalItems / limit),
+        currentPage: page,
+      },
+    };
+  }
+
+  async getCraftsmanOrders(
+    craftsmanId: string,
+    page: number,
+    limit: number,
+    filters: OrderFilterDto,
+  ): Promise<Pagination<Order, IPaginationMeta>> {
+    const qb = this.orderRepository
+      .createQueryBuilder('order')
+      .leftJoinAndSelect('order.items', 'item')
+      .leftJoinAndSelect('item.product', 'product')
+      .leftJoin('product.craftsman', 'craftsman')
+      .leftJoinAndSelect('order.user', 'user')
+      .where('craftsman.userId = :craftsmanId', { craftsmanId });
+
+    // Apply filters
+    if (filters.status) {
+      qb.andWhere('order.status = :status', { status: filters.status });
+    }
+    if (filters.createdAtMin) {
+      qb.andWhere('order.createdAt >= :createdAtMin', {
+        createdAtMin: filters.createdAtMin,
+      });
+    }
+    if (filters.createdAtMax) {
+      qb.andWhere('order.createdAt <= :createdAtMax', {
+        createdAtMax: filters.createdAtMax,
+      });
+    }
+
+    // Pagination
+    const skip = (page - 1) * limit;
+    qb.skip(skip).take(limit).orderBy('order.createdAt', 'DESC');
+
+    const [orders, totalItems] = await qb.getManyAndCount();
+
+    // Remove craftsman info from products to reduce payload
+    orders.forEach((order) => {
+      order.items.forEach((item) => {
         if (item.product) {
           item.product.craftsman = undefined;
         }
-      }
-
-      return {
-        order,
-        craftsman,
-      };
+      });
     });
-  }
 
-  async getCraftsmanOrders(craftsmanId: string): Promise<Order[]> {
-    return await this.orderRepository.find({
-      where: { items: { product: { craftsmanId } } },
-      relations: ['items', 'items.product', 'user'],
-      order: { createdAt: 'DESC' },
-    });
+    return {
+      items: orders,
+      meta: {
+        totalItems,
+        itemCount: orders.length,
+        itemsPerPage: limit,
+        totalPages: Math.ceil(totalItems / limit),
+        currentPage: page,
+      },
+    };
   }
 
   /**
