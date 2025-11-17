@@ -7,7 +7,9 @@ import {
   Patch,
   Post,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
@@ -22,11 +24,17 @@ import { Query } from '@nestjs/common';
 import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
 import { CreateProfileDto } from './dto/create-user.dto';
 import { UserFilterDto } from './dto/user-filter.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UploadService } from '../upload/upload.service';
+import { multerConfig } from 'src/config/multer.config';
 
 @Controller('users')
 @UseGuards(PermissionsGuard)
 export class UserController {
-  constructor(private readonly userService: UserService) {} // Inject UserService
+  constructor(
+    private readonly userService: UserService,
+    private readonly uploadService: UploadService, // Service to handle file uploads
+  ) {}
 
   // GET /users → retrieve all users
   @Get()
@@ -99,5 +107,34 @@ export class UserController {
   @RequirePermissions(Permission.ADMIN_USER_CREATE)
   createAdminUser(@Body() userData: CreateProfileDto): Promise<User> {
     return this.userService.createAdminUser(userData);
+  }
+
+  // PATCH /users/profile/me/image → update current user's profile image
+  @Patch('/profile/me/image')
+  @UseInterceptors(FileInterceptor('profileImage', multerConfig))
+  async updateMyProfileImage(
+    @CurrentUser() user: AuthUser,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<User> {
+    console.log(
+      'Received file:',
+      file
+        ? {
+            filename: file.filename,
+            size: file.size,
+            mimetype: file.mimetype,
+          }
+        : 'NO FILE',
+    );
+    this.uploadService.validateFile(file);
+    const imageUrl = this.uploadService.getFileUrl(file.filename, 'profiles');
+    return this.userService.updateProfileImage(user.id, imageUrl);
+  }
+
+  @Post('upload-test')
+  @UseInterceptors(FileInterceptor('file'))
+  uploadTest(@UploadedFile() file: Express.Multer.File) {
+    console.log(file);
+    return { filename: file?.originalname || null };
   }
 }
