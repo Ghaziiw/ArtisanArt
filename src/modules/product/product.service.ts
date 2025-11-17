@@ -11,6 +11,7 @@ import { Category } from '../category/category.entity';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
 import { ProductFilterDto } from './dto/product-filter.dto';
+import { ProductWithStats } from './dto/viw-product-stats.dto';
 
 /**
  * Service responsible for managing product records using a TypeORM repository.
@@ -71,14 +72,21 @@ export class ProductService {
     page: number,
     limit: number,
     filters: ProductFilterDto,
-  ): Promise<Pagination<Product, IPaginationMeta>> {
+  ): Promise<Pagination<ProductWithStats, IPaginationMeta>> {
     const skip = (page - 1) * limit;
 
     const qb = this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.category', 'category')
       .leftJoinAndSelect('product.craftsman', 'craftsman')
-      .leftJoinAndSelect('product.offer', 'offer');
+      .leftJoinAndSelect('product.offer', 'offer')
+      .leftJoin('product.comments', 'comments')
+      .addSelect('AVG(comments.mark)', 'avgRating')
+      .addSelect('COUNT(comments.id)', 'totalComments')
+      .groupBy('product.id')
+      .addGroupBy('category.id')
+      .addGroupBy('craftsman.userId')
+      .addGroupBy('offer.productId');
 
     // --- Filter by craftsman name ---
     if (filters.craftsmanName) {
@@ -125,13 +133,27 @@ export class ProductService {
 
     qb.skip(skip).take(limit);
 
-    const [products, totalItems] = await qb.getManyAndCount();
+    const totalItems = await qb.getCount();
+    const { raw, entities } = await qb.getRawAndEntities();
+
+    // Explicitly type raw as an array of objects with avgRating and totalComments
+    const typedRaw = raw as Array<{
+      avgRating: number | null;
+      totalComments: number | null;
+    }>;
+
+    // Map entities to include avgRating and totalComments
+    const mapped: ProductWithStats[] = entities.map((prod, i) => ({
+      ...this.removeInvalidOffer(prod),
+      avgRating: Number(typedRaw[i]?.avgRating ?? 0),
+      totalComments: Number(typedRaw[i]?.totalComments ?? 0),
+    }));
 
     return {
-      items: products.map((product) => this.removeInvalidOffer(product)),
+      items: mapped,
       meta: {
         totalItems,
-        itemCount: products.length,
+        itemCount: mapped.length,
         itemsPerPage: limit,
         totalPages: Math.ceil(totalItems / limit),
         currentPage: page,
