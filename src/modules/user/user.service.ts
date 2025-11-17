@@ -128,6 +128,18 @@ export class UserService {
 
   // Delete a user by ID (admin function)
   async deleteUserAdmin(userId: string): Promise<DeleteResult> {
+    const user = await this.findOne(userId);
+
+    // Check if user exists
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    // Delete user's profile image if exists
+    if (user.image) {
+      await this.uploadService.deleteFile(user.image);
+    }
+
     return await this.userRepository.delete({ id: userId });
   }
 

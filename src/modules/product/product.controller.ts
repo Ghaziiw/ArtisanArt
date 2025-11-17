@@ -11,6 +11,7 @@ import {
   Query,
   UseInterceptors,
   UploadedFiles,
+  BadRequestException,
 } from '@nestjs/common';
 import { PermissionsGuard } from 'src/auth/guards/permissions.guard';
 import { ProductService } from './product.service';
@@ -92,33 +93,46 @@ export class ProductController {
   @Patch(':id')
   @RequirePermissions(Permission.PRODUCTS_UPDATE)
   @UseGuards(CraftsmanExpirationGuard)
-  @UseInterceptors(
-    FilesInterceptor('images', 5, multerConfig),
-    CleanupFilesInterceptor,
-  )
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateProductDto: UpdateProductDto,
     @CurrentUser() user: AuthUser,
-    @UploadedFiles() files: Express.Multer.File[],
   ) {
-    // Validate files if provided
-    if (files && files.length > 0) {
-      this.uploadService.validateFiles(files);
-    }
-
-    // Generate image URLs
-    const imageUrls =
-      files?.map((file) =>
-        this.uploadService.getFileUrl(file.filename, 'products'),
-      ) || [];
-
-    // If new images are uploaded, set them in the update DTO
-    if (imageUrls.length > 0) {
-      updateProductDto.images = imageUrls;
-    }
-
     return await this.productService.update(id, updateProductDto, user.id);
+  }
+
+  // PATCH /products/:id/images → update product images
+  @Patch(':id/images')
+  @RequirePermissions(Permission.PRODUCTS_UPDATE)
+  @UseGuards(CraftsmanExpirationGuard)
+  @UseInterceptors(
+    FilesInterceptor('images', 5, multerConfig),
+    CleanupFilesInterceptor,
+  )
+  async updateImages(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+    @UploadedFiles() files: Express.Multer.File[],
+    @Body('replaceAll') replaceAll?: string, // 'true' or 'false'
+  ) {
+    if (!files || files.length === 0) {
+      throw new BadRequestException('No images provided');
+    }
+
+    this.uploadService.validateFiles(files);
+
+    const newImageUrls = files.map((file) =>
+      this.uploadService.getFileUrl(file.filename, 'products'),
+    );
+
+    const shouldReplaceAll = replaceAll === 'true';
+
+    return await this.productService.updateProductImages(
+      id,
+      user.id,
+      newImageUrls,
+      !shouldReplaceAll, // keepExisting
+    );
   }
 
   // DELETE /products/:id → delete a product
