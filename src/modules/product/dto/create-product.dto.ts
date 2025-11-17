@@ -6,6 +6,7 @@ import {
   Min,
   MinLength,
   IsUUID,
+  IsUrl,
 } from 'class-validator';
 
 export class CreateProductDto {
@@ -30,6 +31,6 @@ export class CreateProductDto {
 
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUrl({}, { each: true })
   images?: string[];
 }

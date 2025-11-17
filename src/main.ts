@@ -20,6 +20,9 @@ async function bootstrap() {
       whitelist: true, // Delete attributes not in the DTO
       forbidNonWhitelisted: true, // Error if non-whitelisted field sent
       transform: true, // Automatically converts types (e.g., string → number)
+      transformOptions: {
+        enableImplicitConversion: true, // Convert primitive types automatically
+      },
     }),
   );
 

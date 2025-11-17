@@ -116,25 +116,8 @@ export class UserController {
     @CurrentUser() user: AuthUser,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<User> {
-    console.log(
-      'Received file:',
-      file
-        ? {
-            filename: file.filename,
-            size: file.size,
-            mimetype: file.mimetype,
-          }
-        : 'NO FILE',
-    );
     this.uploadService.validateFile(file);
     const imageUrl = this.uploadService.getFileUrl(file.filename, 'profiles');
     return this.userService.updateProfileImage(user.id, imageUrl);
-  }
-
-  @Post('upload-test')
-  @UseInterceptors(FileInterceptor('file'))
-  uploadTest(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
-    return { filename: file?.originalname || null };
   }
 }
