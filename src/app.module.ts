@@ -21,6 +21,7 @@ import { ShoppingCartModule } from './modules/shoppingcart/shoppingcart.module';
 import { Order } from './modules/order/order.entity';
 import { OrderModule } from './modules/order/order.module';
 import { OrderItem } from './modules/order/order-item.entity';
+import { UploadModule } from './modules/upload/upload.module';
 
 @Module({
   imports: [
@@ -39,7 +40,6 @@ import { OrderItem } from './modules/order/order-item.entity';
         OrderItem,
       ],
       synchronize: true,
-      // migrationsRun: false,
     }), // Database configuration
     UserModule,
     CraftsmanModule,
@@ -49,6 +49,7 @@ import { OrderItem } from './modules/order/order-item.entity';
     CommentModule,
     ShoppingCartModule,
     OrderModule,
+    UploadModule,
     AuthModule.forRoot({
       auth,
       isGlobal: true, // Make auth module global

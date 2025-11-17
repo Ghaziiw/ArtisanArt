@@ -17,6 +17,7 @@ import {
 } from 'nestjs-typeorm-paginate';
 import { CreateProfileDto } from './dto/create-user.dto';
 import { UserFilterDto } from './dto/user-filter.dto';
+import { UploadService } from '../upload/upload.service';
 
 /**
  * Service responsible for managing user records using a TypeORM repository.
@@ -76,6 +77,7 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>, // Repository TypeORM pour User
+    private readonly uploadService: UploadService, // Service to handle file uploads
   ) {}
 
   // Retrieve all users
@@ -126,6 +128,18 @@ export class UserService {
 
   // Delete a user by ID (admin function)
   async deleteUserAdmin(userId: string): Promise<DeleteResult> {
+    const user = await this.findOne(userId);
+
+    // Check if user exists
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    // Delete user's profile image if exists
+    if (user.image) {
+      await this.uploadService.deleteFile(user.image);
+    }
+
     return await this.userRepository.delete({ id: userId });
   }
 
@@ -219,5 +233,22 @@ export class UserService {
     await this.userRepository.save(createdUser);
 
     return createdUser;
+  }
+
+  // Update user's profile image
+  async updateProfileImage(userId: string, imageUrl: string): Promise<User> {
+    const user = await this.findOne(userId);
+
+    if (!user) {
+      throw new BadRequestException('User not found');
+    }
+
+    // Delete old image if exists
+    if (user.image) {
+      await this.uploadService.deleteFile(user.image);
+    }
+
+    user.image = imageUrl;
+    return await this.userRepository.save(user);
   }
 }

@@ -7,7 +7,9 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CraftsmanService } from './craftsman.service';
 import { CreateCraftsmanDto } from './dto/create-craftsman.dto';
@@ -21,11 +23,17 @@ import { RequirePermissions } from 'src/auth/decorators/permissions.decorator';
 import { Permission } from 'src/auth/types/permissions.types';
 import { UpdateCraftsmanExpDateDto } from './dto/update-craftsman-exp-date.dto';
 import { CraftsmanFilterDto } from './dto/craftsman-filter.dto';
+import { UploadService } from '../upload/upload.service';
+import { multerConfig } from 'src/config/multer.config';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('craftsmen')
 @UseGuards(PermissionsGuard)
 export class CraftsmanController {
-  constructor(private readonly craftsmanService: CraftsmanService) {} // Inject CraftsmanService
+  constructor(
+    private readonly craftsmanService: CraftsmanService,
+    private readonly uploadService: UploadService,
+  ) {} // Inject CraftsmanService
 
   // GET /craftsmen → retrieve all craftsmen
   @Get()
@@ -111,5 +119,21 @@ export class CraftsmanController {
   @Delete('/profile/me')
   async deleteMyProfile(@CurrentUser() user: AuthUser) {
     return this.craftsmanService.deleteCraftsman(user.id);
+  }
+
+  // PATCH /craftsmen/profile/me/image → update current craftsman's profile image
+  @Patch('/profile/me/image')
+  @UseInterceptors(FileInterceptor('profileImage', multerConfig))
+  async updateMyProfileImage(
+    @CurrentUser() user: AuthUser,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    // Validate file
+    this.uploadService.validateFile(file);
+
+    // Generate image URL
+    const imageUrl = this.uploadService.getFileUrl(file.filename, 'profiles');
+
+    return this.craftsmanService.updateCraftsman(user.id, { image: imageUrl });
   }
 }

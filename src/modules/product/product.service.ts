@@ -11,6 +11,8 @@ import { Category } from '../category/category.entity';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
 import { ProductFilterDto } from './dto/product-filter.dto';
+import { ProductWithStats } from './dto/viw-product-stats.dto';
+import { UploadService } from '../upload/upload.service';
 
 /**
  * Service responsible for managing product records using a TypeORM repository.
@@ -45,6 +47,7 @@ export class ProductService {
     private readonly productRepository: Repository<Product>, // Repository TypeORM pour Product
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>, // Repository TypeORM pour Category
+    private readonly uploadService: UploadService, // Service to handle file uploads
   ) {}
 
   // Helper method to remove invalid offers from a product
@@ -71,14 +74,21 @@ export class ProductService {
     page: number,
     limit: number,
     filters: ProductFilterDto,
-  ): Promise<Pagination<Product, IPaginationMeta>> {
+  ): Promise<Pagination<ProductWithStats, IPaginationMeta>> {
     const skip = (page - 1) * limit;
 
     const qb = this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.category', 'category')
       .leftJoinAndSelect('product.craftsman', 'craftsman')
-      .leftJoinAndSelect('product.offer', 'offer');
+      .leftJoinAndSelect('product.offer', 'offer')
+      .leftJoin('product.comments', 'comments')
+      .addSelect('AVG(comments.mark)', 'avgRating')
+      .addSelect('COUNT(comments.id)', 'totalComments')
+      .groupBy('product.id')
+      .addGroupBy('category.id')
+      .addGroupBy('craftsman.userId')
+      .addGroupBy('offer.productId');
 
     // --- Filter by craftsman name ---
     if (filters.craftsmanName) {
@@ -125,13 +135,27 @@ export class ProductService {
 
     qb.skip(skip).take(limit);
 
-    const [products, totalItems] = await qb.getManyAndCount();
+    const totalItems = await qb.getCount();
+    const { raw, entities } = await qb.getRawAndEntities();
+
+    // Explicitly type raw as an array of objects with avgRating and totalComments
+    const typedRaw = raw as Array<{
+      avgRating: number | null;
+      totalComments: number | null;
+    }>;
+
+    // Map entities to include avgRating and totalComments
+    const mapped: ProductWithStats[] = entities.map((prod, i) => ({
+      ...this.removeInvalidOffer(prod),
+      avgRating: Number(typedRaw[i]?.avgRating ?? 0),
+      totalComments: Number(typedRaw[i]?.totalComments ?? 0),
+    }));
 
     return {
-      items: products.map((product) => this.removeInvalidOffer(product)),
+      items: mapped,
       meta: {
         totalItems,
-        itemCount: products.length,
+        itemCount: mapped.length,
         itemsPerPage: limit,
         totalPages: Math.ceil(totalItems / limit),
         currentPage: page,
@@ -202,20 +226,85 @@ export class ProductService {
   async deleteProduct(id: string, craftsmanId: string) {
     const product = await this.findOne(id);
 
-    // Verify product exists
     if (!product) {
       throw new BadRequestException('Product not found');
     }
 
-    // Check if user is the owner or admin
     if (product.craftsmanId !== craftsmanId) {
       throw new ForbiddenException(
         'You do not have permission to delete this product',
       );
     }
 
+    // Delete all product images before deleting the product
+    if (product.images && product.images.length > 0) {
+      await this.uploadService.deleteMultipleFiles(product.images);
+    }
+
     await this.productRepository.delete(id);
 
     return { message: 'Product deleted successfully' };
+  }
+
+  // Update product images
+  async updateProductImages(
+    id: string,
+    craftsmanId: string,
+    newImageUrls: string[],
+    keepExisting: boolean = false,
+  ): Promise<Product> {
+    const product = await this.findOne(id);
+
+    if (!product) {
+      throw new BadRequestException('Product not found');
+    }
+
+    if (product.craftsmanId !== craftsmanId) {
+      throw new ForbiddenException(
+        'You do not have permission to update this product',
+      );
+    }
+
+    const oldImages = product.images || [];
+    let finalImages: string[] = [];
+    let imagesToDelete: string[] = [];
+
+    if (keepExisting) {
+      // Keep all existing images and add new ones
+      finalImages = [...oldImages, ...newImageUrls];
+
+      // Validate total image count (max 5)
+      if (finalImages.length > 5) {
+        // Clean up newly uploaded files before throwing error
+        await this.uploadService.deleteMultipleFiles(newImageUrls);
+        throw new BadRequestException(
+          `Cannot add ${newImageUrls.length} images. Product already has ${oldImages.length} images. Maximum 5 images allowed per product.`,
+        );
+      }
+    } else {
+      // Replace all images
+      finalImages = newImageUrls;
+      imagesToDelete = oldImages;
+    }
+
+    try {
+      // Update product in database
+      product.images = finalImages;
+      product.updatedAt = new Date();
+      const updatedProduct = await this.productRepository.save(product);
+
+      // Only delete old images after successful database update
+      if (imagesToDelete.length > 0) {
+        await this.uploadService.deleteMultipleFiles(imagesToDelete);
+      }
+
+      return updatedProduct;
+    } catch (error) {
+      // Rollback: delete new images if database update fails
+      if (newImageUrls.length > 0) {
+        await this.uploadService.deleteMultipleFiles(newImageUrls);
+      }
+      throw error;
+    }
   }
 }

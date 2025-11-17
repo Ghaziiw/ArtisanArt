@@ -10,7 +10,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Category } from 'src/modules/category/category.entity';
-import { IsUUID, Min } from 'class-validator';
+import { IsUrl, IsUUID, Min } from 'class-validator';
 import type { Offer } from '../offer/offer.entity';
 import { Exclude } from 'class-transformer'; // To exclude relations from serialization
 import { Craftsman } from '../craftsman/craftsman.entity';
@@ -48,6 +48,7 @@ export class Product {
   categoryId: string;
 
   @Column('simple-array', { nullable: true })
+  @IsUrl({}, { each: true })
   images: string[];
 
   // Relation Many-to-One avec User (artisan)

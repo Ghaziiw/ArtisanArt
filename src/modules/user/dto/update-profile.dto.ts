@@ -12,10 +12,6 @@ export class UpdateProfileDto {
 
   @IsOptional()
   @IsString()
-  image?: string;
-
-  @IsOptional()
-  @IsString()
   location?: string;
 }
 
