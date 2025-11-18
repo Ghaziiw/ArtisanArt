@@ -18,8 +18,13 @@ src/
 │   ├── offer/
 │   ├── comment/
 │   ├── shoppingcart/
-│   └── order/
-└── utils/
+│   ├── order/
+│   └── upload/
+├── utils/
+├──uploads/
+│   ├── profiles/     # Images de profil (users & craftsmen)
+│   ├── products/     # Images de produits
+│   ├── others/       # Autres fichiers
 ```
 
 ---

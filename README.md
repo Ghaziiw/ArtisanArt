@@ -90,6 +90,7 @@ Ce fichier contient toutes les informations nécessaires au fonctionnement :
 - configuration de l’application  
 - paramètres de Better Auth  
 - URL du serveur  
+- paramètres de Multer  
 
 Voici un exemple complet de configuration :
 
@@ -112,4 +113,7 @@ PORT=3000
 # Better Auth configuration
 BETTER_AUTH_SECRET=abcd1234efgh5678
 BETTER_AUTH_URL=http://localhost:3000
+
+# Multer configuration
+MULTER_BASE_URL=http://localhost:3000
 ```
