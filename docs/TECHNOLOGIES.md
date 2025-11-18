@@ -43,7 +43,6 @@ ORM permettant :
 
 - `Multer` via `@nestjs/platform-express`
 - Validations fichiers
-- Support local/cloud
 
 ---
 

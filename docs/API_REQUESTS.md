@@ -86,6 +86,28 @@ curl -X GET "http://localhost:3000/users?page=1&limit=20&role=artisan&name=John"
 -b cookies.txt
 ```
 
+### Upload Image de Profil
+
+```bash
+curl -X PATCH "http://localhost:3000/users/profile/me/image" \
+-b cookies.txt \
+-F "profileImage=@/chemin/vers/ton/image.jpg"
+```
+
+> **Validations :**
+>
+> - Maximum `1 image` par profile
+> - Taille max `1MB`
+> - Types acceptés: `jpg`, `jpeg`, `png`, `webp`
+
+### Upload Image de Profil (Admin)
+
+```bash
+curl -X PATCH "http://localhost:3000/users/:userId/image \
+-b cookies.txt \
+-F "profileImage=@/chemin/vers/ton/image.jpg"
+```
+
 ### Obtenir mon profil
 
 ```bash
@@ -253,6 +275,20 @@ curl -X POST "http://localhost:3000/craftsmen" \
 > - `instagram`
 > - `facebook`
 > - `profileImage`
+
+### Upload Image de Profil Artisan
+
+```bash
+curl -X PATCH "http://localhost:3000/craftsmen/profile/me/image" \
+-b cookies.txt \
+-F "profileImage=@/chemin/vers/ton/image.jpg"
+```
+
+> **Validations :**
+>
+> - Maximum `1 image` par profile
+> - Taille max `1MB`
+> - Types acceptés: `jpg`, `jpeg`, `png`, `webp`
 
 ### Obtenir mon profil d'artisan
 
@@ -441,24 +477,25 @@ curl -X GET "http://localhost:3000/products/id_expl"
 ```bash
 curl -X POST "http://localhost:3000/products" \
 -b cookies.txt \
--H "Content-Type: application/json" \
--d '{
-        "name": "Traditional Vase",
-        "description": "Handmade traditional Tunisian vase",
-        "price": 45.99,
-        "stock": 10,
-        "categoryId": "id_expl",
-        "images": [
-            "https://example.com/vase1.jpg",
-            "https://example.com/vase2.jpg"
-        ]
-    }'
+-F "name=Vase Artisanal" \
+-F "description=Magnifique vase fait main en céramique" \
+-F "price=45.99" \
+-F "stock=10" \
+-F "categoryId=id_expl" \
+-F "images=@/chemin/vers/ton/image1.jpg" \
+-F "images=@/chemin/vers/ton/image2.jpg"
 ```
 
 > **Remarque :** Les champs optionnels sont :
 >
 > - `categoryId`
 > - `images`
+>
+> **Validations :**
+>
+> - Maximum `5 images` par produit
+> - Taille max `1MB` par image
+> - Types acceptés: `jpg`, `jpeg`, `png`, `webp`
 
 ### Mettre à jour un produit (Artisan/Admin)
 
@@ -483,6 +520,26 @@ curl -X PATCH "http://localhost:3000/products/id_expl" \
 >
 > - `categoryId`
 > - `images`
+
+### Mettre à Jour les Images d'un Produit
+
+```bash
+curl -X PATCH "http://localhost:3000/products/id_expl/images" \
+-b cookies.txt \
+-F "images=@/chemin/vers/image1.jpg" \
+-F "images=@/chemin/vers/image2.png" \
+-F "replaceAll=false"
+```
+> **Remarque :**
+>- `replaceAll`: string ("true" ou "false")
+> >- `"true"`: Remplace toutes les images existantes
+> >- `"false"`: Ajoute les nouvelles images aux existante (défaut)
+>
+> **Validations :**
+>
+> - Maximum `5 images` par produit
+> - Taille max `1MB` par image
+> - Types acceptés: `jpg`, `jpeg`, `png`, `webp`
 
 ### Supprimer un produit (Artisan/Admin)
 
@@ -816,3 +873,8 @@ curl -X GET "http://localhost:3000/admin" \
 8.  **Pagination**: Par défaut, `page=1` et `limit=20`. Ajustez selon vos besoins.
 9.  **Filtres**: Les filtres textuels utilisent la recherche partielle et insensible à la casse (ILIKE).
 10. **Combinaison de filtres**: Vous pouvez combiner plusieurs filtres dans une même requête.
+11. **Types de Fichiers Acceptés**: `jpeg`, `jpg`, `png`, `webp`
+12. **Limitations des Fichiers Acceptés**:
+- Taille maximale par fichier: `1MB`
+- Nombre maximum d'images par produit: 5
+- Nombre maximum d'images par upload: 5
