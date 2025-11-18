@@ -15,6 +15,8 @@ export interface Product {
     businessName: string;
     workshopAddress: string;
     profileImage: string;
+    avgRating: number;
+    totalComments: number;
   };
   offer: { percentage: number } | null;
   avgRating: number;
@@ -41,6 +43,9 @@ export class ProductService {
 
   constructor(private http: HttpClient) {}
 
+  /**
+    * Fetches a paginated list of products from the API.
+   */
   getProducts(page: number = 1, limit: number = 20): Observable<ProductsResponse> {
     const params = new HttpParams().set('page', page.toString()).set('limit', limit.toString());
 

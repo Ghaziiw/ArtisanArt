@@ -13,8 +13,9 @@ import { HttpClientModule } from '@angular/common/http';
 export class SearchResultsTab {
   constructor(private productService: ProductService) {}
 
-  products: Product[] = [];
+  products: Product[] = []; // List of products to display
 
+  // Fetch products on component initialization
   ngOnInit() {
     this.productService.getProducts(1, 20).subscribe({
       next: (res) => {

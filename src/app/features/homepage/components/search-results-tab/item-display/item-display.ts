@@ -9,5 +9,5 @@ import { CommonModule } from '@angular/common';
   styleUrl: './item-display.css',
 })
 export class ItemDisplay {
-  @Input() product!: Product;
+  @Input() product!: Product; // Input property to receive product data
 }

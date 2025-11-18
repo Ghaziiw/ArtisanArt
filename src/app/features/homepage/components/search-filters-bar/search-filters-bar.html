@@ -16,11 +16,10 @@
       <div class="section">
         <div class="section-title">Category</div>
         <div class="checkbox-group">
-          <label class="checkbox-item"><input type="checkbox"><span>Electronics</span></label>
-          <label class="checkbox-item"><input type="checkbox"><span>Fashion</span></label>
-          <label class="checkbox-item"><input type="checkbox"><span>Home & Garden</span></label>
-          <label class="checkbox-item"><input type="checkbox"><span>Beauty & Health</span></label>
-          <label class="checkbox-item"><input type="checkbox"><span>Sports & Outdoors</span></label>
+          <label class="checkbox-item" *ngFor="let category of categories">
+            <input type="checkbox">
+            <span>{{ category.name }}</span>
+          </label>
         </div>
       </div>
 
@@ -33,7 +32,7 @@
         <span>$</span>
         <input type="number" class="price-min" value="0" min="0">
       </div>
-      <span class="separator">–</span>
+      <!-- <span class="separator">–</span> -->
       <div class="price-field">
         <span>$</span>
         <input type="number" class="price-max" value="1000" max="9999">
