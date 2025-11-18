@@ -1,0 +1,11 @@
+.horizontal-div{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 50px;
+}
+
+body {
+    margin: 0;
+    font-family: 'inter';
+  }

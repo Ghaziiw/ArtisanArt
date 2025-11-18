@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ArtisanArt": {
+    "Restaurant": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -19,11 +19,11 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
+                "src/favicon.ico",
+                "src/assets",
+                { "glob": "**/*", "input": "public" },
+                { "glob": "**/*", "input": "/app/assets", "output": "/assets" }
+              ],
             "styles": [
               "src/styles.css"
             ],
@@ -61,10 +61,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "ArtisanArt:build:production"
+              "buildTarget": "Restaurant:build:production"
             },
             "development": {
-              "buildTarget": "ArtisanArt:build:development"
+              "buildTarget": "Restaurant:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -84,7 +84,12 @@
               {
                 "glob": "**/*",
                 "input": "public"
-              }
+              },
+              {
+                "glob": "**/*",
+                "input": "assets/icons",  
+                "output": "/assets/icons"
+              }  
             ],
             "styles": [
               "src/styles.css"

@@ -1,1 +1,86 @@
-/* You can add global styles to this file, and also import other style files */
+@font-face {
+    font-family: 'Source Sans Pro';
+    src: url(/assets/fonts/SourceSansPro/SourceSansPro-Light.ttf);
+    font-weight: 100;
+}
+@font-face {
+    font-family: 'Source Sans Pro';
+    src: url(/assets/fonts/SouceSansPro/SourceSansPro-Regular.ttf);
+    font-weight: 300;
+}
+@font-face {
+    font-family: 'Source Sans Pro';
+    src: url(/assets/fonts/SouceSansPro/SourceSansPro-Black.ttf);
+    font-weight: 500;
+}
+@font-face {
+    font-family: 'Source Sans Pro';
+    src: url(/assets/fonts/SouceSansPro/SourceSansPro-Bold.ttf);
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: 'Alt Burberry';
+    src: url("/assets/fonts/Alternative Burberry.ttf");
+}
+
+@font-face {
+    font-family: 'inter';
+    src: url("/assets/fonts/Inter_24pt-Regular.ttf");
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Parisienne';
+    src: url("/assets/fonts/Parisienne-Regular.ttf");
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Outfit';
+    src: url("/assets/fonts/Outfit-VariableFont_wght.ttf");
+}
+
+
+
+:root{
+    --color-palette1: #9a2b1b;
+    --color-palette2: #a54335;
+    --color-palette3: #b15b4e;
+    --color-palette4: #bc7667;
+    --color-palette5:#C78A81;
+    --color-palette6:#d2a19a;
+    --color-palette7:#ddb9b3;
+    --color-palette8:#e9d0cc;
+    --color-palette9:#f4e8e6;
+    --header-backgrounnd: #fff8f5;
+    --body-background:#f5e6e1;
+    --border-color: #d4afa7;
+    --login-btn-text:#5a4237;
+    --login-btn-background:#f5e6df;
+    --login-btn-border: #d3ada4;
+    --login-btn-background-on-hover: #d9ada0;
+    --filters-border-color: #d7afa0;
+}
+
+body{
+    background-color: var(--body-background);
+}
+
+.header-button{
+    background-color: var(--login-btn-background);
+    color: var(--login-btn-text);
+    min-width: 90px;
+    height: 37px;
+    border-radius: 8px;
+    border: solid 1px var(--login-btn-border);
+    margin-left: 20px;
+    transition: 300ms;
+    font-family: 'inter';
+    font-weight: 700;
+}
+
+.header-button:hover{
+    background-color: var(--login-btn-background-on-hover);
+    transition: 300ms;
+}
