@@ -18,13 +18,18 @@ export class SearchResultsTab {
   products: Product[] = [];
   isLoading = true;
 
+  // Pagination
+  currentPage: number = 1;
+  totalPages: number = 1;
+  itemsPerPage: number = 5;
+
   ngOnInit() {
     this.loadProducts();
   }
 
-  // Cette méthode est appelée chaque fois que @Input() change
   ngOnChanges(changes: SimpleChanges) {
     if (changes['filters'] && !changes['filters'].firstChange) {
+      this.currentPage = 1;
       this.loadProducts();
     }
   }
@@ -32,9 +37,11 @@ export class SearchResultsTab {
   loadProducts() {
     this.isLoading = true;
 
-    this.productService.getProducts(1, 20, this.filters).subscribe({
+    this.productService.getProducts(this.currentPage, this.itemsPerPage, this.filters).subscribe({
       next: (res) => {
         this.products = res.items;
+        this.totalPages = res.meta.totalPages;
+        this.itemsPerPage = res.meta.itemsPerPage;
         this.isLoading = false;
       },
       error: (err) => {
@@ -42,5 +49,19 @@ export class SearchResultsTab {
         this.isLoading = false;
       },
     });
+  }
+
+  goToPage(page: number) {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+    this.loadProducts();
+  }
+
+  nextPage() {
+    this.goToPage(this.currentPage + 1);
+  }
+
+  prevPage() {
+    this.goToPage(this.currentPage - 1);
   }
 }
