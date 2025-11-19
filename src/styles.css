@@ -60,7 +60,11 @@
     --login-btn-background:#f5e6df;
     --login-btn-border: #d3ada4;
     --login-btn-background-on-hover: #d9ada0;
+    --sign-up-btn: #a74f4e;
+    --sign-up-btn-on-hover: #ad5d5c;
     --filters-border-color: #d7afa0;
+    --search-bar-gray: #888;
+    --general-border-radius: 10px;
 }
 
 body{
@@ -83,4 +87,23 @@ body{
 .header-button:hover{
     background-color: var(--login-btn-background-on-hover);
     transition: 300ms;
+}
+
+
+.horizontal-div{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin: 20px 60px;
+    gap: 20px;
+}
+
+
+.vertical-div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 60px;
+    gap: 20px;
 }
