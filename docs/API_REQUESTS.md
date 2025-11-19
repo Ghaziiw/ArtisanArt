@@ -455,7 +455,7 @@ curl -X DELETE "http://localhost:3000/categories/id_expl" \
 ### Lister tous les produits (Public)
 
 **Pagination :** Oui (`page`, `limit`)  
-**Filtres :** `name`, `categoryId`, `minPrice`, `maxPrice`, `sortByPrice`, `craftsmanName`
+**Filtres :** `name`, `categoryId`, `minPrice`, `maxPrice`, `sortByPrice`, `craftsmanName`, `minRating`                 
 
 ```bash
 curl -X GET "http://localhost:3000/products?page=1&limit=20"

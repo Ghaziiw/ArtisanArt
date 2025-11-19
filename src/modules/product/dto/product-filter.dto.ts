@@ -4,6 +4,8 @@ import {
   IsUUID,
   IsNumberString,
   IsIn,
+  Max,
+  Min,
 } from 'class-validator';
 
 export class ProductFilterDto {
@@ -30,4 +32,10 @@ export class ProductFilterDto {
   @IsOptional()
   @IsString()
   craftsmanName?: string;
+
+  @IsOptional()
+  @IsNumberString()
+  @Max(5)
+  @Min(0)
+  minRating?: number;
 }

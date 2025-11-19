@@ -13,6 +13,8 @@ import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
 import { ProductFilterDto } from './dto/product-filter.dto';
 import { ProductWithStats } from './dto/viw-product-stats.dto';
 import { UploadService } from '../upload/upload.service';
+import { CraftsmanService } from '../craftsman/craftsman.service';
+import { CraftsmanWithStats } from '../craftsman/dto/view-craftsman-stats.dto';
 
 /**
  * Service responsible for managing product records using a TypeORM repository.
@@ -48,6 +50,7 @@ export class ProductService {
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>, // Repository TypeORM pour Category
     private readonly uploadService: UploadService, // Service to handle file uploads
+    private readonly craftsmanService: CraftsmanService, // Service to get craftsman stats
   ) {}
 
   // Helper method to remove invalid offers from a product
@@ -122,14 +125,21 @@ export class ProductService {
     // --- Filter by minPrice ---
     if (filters.minPrice) {
       qb.andWhere('product.price >= :minPrice', {
-        minPrice: parseFloat(filters.minPrice),
+        minPrice: Number(filters.minPrice),
       });
     }
 
     // --- Filter by maxPrice ---
     if (filters.maxPrice) {
       qb.andWhere('product.price <= :maxPrice', {
-        maxPrice: parseFloat(filters.maxPrice),
+        maxPrice: Number(filters.maxPrice),
+      });
+    }
+
+    // --- Filter by minRating ---
+    if (filters.minRating) {
+      qb.having('AVG(comments.mark) >= :minRating', {
+        minRating: Number(filters.minRating),
       });
     }
 
@@ -145,11 +155,24 @@ export class ProductService {
     }>;
 
     // Map entities to include avgRating and totalComments
-    const mapped: ProductWithStats[] = entities.map((prod, i) => ({
-      ...this.removeInvalidOffer(prod),
-      avgRating: Number(typedRaw[i]?.avgRating ?? 0),
-      totalComments: Number(typedRaw[i]?.totalComments ?? 0),
-    }));
+    const mapped: ProductWithStats[] = await Promise.all(
+      entities.map(async (prod, i) => {
+        let craftsmanStats: CraftsmanWithStats | null = null;
+
+        if (prod.craftsman) {
+          craftsmanStats = await this.craftsmanService.findOneByUserIdWithStats(
+            prod.craftsman.userId,
+          );
+        }
+
+        return {
+          ...this.removeInvalidOffer(prod),
+          avgRating: Number(typedRaw[i]?.avgRating ?? 0),
+          totalComments: Number(typedRaw[i]?.totalComments ?? 0),
+          craftsman: craftsmanStats!,
+        };
+      }),
+    );
 
     return {
       items: mapped,
