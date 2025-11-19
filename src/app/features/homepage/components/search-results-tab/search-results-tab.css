@@ -6,3 +6,11 @@
     align-items: center;
     justify-content: center;
 }
+
+.loading-products {
+    width: 1300px;
+    text-align: center;
+    font-family: 'Outfit';
+    font-weight: 500;
+    color: var(--login-btn-text);
+}
