@@ -61,10 +61,13 @@
     --login-btn-border: #d3ada4;
     --login-btn-background-on-hover: #d9ada0;
     --filters-border-color: #d7afa0;
+    --color-palette10: #C5B1AF;
 }
 
 body{
     background-color: var(--body-background);
+    margin: 0;
+    padding: 0;
 }
 
 .header-button{
