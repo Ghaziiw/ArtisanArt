@@ -10,6 +10,13 @@
   border: 1px solid var(--border-color);
   max-height: 200px;
   padding:32px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.product-card:hover {
+  box-shadow: 0 3px 10px 1px rgba(0, 0, 0, 0.199);
+  transition: all 0.3s ease-in-out;
 }
 
 .product-image {

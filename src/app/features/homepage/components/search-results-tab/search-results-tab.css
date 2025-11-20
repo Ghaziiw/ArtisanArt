@@ -7,10 +7,53 @@
     justify-content: center;
 }
 
-.loading-products {
+.loading-products, .no-results {
     width: 1300px;
     text-align: center;
     font-family: 'Outfit';
     font-weight: 500;
     color: var(--login-btn-text);
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    align-items: center;
+}
+
+.pagination button {
+    background-color: var(--login-btn-background);
+    color: var(--login-btn-text);
+    border-radius: 8px;
+    border: solid 1px var(--login-btn-border);
+    margin: 0 10px;
+    transition: 300ms;
+    font-weight: 600;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.pagination span {
+    font-family: 'Outfit';
+    font-weight: 200;
+    color: var(--login-btn-text);
+}
+
+.pagination button:hover {
+    background-color: var(--login-btn-background-on-hover);
+    transition: 300ms;
+}
+
+.pagination button:disabled {
+    color: #A8908D;
+    border: solid 1px var(--color-palette8);
+    cursor: not-allowed;
+    cursor: disabled;
+}
+
+.pagination button:first-child, .pagination button:last-child {
+    height: 30px;
+    width: 100px;
 }
