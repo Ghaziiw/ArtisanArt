@@ -3,7 +3,7 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { Product } from './product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -72,6 +72,50 @@ export class ProductService {
     return product;
   }
 
+  private applyFilters(qb: SelectQueryBuilder<any>, filters: ProductFilterDto) {
+    if (filters.craftsmanName) {
+      qb.andWhere('craftsman.businessName ILIKE :craftsmanName', {
+        craftsmanName: `%${filters.craftsmanName}%`,
+      });
+    }
+
+    if (filters.categoriesId) {
+      const categories = Array.isArray(filters.categoriesId)
+        ? filters.categoriesId
+        : [filters.categoriesId];
+
+      qb.andWhere('category.id IN (:...categories)', { categories });
+    }
+
+    if (filters.name) {
+      qb.andWhere('product.name ILIKE :name', { name: `%${filters.name}%` });
+    }
+
+    if (filters.minPrice) {
+      qb.andWhere(
+        '(product.price * (1 - COALESCE(offer.percentage, 0) / 100)) >= :minPrice',
+        { minPrice: Number(filters.minPrice) },
+      );
+    }
+
+    if (filters.maxPrice) {
+      qb.andWhere(
+        '(product.price * (1 - COALESCE(offer.percentage, 0) / 100)) <= :maxPrice',
+        { maxPrice: Number(filters.maxPrice) },
+      );
+    }
+
+    if (filters.minRating) {
+      qb.having('COALESCE(AVG(comments.mark), 0) >= :minRating', {
+        minRating: Number(filters.minRating),
+      });
+    }
+
+    if (filters.freeShipping === 'true') {
+      qb.andWhere('craftsman.deliveryPrice = 0');
+    }
+  }
+
   // Retrieve all products with their categories
   async findAll(
     page: number,
@@ -80,6 +124,7 @@ export class ProductService {
   ): Promise<Pagination<ProductWithStats, IPaginationMeta>> {
     const skip = (page - 1) * limit;
 
+    // 1) Créer la query de base
     const qb = this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.category', 'category')
@@ -93,14 +138,10 @@ export class ProductService {
       .addGroupBy('craftsman.userId')
       .addGroupBy('offer.productId');
 
-    // --- Filter by craftsman name ---
-    if (filters.craftsmanName) {
-      qb.andWhere('craftsman.name ILIKE :craftsmanName', {
-        craftsmanName: `%${filters.craftsmanName}%`,
-      });
-    }
+    // 2) Appliquer les filtres
+    this.applyFilters(qb, filters);
 
-    // --- Sort by price ---
+    // 3) Appliquer le tri
     if (filters.sortByPrice) {
       qb.orderBy(
         'product.price',
@@ -110,61 +151,32 @@ export class ProductService {
       qb.orderBy('product.createdAt', 'DESC');
     }
 
-    // --- Filter by category ID ---
-    if (filters.categoryId) {
-      qb.andWhere('category.id = :categoryId', {
-        categoryId: filters.categoryId,
-      });
-    }
+    // 4) CLONER la query pour compter AVANT la pagination
+    // Important: le clone inclut tous les filtres (WHERE et HAVING)
+    const countQb = qb.clone();
+    const countResult = await countQb.getRawMany();
+    const totalItems = countResult.length;
 
-    // --- Filter by name ---
-    if (filters.name) {
-      qb.andWhere('product.name ILIKE :name', { name: `%${filters.name}%` });
-    }
-
-    // --- Filter by minPrice ---
-    if (filters.minPrice) {
-      qb.andWhere('product.price >= :minPrice', {
-        minPrice: Number(filters.minPrice),
-      });
-    }
-
-    // --- Filter by maxPrice ---
-    if (filters.maxPrice) {
-      qb.andWhere('product.price <= :maxPrice', {
-        maxPrice: Number(filters.maxPrice),
-      });
-    }
-
-    // --- Filter by minRating ---
-    if (filters.minRating) {
-      qb.having('AVG(comments.mark) >= :minRating', {
-        minRating: Number(filters.minRating),
-      });
-    }
-
+    // 5) Appliquer la pagination sur la query principale
     qb.skip(skip).take(limit);
 
-    const totalItems = await qb.getCount();
+    // 6) Récupérer les données paginées
     const { raw, entities } = await qb.getRawAndEntities();
 
-    // Explicitly type raw as an array of objects with avgRating and totalComments
     const typedRaw = raw as Array<{
       avgRating: number | null;
       totalComments: number | null;
     }>;
 
-    // Map entities to include avgRating and totalComments
+    // 7) Mapper les résultats
     const mapped: ProductWithStats[] = await Promise.all(
       entities.map(async (prod, i) => {
         let craftsmanStats: CraftsmanWithStats | null = null;
-
         if (prod.craftsman) {
           craftsmanStats = await this.craftsmanService.findOneByUserIdWithStats(
             prod.craftsman.userId,
           );
         }
-
         return {
           ...this.removeInvalidOffer(prod),
           avgRating: Number(typedRaw[i]?.avgRating ?? 0),
