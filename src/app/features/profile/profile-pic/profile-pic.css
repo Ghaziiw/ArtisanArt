@@ -16,9 +16,10 @@
     max-height: 140px;
     margin-bottom: -20px;
 }
+
 #user-img{
-    min-height: 125px;
-    min-width: 125px;
+    height: 125px;
+    width: 125px;
     overflow: hidden;
     border: 3px solid var(--login-btn-border);
     border-radius: 62.5px;

@@ -1,4 +1,5 @@
-import { Component, NgModule, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 
 interface User {
@@ -9,12 +10,13 @@ interface User {
 
 @Component({
   selector: 'app-personal-info',
+  imports: [CommonModule, FormsModule],
   templateUrl: './personal-info.html',
   styleUrls: ['./personal-info.css'],
-  imports:[FormsModule],
 })
 export class PersonalInfo {
   @ViewChild('infoForm') infoForm!: NgForm;
+  @ViewChild('passwordForm') passwordForm!: NgForm;
 
   user: User = {
     fullName: 'Sophie Martin',
@@ -22,17 +24,40 @@ export class PersonalInfo {
     location: 'Paris, France'
   };
 
+  test() {
+  console.log('CLICKED');
+  alert('clicked!');
+}
+
+  showPasswordForm : boolean = false;
+
+  password = {
+    current: '',
+    new: '',
+    confirm: ''
+  };
+
+  openPasswordForm(): void {
+    this.showPasswordForm = true;
+  }
+  closePasswordForm():void{
+    this.showPasswordForm = false;
+  }
+
   onSubmit(): void {
+    //add info updates here
     if (this.infoForm.valid) {
-      console.log('Informations sauvegardées :', this.user);
-      alert('Modifications enregistrées avec succès !');
-      // TODO: call API here
+      console.log('Saved:', this.user);
+      alert('Changes saved!');
     }
   }
 
-  onChangePassword(): void {
-    console.log('Ouvrir le modal de changement de mot de passe');
-    // this.router.navigate(['/change-password']);
-    // or open a modal
+  onPasswordSubmit(): void {
+    if (this.password.new !== this.password.confirm) return;
+
+    console.log('Password change:', this.password);
+    alert('Password updated!');
+    this.showPasswordForm = false;
+    this.password = { current: '', new: '', confirm: '' };
   }
 }
