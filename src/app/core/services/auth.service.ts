@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, catchError, of } from 'rxjs';
+import { authClient } from '../../../lib/auth-client';
 
 export interface User {
   id: string;
@@ -88,27 +89,19 @@ export class AuthService {
   /**  
    * Logs out the current user.  
    */
-  logout(): Observable<any> {
-    return this.http.post(`${this.apiUrl}/logout`, {}, { withCredentials: true })
-      .pipe(
-        tap(() => {
-          this.userSubject.next(null);
-          this.sessionSubject.next(null);
-        })
-      );
+  async logout() {
+    this.userSubject.next(null);
+    this.sessionSubject.next(null);
+    await authClient.signOut();
   }
 
   /**  
    * Logs in a user with email and password.  
    */
-  login(email: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/sign-in/email`, { email, password }, { withCredentials: true })
-      .pipe(
-        tap(res => this.userSubject.next(res.user)),
-        catchError(err => {
-          console.error('Login failed', err);
-          return of(err as any);
-        })
-      );
+  async login(email: string, password: string) {
+    await authClient.signIn.email({
+        email: email,
+        password: password
+    });
   }
 }

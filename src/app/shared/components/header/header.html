@@ -1,26 +1,21 @@
 <div id="header-container">
-    <img [src]="'/assets/images/logo.svg'" 
-         alt="Website Logo" 
-         id="artisanart-logo"
-         routerLink="/"
-         style="cursor: pointer;">
+    <img [src]="'/assets/images/logo.svg'" alt="Website Logo" id="artisanart-logo" routerLink="/" style="cursor: pointer;">
     
     <div id="search-bar">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search">
-            <path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/>
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
         <input type="text" name="search-products" id="search-bar-text" placeholder="Search...">
     </div>
     
     <div id="profile-login-sigunp">
-        <button id="profile-btn" class="header-button" routerLink="/profile">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user">
-                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
-            </svg>
+        <button id="profile-btn" class="header-button" routerLink="/profile" *ngIf="authService.user$ | async as user">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             Profile
         </button>
-        <button id="login-btn" class="header-button" routerLink="/login">Login</button>
-        <button id="sign-up-btn" class="header-button">Sign-up</button>
+        <button *ngIf="authService.user$ | async" id="logout-btn" class="header-button" (click)="logout()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
+            Logout
+        </button>
+        <button id="login-btn" class="header-button" routerLink="/login" *ngIf="!(authService.user$ | async)">Login</button>
+        <button id="sign-up-btn" class="header-button" *ngIf="!(authService.user$ | async)">Sign-up</button>
     </div>
 </div>

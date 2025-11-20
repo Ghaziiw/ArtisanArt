@@ -93,7 +93,7 @@ div{
     justify-content: center;
 }
 
-#profile-btn>svg{
+#profile-btn>svg, #logout-btn>svg{
     margin-left: -3px;
     position: relative;
     top:3px;
@@ -101,14 +101,14 @@ div{
     height: 15px;
 }
 
-#sign-up-btn{
+#sign-up-btn, #logout-btn{
     background-color: var(--sign-up-btn);
     color: #fff;
     transition: 300ms;
     font-weight: 500;
 }
 
-#sign-up-btn:hover{
+#sign-up-btn:hover, #logout-btn:hover{
     background-color: var(--sign-up-btn-on-hover);
     transition: 300ms;
 }
