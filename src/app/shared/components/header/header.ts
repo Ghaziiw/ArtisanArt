@@ -1,3 +1,4 @@
+// src/app/shared/components/header/header.ts
 import { Component } from '@angular/core';
 import { RouterLink } from "@angular/router";
 
