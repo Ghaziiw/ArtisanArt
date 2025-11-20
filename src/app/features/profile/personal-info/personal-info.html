@@ -2,9 +2,8 @@
 
   <!-- Informations personnelles -->
   <div class="card">
-    <p class="title">Informations personnelles</p>
-
-    <form #infoForm="ngForm" (ngSubmit)="onSubmit()" novalidate>
+    <p class="title">Personal Informations</p>
+    <form #infoForm="ngForm" (ngSubmit)="onSubmit()">
       <div class="field">
         <div class="field-content">
             <div class="icon-label-wrapper">
@@ -16,7 +15,7 @@
                 <circle cx="12" cy="7" r="4"></circle>
               </svg>
               </div>
-              <label>Full name</label>
+              <label for="fullName">Full name</label>
             </div>
               <input
               type="text"
@@ -24,7 +23,7 @@
               name="fullName"
               required
               class="input"
-              placeholder="Votre nom complet"
+              placeholder="FirstName LastName"
               />
         </div>
       </div>
@@ -40,7 +39,7 @@
               <polyline points="22,6 12,13 2,6"></polyline>
             </svg>
           </div>
-          <label>Email</label>
+          <label for="email">Email</label>
         </div>
           <input
             type="email"
@@ -49,6 +48,7 @@
             required
             email
             class="input"
+            placeholder="youremail@email.something"
           />
         </div>
       </div>
@@ -56,7 +56,6 @@
       <div class="field">
         <div class="field-content">
           <div class="icon-label-wrapper">
-
             <div class="field-icon">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
               fill="none" stroke="#C78A81" stroke-width="2" stroke-linecap="round"
@@ -65,7 +64,7 @@
               <circle cx="12" cy="10" r="3"></circle>
             </svg>
           </div>
-          <label>Location</label>
+          <label for="location">Location</label>
         </div>
           <input
           type="text"
@@ -87,22 +86,82 @@
     </form>
   </div>
 
+
   <div class="card password-card">
     <div class="password-btn-label">
       <h3>Password</h3>
-      <button type="button" class="change-password-btn" (click)="onChangePassword()">
+      <button type="button" class="change-password-btn" (click)="openPasswordForm()" *ngIf="!showPasswordForm">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-        stroke-linejoin="round">
-        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-      </svg>
-      Change Pasword
-    </button>
-  </div>
-  <p class="password-hint">
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+             stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+        </svg>
+        Change Password
+      </button>
+    </div>
+  <p class="password-hint" *ngIf="!showPasswordForm">
     Your password is protected. click on "Change password" to change it.
   </p>
-  </div>
+  <!--password change form, appears after clicking change password-->
+  <div class="password-change-form" *ngIf="showPasswordForm">
+      <form #passwordForm="ngForm" (ngSubmit)="onPasswordSubmit()" class="form">
 
+        <div class="field">
+          <div class="field-content">
+            <div class="icon-label-wrapper">
+              <div class="field-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C78A81" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </div>
+              <label for="current">Current password</label>
+            </div>
+            <input type="password" [(ngModel)]="password.current" name="current" required class="input" placeholder="••••••••">
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-content">
+            <div class="icon-label-wrapper">
+              <div class="field-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C78A81" stroke-width="2">
+                  <path d="M17 11V9a5 5 0 0 0-10 0v2"></path>
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                </svg>
+              </div>
+              <label for="new">New password</label>
+            </div>
+            <input type="password" [(ngModel)]="password.new" name="new" required minlength="8" class="input" placeholder="At least 8 characters">
+          </div>
+        </div>
+
+        <div class="field">
+          <div class="field-content">
+            <div class="icon-label-wrapper">
+              <div class="field-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C78A81" stroke-width="2">
+                  <path d="M17 11V9a5 5 0 0 0-10 0v2"></path>
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                </svg>
+              </div>
+              <label for="confirm">Confirm new password</label>
+            </div>
+            <input type="password" [(ngModel)]="password.confirm" name="confirm" required class="input"
+                   [class.input-error]="passwordForm.submitted && password.new !== password.confirm"
+                   placeholder="Repeat your new password">
+          </div>
+        </div>
+
+        <div class="password-actions">
+          <button type="submit" class="save-btn">
+            Update Password
+          </button>
+          <button type="reset" class="save-btn" id="cancel-btn" (click)="closePasswordForm()">Cancel</button>
+        </div>
+      </form>
+    </div>
+    
+  </div>
 </div>
