@@ -20,10 +20,20 @@ div{
 }
 
 #search-bar{
-    padding-left: 40px;
+    padding-left: 0px;
     color:#888888;
-    height:64px;
-    width: 650px;
+    height:39px;
+    max-width: 580px;
+    border-radius: var(--general-border-radius);
+    transition: 150ms;
+}
+
+
+#search-bar:focus-within {
+    border-color: var(--search-bar-gray);
+    box-shadow: 0 0 0 3px var(--login-btn-border);
+    border: 1px solid var(--login-btn-text);
+    transition: 150ms;
 }
 
 #search-bar>p{
@@ -46,12 +56,13 @@ div{
 }
 
 #search-bar-text{
+    color: var(--search-bar-gray);
     background: none;
     border: 0px;
     border-radius: 10px;
-    height: 50px;
+    height: 35px;
     width: 500px;
-    padding-left: 10px;
+    padding-left: 40px;
     font-family: 'inter';
     font-weight: 400;
     font-size: 15px;
@@ -59,6 +70,12 @@ div{
 
 #search-bar-text:focus{
     border: none;
+    outline: var(--search-bar-gray);
+}
+
+#search-bar>svg{
+    position: relative;
+    left: 35px;
 }
 
 #profile-login-signup{
@@ -76,24 +93,22 @@ div{
     justify-content: center;
 }
 
-#profile-btn>img{
+#profile-btn>svg{
     margin-left: -3px;
-    margin-right: 6px;
     position: relative;
     top:3px;
     width: 15px;
     height: 15px;
-    fill: #5a4237;
 }
 
 #sign-up-btn{
-    background-color: #a74f4e;
+    background-color: var(--sign-up-btn);
     color: #fff;
     transition: 300ms;
     font-weight: 500;
 }
 
 #sign-up-btn:hover{
-    background-color: #ad5d5c;
+    background-color: var(--sign-up-btn-on-hover);
     transition: 300ms;
 }

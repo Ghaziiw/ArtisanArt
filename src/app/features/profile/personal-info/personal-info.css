@@ -1,0 +1,132 @@
+.container {
+  min-width: 750px;
+  margin: 0 0 24px;
+  padding: 24px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.card {
+  background: var(--header-backgrounnd);
+  border-radius: 16px;
+  padding: 30px 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--login-btn-border);
+}
+
+.title{
+    font-family: 'Outfit';
+    font-size: 16px;
+    color: var(--login-btn-text);
+    align-self: flex-start;
+    margin: 0 0 32px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.field {
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.icon-label-wrapper{
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 5px 0px 5px 10px;
+}
+
+.field-icon {
+  color: #d4a5a5;
+  flex-shrink: 0;
+}
+
+.field-content {
+  flex: 1;
+}
+
+.field-content label {
+  display: block;
+  font-family: 'Outfit';
+  font-size: 14px;
+  color: var(--login-btn-text);
+  font-weight: 500;
+}
+
+.input {
+  width: 92%;
+  height: 36px;
+  padding: 0 16px;
+  border: 1.5px solid var(--login-btn-border);
+  border-radius: 10px;
+  font-size: 15px;
+  transition: all 0.2s;
+  background-color: var(--header-backgrounnd);
+  color: var(--login-btn-text)
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--login-btn-text);
+  box-shadow: 0 0 0 3px var(--login-btn-border);
+}
+
+.save-btn {
+  width: 96%;
+  margin-top: 12px;
+  margin-left: 10px;
+  background: var(--sign-up-btn);
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: disabled
+}
+
+.save-btn:hover:not(:disabled) {
+    background: var(--sign-up-btn-on-hover);
+    cursor: not-allowed;
+}
+
+.password-card h3 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  color: #444;
+}
+
+.password-hint {
+  color: #777;
+  font-size: 14px;
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+.change-password-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f5f0f0;
+  color: #8b2e2e;
+  border: 1.5px solid #e2cfcf;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.change-password-btn:hover {
+  background: #ede5e5;
+  border-color: #c77;
+}
