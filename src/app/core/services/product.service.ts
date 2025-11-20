@@ -36,11 +36,9 @@ export interface ProductsResponse {
   }
 }
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class ProductService {
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = 'http://localhost:3000/products';
 
   constructor(private http: HttpClient) {}
 
@@ -71,6 +69,6 @@ export class ProductService {
       if (filters.freeShipping) params = params.set('freeShipping', 'true');
     }
 
-    return this.http.get<ProductsResponse>(`${this.apiUrl}/products`, { params });
+    return this.http.get<ProductsResponse>(`${this.apiUrl}`, { params });
   }
 }
