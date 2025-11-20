@@ -1,7 +1,5 @@
-<body>
-    <app-header></app-header>
-    <div class="horizontal-div">
-        <app-search-filters-bar></app-search-filters-bar>
-        <app-search-results-tab></app-search-results-tab>
-    </div>
-</body>
+<app-header></app-header>
+<div class="horizontal-div">
+    <app-search-filters-bar (filtersChange)="onFiltersChange($event)"></app-search-filters-bar>
+    <app-search-results-tab [filters]="currentFilters"></app-search-results-tab>
+</div>

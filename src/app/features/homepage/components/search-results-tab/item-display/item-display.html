@@ -1,6 +1,6 @@
 <div class="product-card">
   <div class="product-image">
-    <img [src]="product.images.length ? product.images[0] : '/assets/images/chachya.webp'" alt="product-image">
+    <img [src]="product.images && product.images.length && product.images[0] ? product.images[0] : '/assets/images/chachya.webp'" alt="product-image">
   </div>
 
   <div class="content">
@@ -31,7 +31,7 @@
   </div>
 
   <div class="seller">
-    <img [src]="product.craftsman.profileImage.length ? product.craftsman.profileImage : '/assets/images/seller1.jpg'" alt="Seller" class="seller-avatar">
+    <img [src]="product.craftsman.profileImage?.length ? product.craftsman.profileImage : '/assets/images/seller1.jpg'" alt="Seller" class="seller-avatar">
     <div class="seller-name">{{ product.craftsman.businessName || 'Artisan inconnu' }}</div>
     <div class="location">{{ product.craftsman.workshopAddress || 'Adresse non disponible' }}</div>
 

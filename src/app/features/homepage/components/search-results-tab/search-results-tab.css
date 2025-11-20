@@ -7,7 +7,7 @@
     justify-content: center;
 }
 
-.loading-products {
+.loading-products, .no-results {
     width: 1300px;
     text-align: center;
     font-family: 'Outfit';
