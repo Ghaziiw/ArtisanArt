@@ -2,7 +2,7 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChang
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http'; // <-- import du module HTTP
+import { HttpClientModule, provideHttpClient } from '@angular/common/http'; // <-- import du module HTTP
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -10,6 +10,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
-    importProvidersFrom(HttpClientModule)
+    importProvidersFrom(HttpClientModule),
+    provideHttpClient(),
   ]
 };

@@ -1,12 +1,7 @@
+import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { NgForm, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Component, ViewChild } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
-
-interface User {
-  fullName: string;
-  email: string;
-  location: string;
-}
+import { AuthService, User } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-personal-info',
@@ -14,50 +9,79 @@ interface User {
   templateUrl: './personal-info.html',
   styleUrls: ['./personal-info.css'],
 })
-export class PersonalInfo {
+export class PersonalInfo implements OnChanges {
+  @Input() user!: User; // Useer passed from parent component
   @ViewChild('infoForm') infoForm!: NgForm;
-  @ViewChild('passwordForm') passwordForm!: NgForm;
 
-  user: User = {
-    fullName: 'Sophie Martin',
-    email: 'sophie.martin@email.com',
-    location: 'Paris, France'
-  };
+  password = { current: '', new: '', confirm: '' };
+  showPasswordForm = false;
 
-  test() {
-  console.log('CLICKED');
-  alert('clicked!');
-}
+  constructor(private authService: AuthService) {}
 
-  showPasswordForm : boolean = false;
-
-  password = {
-    current: '',
-    new: '',
-    confirm: ''
-  };
-
-  openPasswordForm(): void {
-    this.showPasswordForm = true;
-  }
-  closePasswordForm():void{
-    this.showPasswordForm = false;
-  }
-
-  onSubmit(): void {
-    //add info updates here
-    if (this.infoForm.valid) {
-      console.log('Saved:', this.user);
-      alert('Changes saved!');
+  // Detect changes to the input user
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['user'] && this.user) {
+      // Tu peux copier les valeurs si tu veux éditer localement
+      this.localUser = { ...this.user };
     }
   }
 
-  onPasswordSubmit(): void {
-    if (this.password.new !== this.password.confirm) return;
+  localUser!: User;
 
-    console.log('Password change:', this.password);
-    alert('Password updated!');
-    this.showPasswordForm = false;
-    this.password = { current: '', new: '', confirm: '' };
+  // Open and close password change form with animation
+  openPasswordForm(): void {
+    this.showPasswordForm = true;
+  }
+  closePasswordForm(): void {
+    const formEl = document.querySelector('.password-change-form') as HTMLElement;
+    if (!formEl) return;
+
+    formEl.classList.add('hide');
+
+    formEl.addEventListener('animationend', () => {
+      this.showPasswordForm = false;
+      formEl.classList.remove('hide');
+    }, { once: true });
+  }
+
+  // Submit personal info form
+  onSubmit(): void {
+    if (!this.infoForm.valid) return;
+
+    // this.authService.updateUser({
+    //   name: this.localUser.name,
+    //   email: this.localUser.email,
+    //   location: this.localUser.location
+    // }).subscribe({
+    //   next: updatedUser => {
+    //     console.log('User updated:', updatedUser);
+    //     alert('Changes saved!');
+    //   },
+    //   error: err => {
+    //     console.error(err);
+    //     alert('Failed to update user info');
+    //   }
+    // });
+  }
+
+  // Submit password change form
+  onPasswordSubmit(): void {
+    if (this.password.new !== this.password.confirm) {
+      alert('Passwords do not match!');
+      return;
+    }
+
+    // this.authService.changePassword(this.password.current, this.password.new)
+    //   .subscribe({
+    //     next: () => {
+    //       alert('Password updated!');
+    //       this.closePasswordForm();
+    //       this.password = { current: '', new: '', confirm: '' };
+    //     },
+    //     error: err => {
+    //       console.error(err);
+    //       alert('Failed to change password');
+    //     }
+    //   });
   }
 }

@@ -95,8 +95,8 @@
 }
 
 .save-btn:hover:not(:disabled) {
-    background: var(--sign-up-btn-on-hover);
-    cursor: not-allowed;
+  background: var(--sign-up-btn-on-hover);
+  cursor: not-allowed;
 }
 .password-hint {
   color: #777;
@@ -177,4 +177,13 @@
 .input-error {
   border-color: #e74c3c !important;
   box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.15);
+}
+
+@keyframes slideUp {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-10px); }
+}
+
+.password-change-form.hide {
+  animation: slideUp 0.35s linear forwards;
 }

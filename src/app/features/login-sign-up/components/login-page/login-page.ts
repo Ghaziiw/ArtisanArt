@@ -1,29 +1,38 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
+import { AuthService, LoginResponse } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login-page',
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './login-page.html',
-  styleUrl: './login-page.css',
+  styleUrls: ['./login-page.css'], // pluriel
 })
 export class LoginPage {
-    credentials = {
-    email: '',
-    password: ''
-  };
-
+  credentials = { email: '', password: '' };
   loginError: string = '';
 
-  onSubmit(form: any) {
-    if (form.valid) {
-      // Handle login logic
-    }
+  constructor(private authService: AuthService) {}
+
+  onSubmit(form: NgForm) {
+    if (!form.valid) return;
+
+    this.authService.login(this.credentials.email, this.credentials.password)
+      .subscribe({
+        next: (res: LoginResponse) => {
+          console.log('Logged in user:', res.user);
+          // Redirection possible ici
+        },
+        error: (err: any) => {
+          console.error(err);
+          this.loginError = 'Email ou mot de passe invalide';
+        }
+      });
   }
 
   onSignUpClick(event: Event) {
     event.preventDefault();
-    // Handle navigation to sign up
+    // Navigation vers signup
   }
 }
