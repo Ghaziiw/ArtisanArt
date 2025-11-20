@@ -7,7 +7,7 @@ import { PersonalInfo } from './personal-info/personal-info';
   selector: 'app-profile',
   imports: [Header, ProfilePic,PersonalInfo],
   templateUrl: './profile.html',
-  styleUrl: './profile.css',
+  styleUrls: ['./profile.css'],
 })
 export class Profile {
 

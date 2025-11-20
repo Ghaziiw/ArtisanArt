@@ -65,13 +65,10 @@
     --filters-border-color: #d7afa0;
     --search-bar-gray: #888;
     --general-border-radius: 10px;
-    --color-palette10: #C5B1AF;
 }
 
 body{
     background-color: var(--body-background);
-    margin: 0;
-    padding: 0;
 }
 
 .header-button{
