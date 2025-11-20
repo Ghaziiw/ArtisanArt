@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, catchError, of } from 'rxjs';
 import { authClient } from '../../../lib/auth-client';
+import { get } from 'http';
 
 export interface User {
   id: string;
@@ -57,25 +58,27 @@ export class AuthService {
    * Fetches the current session from the API.
    */
   getSession(): Observable<SessionResponse | null> {
-    return this.http.get<SessionResponse>(`${this.apiUrl}/get-session`, {
-      withCredentials: true, // <- envoie le cookie automatiquement
-    }).pipe(
-      tap((response) => {
-        if (response?.user && response?.session) {
-          this.userSubject.next(response.user);
-          this.sessionSubject.next(response.session);
-        } else {
+    return this.http
+      .get<SessionResponse>(`${this.apiUrl}/get-session`, {
+        withCredentials: true, // <- envoie le cookie automatiquement
+      })
+      .pipe(
+        tap((response) => {
+          if (response?.user && response?.session) {
+            this.userSubject.next(response.user);
+            this.sessionSubject.next(response.session);
+          } else {
+            this.userSubject.next(null);
+            this.sessionSubject.next(null);
+          }
+        }),
+        catchError((err) => {
+          console.error('Failed to load session:', err);
           this.userSubject.next(null);
           this.sessionSubject.next(null);
-        }
-      }),
-      catchError(err => {
-        console.error('Failed to load session:', err);
-        this.userSubject.next(null);
-        this.sessionSubject.next(null);
-        return of(null);
-      })
-    );
+          return of(null);
+        })
+      );
   }
 
   /**
@@ -86,8 +89,8 @@ export class AuthService {
     this.getSession().subscribe();
   }
 
-  /**  
-   * Logs out the current user.  
+  /**
+   * Logs out the current user.
    */
   async logout() {
     this.userSubject.next(null);
@@ -95,13 +98,14 @@ export class AuthService {
     await authClient.signOut();
   }
 
-  /**  
-   * Logs in a user with email and password.  
+  /**
+   * Logs in a user with email and password.
    */
   async login(email: string, password: string) {
-    await authClient.signIn.email({
-        email: email,
-        password: password
-    });
+    const res = await authClient.signIn.email({ email, password });
+    if (res.data) {
+      this.getSession().subscribe();
+    }
+    return res.data || res.error; // renvoie soit Data soit Error
   }
 }
