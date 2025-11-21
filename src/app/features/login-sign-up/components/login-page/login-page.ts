@@ -1,38 +1,49 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { AuthService, LoginResponse } from '../../../../core/services/auth.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
+  standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './login-page.html',
-  styleUrls: ['./login-page.css'], // pluriel
+  styleUrls: ['./login-page.css'],
 })
 export class LoginPage {
   credentials = { email: '', password: '' };
   loginError: string = '';
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
-  onSubmit(form: NgForm) {
+  async onSubmit(form: NgForm) {
     if (!form.valid) return;
 
-    this.authService.login(this.credentials.email, this.credentials.password)
-      .subscribe({
-        next: (res: LoginResponse) => {
-          console.log('Logged in user:', res.user);
-          // Redirection possible ici
-        },
-        error: (err: any) => {
-          console.error(err);
-          this.loginError = 'Email ou mot de passe invalide';
-        }
-      });
+    this.loginError = '';
+
+    try {
+      const result = await this.authService.login(this.credentials.email, this.credentials.password);
+
+      // Si Better Auth renvoie un objet Data, il contient user
+      if ('user' in result) {
+        // login réussi
+        this.router.navigate(['/profile']);
+      } else {
+        // login échoué
+        this.loginError = 'Email ou mot de passe invalide';
+      }
+
+    } catch (error: any) {
+      console.error(error);
+      this.loginError = error?.message || 'Échec de la connexion';
+    }
   }
+
 
   onSignUpClick(event: Event) {
     event.preventDefault();
     // Navigation vers signup
+    this.router.navigate(['/signup']);
   }
 }

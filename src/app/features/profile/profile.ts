@@ -1,28 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { Header } from '../../shared/components/header/header';
-import { ProfilePic } from "./profile-pic/profile-pic";
+import { ProfilePic } from './profile-pic/profile-pic';
 import { PersonalInfo } from './personal-info/personal-info';
 import { CommonModule } from '@angular/common';
 import { AuthService, User } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-profile',
-  imports: [Header, ProfilePic,PersonalInfo, CommonModule],
+  imports: [Header, ProfilePic, PersonalInfo, CommonModule],
   templateUrl: './profile.html',
   styleUrls: ['./profile.css'],
 })
 export class Profile implements OnInit {
-  user: User | null = null;
+  user!: User;
 
   constructor(private authService: AuthService) {}
 
   // Load user on init
   ngOnInit() {
-    this.authService.user$.subscribe({
-      next: (user) => {
-        this.user = user;
-      },
-      error: (err) => console.error('Error loading user:', err)
+    this.authService.user$.subscribe((user) => {
+      this.user = user!;
+      console.log('Parent received user:', user);
     });
   }
 }
