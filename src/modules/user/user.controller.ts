@@ -120,4 +120,9 @@ export class UserController {
     const imageUrl = this.uploadService.getFileUrl(file.filename, 'profiles');
     return this.userService.updateProfileImage(user.id, imageUrl);
   }
+
+  @Delete('/profile/me/image')
+  async deleteMyProfileImage(@CurrentUser() user: AuthUser): Promise<User> {
+    return this.userService.deleteProfileImage(user.id);
+  }
 }

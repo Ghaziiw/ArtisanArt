@@ -103,9 +103,16 @@ curl -X PATCH "http://localhost:3000/users/profile/me/image" \
 ### Upload Image de Profil (Admin)
 
 ```bash
-curl -X PATCH "http://localhost:3000/users/:userId/image \
+curl -X PATCH "http://localhost:3000/users/:userId/image" \
 -b cookies.txt \
 -F "profileImage=@/chemin/vers/ton/image.jpg"
+```
+
+### Supprimer Image de Profil
+
+```bash
+curl -X DELETE "http://localhost:3000/users/profile/me/image" \
+-b cookies.txt \
 ```
 
 ### Obtenir mon profil
