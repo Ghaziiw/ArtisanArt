@@ -8,18 +8,13 @@
         <div class="field-content">
             <div class="icon-label-wrapper">
               <div class="field-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-                fill="none" stroke="#C78A81" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"fill="none" stroke="#C78A81" stroke-width="2" stroke-linecap="round"stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
               </div>
               <label for="fullName">Full name</label>
             </div>
               <input
               type="text"
-              [(ngModel)]="user.name"
+              [(ngModel)]="localUser.name"
               name="fullName"
               required
               class="input"
@@ -32,18 +27,13 @@
         <div class="field-content">
           <div class="icon-label-wrapper">
             <div class="field-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-              fill="none" stroke="#C78A81" stroke-width="2" stroke-linecap="round"
-              stroke-linejoin="round">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-              <polyline points="22,6 12,13 2,6"></polyline>
-            </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"fill="none" stroke="#C78A81" stroke-width="2" stroke-linecap="round"stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
           </div>
           <label for="email">Email</label>
         </div>
           <input
             type="email"
-            [(ngModel)]="user.email"
+            [(ngModel)]="localUser.email"
             name="email"
             required
             email
@@ -57,18 +47,13 @@
         <div class="field-content">
           <div class="icon-label-wrapper">
             <div class="field-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-              fill="none" stroke="#C78A81" stroke-width="2" stroke-linecap="round"
-              stroke-linejoin="round">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-              <circle cx="12" cy="10" r="3"></circle>
-            </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"fill="none" stroke="#C78A81" stroke-width="2" stroke-linecap="round"stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
           </div>
           <label for="location">Location</label>
         </div>
           <input
           type="text"
-          [(ngModel)]="user.location"
+          [(ngModel)]="localUser.location"
           name="location"
           class="input"
           placeholder="ex: Paris, France"
@@ -91,10 +76,7 @@
     <div class="password-btn-label">
       <h3>Password</h3>
       <button type="button" class="change-password-btn" (click)="openPasswordForm()" *ngIf="!showPasswordForm">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
         Change Password
       </button>
     </div>
@@ -107,10 +89,7 @@
           <div class="field-content">
             <div class="icon-label-wrapper">
               <div class="field-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C78A81" stroke-width="2">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C78A81" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
               </div>
               <label for="current">Current password</label>
             </div>
@@ -122,10 +101,7 @@
           <div class="field-content">
             <div class="icon-label-wrapper">
               <div class="field-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C78A81" stroke-width="2">
-                  <path d="M17 11V9a5 5 0 0 0-10 0v2"></path>
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C78A81" stroke-width="2"><path d="M17 11V9a5 5 0 0 0-10 0v2"></path><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect></svg>
               </div>
               <label for="new">New password</label>
             </div>
@@ -137,10 +113,7 @@
           <div class="field-content">
             <div class="icon-label-wrapper">
               <div class="field-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C78A81" stroke-width="2">
-                  <path d="M17 11V9a5 5 0 0 0-10 0v2"></path>
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C78A81" stroke-width="2"><path d="M17 11V9a5 5 0 0 0-10 0v2"></path><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect></svg>
               </div>
               <label for="confirm">Confirm new password</label>
             </div>
@@ -153,7 +126,10 @@
           <button type="reset" class="save-btn" id="cancel-btn" (click)="closePasswordForm()">Cancel</button>
         </div>
       </form>
+
+      <div *ngIf="passwordError" class="error-message">
+        {{ passwordError }}
+      </div>
     </div>
-    
   </div>
 </div>
