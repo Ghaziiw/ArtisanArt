@@ -54,6 +54,10 @@ export class AuthService {
     this.loadSession();
   }
 
+  get currentUser() {
+    return this.userSubject.value;
+  }
+
   /**
    * Fetches the current session from the API.
    */
