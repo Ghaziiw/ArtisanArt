@@ -89,16 +89,16 @@ export class ShoppingCartService {
 
       existingCartItem.quantity = newQuantity;
       await this.shoppingCartRepository.save(existingCartItem);
+    } else {
+      // Create new cart item
+      const cartItem = this.shoppingCartRepository.create({
+        userId,
+        productId: cartData.productId,
+        quantity,
+      });
+
+      await this.shoppingCartRepository.save(cartItem);
     }
-
-    // Create new cart item
-    const cartItem = this.shoppingCartRepository.create({
-      userId,
-      productId: cartData.productId,
-      quantity,
-    });
-
-    await this.shoppingCartRepository.save(cartItem);
 
     const cartItemWithRelations = await this.shoppingCartRepository.findOne({
       where: { userId, productId: cartData.productId },
