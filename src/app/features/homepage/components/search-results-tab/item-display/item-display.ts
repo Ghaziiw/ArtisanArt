@@ -18,6 +18,9 @@ export class ItemDisplay {
   isAddingToCart = false;
   addToCartError = '';
   addToCartSuccess = false;
+  showMessage = false;
+  message: { type: 'success' | 'error'; text: string } = { type: 'success', text: '' };
+  isHiding = false;
 
   constructor(
     private cartService: ShoppingCartService,
@@ -42,7 +45,6 @@ export class ItemDisplay {
     if (this.isAddingToCart) return;
 
     this.isAddingToCart = true;
-    this.addToCartError = '';
     this.addToCartSuccess = false;
 
     // Add to cart with default quantity of 1
@@ -57,7 +59,10 @@ export class ItemDisplay {
           this.isAddingToCart = false;
           this.addToCartSuccess = true;
 
-          // Reset success message after 2 seconds
+          // Show success message
+          this.displayMessage('success', 'Product added to cart successfully!');
+
+          // Reset success state after 2 seconds
           setTimeout(() => {
             this.addToCartSuccess = false;
           }, 2000);
@@ -65,13 +70,32 @@ export class ItemDisplay {
         error: (err) => {
           console.error('Failed to add to cart:', err);
           this.isAddingToCart = false;
-          this.addToCartError = err.error?.message || 'Failed to add to cart';
 
-          // Clear error after 3 seconds
-          setTimeout(() => {
-            this.addToCartError = '';
-          }, 3000);
+          const errorMessage = err.error?.message || 'Failed to add to cart';
+
+          // Show error message
+          this.displayMessage('error', errorMessage);
         },
       });
+  }
+
+  /**
+   * Display message with animations
+   */
+  private displayMessage(type: 'success' | 'error', text: string): void {
+    this.message = { type, text };
+    this.showMessage = true;
+    this.isHiding = false;
+
+    // Start hide animation after 4.5 seconds
+    setTimeout(() => {
+      this.isHiding = true;
+
+      // Remove from DOM after animation completes (0.5s)
+      setTimeout(() => {
+        this.showMessage = false;
+        this.isHiding = false;
+      }, 500);
+    }, 4500);
   }
 }

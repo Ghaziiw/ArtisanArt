@@ -50,11 +50,8 @@
       <svg *ngIf="!isAddingToCart && !addToCartSuccess" xmlns="http://www.w3.org/2000/svg" width="18" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart-icon lucide-shopping-cart"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
       
       <span *ngIf="!isAddingToCart && !addToCartSuccess">Add</span>
-      <span *ngIf="addToCartSuccess">Added!</span>
+      <span *ngIf="addToCartSuccess && !isAddingToCart" style="font-size: 14px;">Added</span>
     </button>
-
-    <!-- Error message (positioned below button) -->
-    <div *ngIf="addToCartError" class="cart-error-message">{{ addToCartError }}</div>
   </div>
 
   <div class="seller">
@@ -69,4 +66,12 @@
       <span>{{ product.craftsman.avgRating || 0 }} ({{ product.craftsman.totalComments || 0 }})</span>
     </div>
   </div>
+</div>
+
+<div 
+  [hidden]="!showMessage" 
+  class="global-message"
+  [ngClass]="{ 'success-message': message.type === 'success', 'error-message': message.type === 'error', 'hiding': isHiding }"
+>
+  {{ message.text }}
 </div>

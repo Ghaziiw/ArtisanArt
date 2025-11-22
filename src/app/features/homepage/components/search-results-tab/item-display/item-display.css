@@ -186,7 +186,7 @@
 .add-btn {
   display: flex;
   align-items: center;
-  width: 90px;
+  width: 95px;
   height: 36px;
   gap: 8px;
   background-color: var(--sign-up-btn);
@@ -211,56 +211,73 @@
   cursor: not-allowed;
 }
 
-/* Success state */
-.add-btn.success {
-  background-color: #489b5c;
+/* Spinner Animation */
+.global-message {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 16px 32px;
+  border-radius: 0 0 12px 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  z-index: 10000;
+  min-width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: slideDown 0.5s ease-out;
 }
 
-.add-btn.success:hover {
-  background-color: #218838;
+/* Hiding Animation */
+.global-message.hiding {
+  animation: slideUp 0.5s ease-in forwards;
 }
 
-/* Loading state */
-.add-btn.loading {
-  opacity: 0.8;
+/* Success Message Styling */
+.success-message {
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-top: none;
+  color: #155724;
 }
 
-/* Spinner animation */
-.spinner {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Error message */
-.cart-error-message {
-  position: absolute;
-  top: 45px;
+/* Error Message Styling */
+.error-message {
   background-color: #ffe6e6;
   border: 1px solid #ffcccc;
-  border-radius: 6px;
+  border-top: none;
   color: #d9534f;
-  padding: 8px 12px;
-  font-size: 12px;
-  white-space: nowrap;
-  animation: slideIn 0.3s ease-out;
-  z-index: 10;
 }
 
-@keyframes slideIn {
+/* Slide Down Animation (Apparition) */
+@keyframes slideDown {
   from {
+    transform: translate(-50%, -100%);
     opacity: 0;
-    transform: translateY(-10px);
   }
   to {
+    transform: translate(-50%, 0);
     opacity: 1;
-    transform: translateY(0);
+  }
+}
+
+/* Slide Up Animation (Disparition) */
+@keyframes slideUp {
+  from {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .global-message {
+    min-width: 90%;
+    padding: 12px 20px;
+    font-size: 14px;
   }
 }
