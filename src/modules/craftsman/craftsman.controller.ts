@@ -17,7 +17,6 @@ import { Public } from 'src/auth/decorators/public.decorator';
 import { PermissionsGuard } from 'src/auth/guards/permissions.guard';
 import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import type { AuthUser } from 'src/auth/types/auth-user';
-import { Craftsman } from '../craftsman/craftsman.entity';
 import { UpdateCraftsmanDto } from '../craftsman/dto/update-craftsman.dto';
 import { RequirePermissions } from 'src/auth/decorators/permissions.decorator';
 import { Permission } from 'src/auth/types/permissions.types';
@@ -26,6 +25,7 @@ import { CraftsmanFilterDto } from './dto/craftsman-filter.dto';
 import { UploadService } from '../upload/upload.service';
 import { multerConfig } from 'src/config/multer.config';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Craftsman } from './craftsman.entity';
 
 @Controller('craftsmen')
 @UseGuards(PermissionsGuard)
@@ -63,7 +63,7 @@ export class CraftsmanController {
   @Get(':id')
   @Public()
   findOne(@Param('id') id: string) {
-    return this.craftsmanService.findOneByUserId(id);
+    return this.craftsmanService.findOneByUserIdWithStats(id);
   }
 
   // POST /craftsmen → create a new craftsman

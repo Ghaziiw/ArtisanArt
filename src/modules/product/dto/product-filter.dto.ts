@@ -4,6 +4,9 @@ import {
   IsUUID,
   IsNumberString,
   IsIn,
+  Max,
+  Min,
+  IsBooleanString,
 } from 'class-validator';
 
 export class ProductFilterDto {
@@ -12,8 +15,8 @@ export class ProductFilterDto {
   name?: string;
 
   @IsOptional()
-  @IsUUID()
-  categoryId?: string;
+  @IsUUID('4', { each: true })
+  categoriesId?: string[];
 
   @IsOptional()
   @IsNumberString()
@@ -30,4 +33,14 @@ export class ProductFilterDto {
   @IsOptional()
   @IsString()
   craftsmanName?: string;
+
+  @IsOptional()
+  @IsNumberString()
+  @Max(5)
+  @Min(0)
+  minRating?: number;
+
+  @IsOptional()
+  @IsBooleanString()
+  freeShipping?: string;
 }

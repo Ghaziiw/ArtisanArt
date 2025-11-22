@@ -1,6 +1,14 @@
 import { IsString, Matches } from 'class-validator';
 import { User } from 'src/modules/user/user.entity';
-import { Entity, Column, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  JoinColumn,
+  OneToOne,
+  PrimaryColumn,
+  OneToMany,
+} from 'typeorm';
+import { Product } from '../product/product.entity';
 
 @Entity('craftsmen')
 export class Craftsman {
@@ -48,4 +56,9 @@ export class Craftsman {
 
   @Column({ nullable: true })
   profileImage?: string;
+
+  @OneToMany('Product', (product: Product) => product.craftsman, {
+    eager: false,
+  })
+  products: Product[];
 }

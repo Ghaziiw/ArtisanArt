@@ -43,4 +43,8 @@ export const auth = betterAuth({
     expiresIn: 60 * 60 * 24 * 1, // 1 day
   },
   debug: true, // Enable debug mode for development
+  trustedOrigins: [
+    'http://localhost:3000', // backend
+    'http://localhost:4200', // frontend
+  ],
 });

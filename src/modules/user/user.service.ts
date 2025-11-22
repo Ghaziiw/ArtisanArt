@@ -251,4 +251,9 @@ export class UserService {
     user.image = imageUrl;
     return await this.userRepository.save(user);
   }
+
+  // Delete user's profile image
+  deleteProfileImage(userId: string): Promise<User> {
+    return this.updateProfileImage(userId, '');
+  }
 }

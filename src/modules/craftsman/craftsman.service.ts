@@ -11,8 +11,14 @@ import { CreateCraftsmanDto } from './dto/create-craftsman.dto';
 import { auth } from 'src/utils/auth';
 import { UpdateCraftsmanDto } from '../craftsman/dto/update-craftsman.dto';
 import { UpdateCraftsmanExpDateDto } from './dto/update-craftsman-exp-date.dto';
-import { IPaginationMeta, paginate, Pagination } from 'nestjs-typeorm-paginate';
+import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
 import { CraftsmanFilterDto } from './dto/craftsman-filter.dto';
+import { CraftsmanWithStats } from './dto/view-craftsman-stats.dto';
+
+export interface CraftsmanStatsRaw {
+  avgRating: string | number;
+  totalComments: string | number;
+}
 
 /**
  * Service responsible for managing craftsman records using a TypeORM repository.
@@ -82,45 +88,90 @@ export class CraftsmanService {
     private userRepo: Repository<User>, // Repository TypeORM for User
   ) {}
 
-  // Retrieve all craftsmen with their associated user data
+  // Helper method to get craftsman stats
+  public async getCraftsmanStats(userId: string): Promise<CraftsmanStatsRaw> {
+    const stats = await this.craftsmanRepository
+      .createQueryBuilder('c')
+      .leftJoin('c.products', 'products')
+      .leftJoin('products.comments', 'comments')
+      .select('COALESCE(AVG(comments.mark), 0)', 'avgRating')
+      .addSelect('COALESCE(COUNT(comments.id), 0)', 'totalComments')
+      .where('c.userId = :userId', { userId })
+      .getRawOne<CraftsmanStatsRaw>();
+
+    return {
+      avgRating: parseFloat(String(stats?.avgRating ?? 0)),
+      totalComments: parseInt(String(stats?.totalComments ?? 0), 10),
+    };
+  }
+
+  // Retrieve all craftsmen with pagination and optional filters
   async findAll(
     page: number,
     limit: number,
     filters: CraftsmanFilterDto,
     isAdmin = false,
-  ): Promise<Pagination<Craftsman, IPaginationMeta>> {
-    const qb = this.craftsmanRepository.createQueryBuilder('craftsman');
+  ): Promise<Pagination<CraftsmanWithStats, IPaginationMeta>> {
+    const skip = (page - 1) * limit;
 
-    // --- Filter by business name ---
+    const qb = this.craftsmanRepository
+      .createQueryBuilder('craftsman')
+      .leftJoinAndSelect('craftsman.user', 'user'); // ✅ Charger pour le tri
+
+    // --- Filters ---
     if (filters.businessName) {
-      qb.andWhere('craftsman.businessName LIKE :businessName', {
+      qb.andWhere('craftsman.businessName ILIKE :businessName', {
         businessName: `%${filters.businessName}%`,
       });
     }
 
-    // --- Filter by specialty ---
     if (filters.specialty) {
-      qb.andWhere('craftsman.specialty LIKE :specialty', {
+      qb.andWhere('craftsman.specialty ILIKE :specialty', {
         specialty: `%${filters.specialty}%`,
       });
     }
 
-    // --- Filter by expiration date range ---
     if (filters.expirationDateMin && isAdmin) {
       qb.andWhere('craftsman.expirationDate >= :expMin', {
         expMin: filters.expirationDateMin,
       });
     }
+
     if (filters.expirationDateMax && isAdmin) {
       qb.andWhere('craftsman.expirationDate <= :expMax', {
         expMax: filters.expirationDateMax,
       });
     }
 
-    return await paginate<Craftsman>(qb, {
-      page,
-      limit,
-    });
+    qb.orderBy('user.createdAt', 'DESC').skip(skip).take(limit);
+
+    const [craftsmen, totalItems] = await qb.getManyAndCount();
+
+    // Get stats for each craftsman
+    const craftsmenWithStats: CraftsmanWithStats[] = await Promise.all(
+      craftsmen.map(async (craftsman) => {
+        const stats = await this.getCraftsmanStats(craftsman.userId);
+
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { user, ...craftsmanData } = craftsman;
+
+        return {
+          ...craftsmanData,
+          ...stats,
+        } as CraftsmanWithStats;
+      }),
+    );
+
+    return {
+      items: craftsmenWithStats,
+      meta: {
+        totalItems,
+        itemCount: craftsmenWithStats.length,
+        itemsPerPage: limit,
+        totalPages: Math.ceil(totalItems / limit),
+        currentPage: page,
+      },
+    };
   }
 
   // Create a new craftsman along with the associated user
@@ -181,6 +232,25 @@ export class CraftsmanService {
       throw new NotFoundException('Craftsman not found');
     }
     return craftsman;
+  }
+
+  public async findOneByUserIdWithStats(
+    userId: string,
+  ): Promise<CraftsmanWithStats> {
+    const craftsman = await this.craftsmanRepository.findOne({
+      where: { userId },
+    });
+
+    if (!craftsman) {
+      throw new NotFoundException('Craftsman not found');
+    }
+
+    const stats = await this.getCraftsmanStats(userId);
+
+    return {
+      ...craftsman,
+      ...stats,
+    } as CraftsmanWithStats;
   }
 
   // Update a craftsman and associated user profile

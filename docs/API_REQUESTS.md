@@ -103,9 +103,16 @@ curl -X PATCH "http://localhost:3000/users/profile/me/image" \
 ### Upload Image de Profil (Admin)
 
 ```bash
-curl -X PATCH "http://localhost:3000/users/:userId/image \
+curl -X PATCH "http://localhost:3000/users/:userId/image" \
 -b cookies.txt \
 -F "profileImage=@/chemin/vers/ton/image.jpg"
+```
+
+### Supprimer Image de Profil
+
+```bash
+curl -X DELETE "http://localhost:3000/users/profile/me/image" \
+-b cookies.txt \
 ```
 
 ### Obtenir mon profil
@@ -455,7 +462,7 @@ curl -X DELETE "http://localhost:3000/categories/id_expl" \
 ### Lister tous les produits (Public)
 
 **Pagination :** Oui (`page`, `limit`)  
-**Filtres :** `name`, `categoryId`, `minPrice`, `maxPrice`, `sortByPrice`, `craftsmanName`
+**Filtres :** `name`, `categoriesId`, `minPrice`, `maxPrice`, `sortByPrice`, `craftsmanName`, `minRating`, `freeShipping`                
 
 ```bash
 curl -X GET "http://localhost:3000/products?page=1&limit=20"
