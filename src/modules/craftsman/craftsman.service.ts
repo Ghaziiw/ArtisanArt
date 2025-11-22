@@ -14,6 +14,7 @@ import { UpdateCraftsmanExpDateDto } from './dto/update-craftsman-exp-date.dto';
 import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
 import { CraftsmanFilterDto } from './dto/craftsman-filter.dto';
 import { CraftsmanWithStats } from './dto/view-craftsman-stats.dto';
+import { UploadService } from '../upload/upload.service';
 
 export interface CraftsmanStatsRaw {
   avgRating: string | number;
@@ -86,6 +87,7 @@ export class CraftsmanService {
     private readonly craftsmanRepository: Repository<Craftsman>, // Repository TypeORM for Craftsman
     @InjectRepository(User)
     private userRepo: Repository<User>, // Repository TypeORM for User
+    private readonly uploadService: UploadService, // Service to handle file uploads
   ) {}
 
   // Helper method to get craftsman stats
@@ -175,14 +177,16 @@ export class CraftsmanService {
   }
 
   // Create a new craftsman along with the associated user
-  async createCraftsman(craftsmanDto: CreateCraftsmanDto) {
+  async createCraftsman(
+    craftsmanDto: CreateCraftsmanDto,
+    file?: Express.Multer.File,
+  ) {
     const user = await auth.api.signUpEmail({
       body: {
         email: craftsmanDto.email,
         password: craftsmanDto.password,
         name: craftsmanDto.name,
         location: craftsmanDto.location,
-        image: craftsmanDto.profileImage,
       },
     });
 
@@ -209,11 +213,20 @@ export class CraftsmanService {
         deliveryPrice: craftsmanDto.deliveryPrice,
         instagram: craftsmanDto.instagram,
         facebook: craftsmanDto.facebook,
-        profileImage: craftsmanDto.profileImage,
       });
 
       // Save the Craftsman entity
       const savedCraftsman = await this.craftsmanRepository.save(craftsman);
+      if (file) {
+        this.uploadService.validateFile(file);
+        // Generate image URL
+        const imageUrl = this.uploadService.getFileUrl(
+          file.filename,
+          'profiles',
+        );
+        savedCraftsman.profileImage = imageUrl;
+        await this.craftsmanRepository.save(savedCraftsman);
+      }
       return savedCraftsman;
     } catch {
       // If craftsman creation fails, rollback user creation

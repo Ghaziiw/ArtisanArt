@@ -69,8 +69,12 @@ export class CraftsmanController {
   // POST /craftsmen → create a new craftsman
   @Post()
   @Public()
-  create(@Body() craftsmanDto: CreateCraftsmanDto) {
-    return this.craftsmanService.createCraftsman(craftsmanDto);
+  @UseInterceptors(FileInterceptor('profileImage', multerConfig))
+  create(
+    @Body() craftsmanDto: CreateCraftsmanDto,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.craftsmanService.createCraftsman(craftsmanDto, file);
   }
 
   // GET /craftsmen/profile/me → get current craftsman's profile

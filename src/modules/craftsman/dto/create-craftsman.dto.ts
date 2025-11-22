@@ -57,8 +57,4 @@ export class CreateCraftsmanDto {
   @IsString()
   @IsOptional()
   facebook?: string;
-
-  @IsString()
-  @IsOptional()
-  profileImage?: string;
 }
