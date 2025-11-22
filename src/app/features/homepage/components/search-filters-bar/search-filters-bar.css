@@ -199,3 +199,20 @@ input[type="text"] {
   border-radius: 16px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.05);
 }
+
+.section input[type="text"], .sort-select {
+  font-weight: 300;
+  width: 90%;
+  height: 20px;
+}
+
+.sort-select {
+  height: 37px;
+  width: 100%;
+}
+
+.section input[type="text"]:focus, .sort-select:focus {
+  outline: none;
+  border-color: var(--login-btn-text);
+  box-shadow: 0 0 0 3px var(--login-btn-border);
+}
