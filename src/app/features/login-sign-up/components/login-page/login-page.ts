@@ -32,12 +32,12 @@ export class LoginPage {
         this.router.navigate(['/profile']);
       } else {
         // login échoué
-        this.loginError = 'Email ou mot de passe invalide';
+        this.loginError = 'Email or password incorrect';
       }
 
     } catch (error: any) {
       console.error(error);
-      this.loginError = error?.message || 'Échec de la connexion';
+      this.loginError = error?.message || 'Login failed';
     }
   }
 
