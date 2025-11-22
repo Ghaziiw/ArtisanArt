@@ -198,9 +198,69 @@
   cursor: pointer;
   transition: background-color 0.2s;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.add-btn:hover {
+.add-btn:hover:not(:disabled) {
   background-color: var(--sign-up-btn-on-hover);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.add-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Success state */
+.add-btn.success {
+  background-color: #489b5c;
+}
+
+.add-btn.success:hover {
+  background-color: #218838;
+}
+
+/* Loading state */
+.add-btn.loading {
+  opacity: 0.8;
+}
+
+/* Spinner animation */
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error message */
+.cart-error-message {
+  position: absolute;
+  top: 45px;
+  background-color: #ffe6e6;
+  border: 1px solid #ffcccc;
+  border-radius: 6px;
+  color: #d9534f;
+  padding: 8px 12px;
+  font-size: 12px;
+  white-space: nowrap;
+  animation: slideIn 0.3s ease-out;
+  z-index: 10;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
