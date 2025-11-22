@@ -1,0 +1,34 @@
+<div class="craftsman-container">
+    <h3>A propos de l'artisan </h3>
+    <div class="info-container"> 
+        <div>
+            <img [src]="craftsmanimg" class="profile-img" />
+        </div>
+
+        <div class="craftsman-details">
+            <h3> {{storeName}}</h3>
+            <p> {{job}} </p>
+        
+
+        <div class="location">
+            {{location}}
+        </div>
+
+        <div class="rating">
+            <span *ngFor="let star of starsArray">
+                <img class="svg-star" src="assets/images/F7StarFill.svg" alt="star">
+            </span>
+            <span class="rating-count">
+                {{ rating }} ({{ reviewsCount }} avis)
+            </span>
+        </div>
+
+        <p> {{description}}</p>
+        <p>Téléphone: {{phone}}</p>
+        </div>
+
+        <button class="store-btn"> Voir la boutique </button>
+
+    </div>
+
+</div>

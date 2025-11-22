@@ -1,0 +1,60 @@
+.craftsman-container {
+  margin-top: 30px;
+   background: #fff;
+   height: 300px;
+   border-radius: 30px;
+}
+
+.info-container {
+  display: flex;
+  gap: 20 px;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.profile-img {
+  width: 70px;
+  height: 70px;
+  border-radius: 100%;
+}
+
+.craftsman-details {
+  flex: 1;
+  padding: 20px;
+}
+
+.job {
+  color: #666;
+}
+
+.location {
+  margin: 5px 0;
+  color: red;
+  font-weight: 600;
+}
+
+.rating {
+  display: flex;
+  gap: 5px;
+  margin: 8px 0;
+}
+
+.store-btn {
+  margin-top: 10px;
+  background: rgb(218, 71, 71);
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  height: 40px;
+  width: 150px;
+}
+
+.store-btn:hover {
+  background: #d12e1f;
+}
+
+.svg-star{
+  width: 20px;
+  height: 20px;
+}
