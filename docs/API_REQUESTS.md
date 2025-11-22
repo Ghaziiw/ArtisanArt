@@ -254,23 +254,21 @@ curl -X GET "http://localhost:3000/craftsmen/id_expl"
 
 ```bash
 curl -X POST "http://localhost:3000/craftsmen" \
--H "Content-Type: application/json" \
--d '{
-        "email": "artisan@example.com",
-        "password": "Password123",
-        "name": "Ahmed Pottery",
-        "location": "Sfax, gremda",
-        "image": "https://example.com/profile.jpg",
-        "businessName": "Ahmed Pottery Workshop",
-        "bio": "Traditional Tunisian pottery",
-        "specialty": "Pottery",
-        "phone": "12345678",
-        "workshopAddress": "sfax, gremda km7",
-        "deliveryPrice": 5.50,
-        "instagram": "https://instagram.com",
-        "facebook": "https://facebook.com",
-        "profileImage": "https://example.com/profile.jpg"
-    }'
+-H "Content-Type: multipart/form-data" \
+-F "email=artisan@example.com" \
+-F "password=Password123" \
+-F "name=Mohcen" \
+-F "location=Sfax, gremda" \
+-F "businessName=Ahmed Pottery Workshop" \
+-F "bio=Traditional Tunisian pottery" \
+-F "specialty=Pottery" \
+-F "phone=12345678" \
+-F "workshopAddress=sfax, gremda km7" \
+-F "deliveryPrice=5.50" \
+-F "instagram=https://instagram.com" \
+-F "facebook=https://facebook.com" \
+-F "image=https://example.com/profile.jpg" \
+-F "profileImage=@/home/medaffes/Downloads/image.jpg"
 ```
 
 > **Remarque :** Les champs optionnels sont :
