@@ -65,6 +65,7 @@
     --filters-border-color: #d7afa0;
     --search-bar-gray: #888;
     --general-border-radius: 10px;
+    --selected-option-background:#f6e7e4;
 }
 
 body{
