@@ -16,6 +16,6 @@
             Logout
         </button>
         <button id="login-btn" class="header-button" routerLink="/login" *ngIf="!(authService.user$ | async)">Login</button>
-        <button id="sign-up-btn" class="header-button" *ngIf="!(authService.user$ | async)">Sign-up</button>
+        <button id="sign-up-btn" class="header-button" routerLink="/signup" *ngIf="!(authService.user$ | async)">Sign-up</button>
     </div>
 </div>
