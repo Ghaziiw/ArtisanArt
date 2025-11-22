@@ -1,0 +1,19 @@
+<div class="review-form-container">
+    <h3> Laisser un avis </h3>
+    <form (ngSubmit)="submit()">
+        <div class="stars">
+            <span *ngFor="let s of stars" (click)="rating = s">
+                <img class="svg-star" src="assets/images/F7StarFill.svg" alt="star">
+            </span>
+        </div>
+        <div>
+            <input type="text" placeholder="partagez votre expérience avec ce produit" 
+            [(ngModel)]="comment" name="comment" class="comment">
+        </div>
+
+        <div>
+            <button type="submit" class="publish-btn"> Publier l'avis </button>
+        </div>
+        
+    </form>
+</div>

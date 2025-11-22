@@ -1,0 +1,45 @@
+.svg-star{
+  width: 20px;
+  height: 20px;
+}
+
+.review {
+  gap: 8px 15px;
+  padding: 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 100%;
+  object-fit: cover;
+}
+
+
+.client-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.date {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 13px;
+  color: #777;
+}
+
+.rating {
+  font-size: 18px;
+  color: #f4a261;
+}
+
+
+.content p {
+  margin: 0;
+  color: #444;
+  line-height: 1.4;
+}
+
