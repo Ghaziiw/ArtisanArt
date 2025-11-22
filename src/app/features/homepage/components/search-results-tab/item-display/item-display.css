@@ -22,7 +22,7 @@
 .product-image {
   top:0;
   left:0;
-  overflow: hidden;
+  /* overflow: hidden; */
   height: 160px;
   width: 160px;
   flex-shrink: 0;
@@ -43,6 +43,7 @@
   justify-content: space-between;
   flex-grow: 1;
   max-height: 163px;
+  margin-left: 5px;
 }
 
 .content>div>h2{
@@ -151,4 +152,21 @@
   gap: 6px;
   color: #8d6b6b;
   font-size: 12px;
+}
+
+.discount {
+  width: 30px;
+  height: 16px;
+  position: relative;
+  top: -188px;
+  left: 125px;
+  background-color: #D4183D;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  align-content: center;
+  font-family: 'Outfit', sans-serif;
 }

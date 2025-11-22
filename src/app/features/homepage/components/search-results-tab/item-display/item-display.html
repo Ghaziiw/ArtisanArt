@@ -1,7 +1,9 @@
 <div class="product-card">
   <div class="product-image">
     <img [src]="product.images && product.images.length && product.images[0] ? product.images[0] : '/assets/images/chachya.webp'" alt="product-image">
+    <p class="discount" [hidden]="!product.offer">-{{ product.offer ? product.offer.percentage : '' }}%</p>
   </div>
+
 
   <div class="content">
     <div>
