@@ -1,0 +1,28 @@
+.product-page {
+  width: 100%;
+  padding: 20px;
+}
+
+.product-page-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
+}
+
+/* Pour éviter que l'image prenne toute la largeur */
+app-product-photos {
+  flex: 1.1;
+}
+
+app-product-info {
+  flex: 1;
+}
+
+.product-page-bottom {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
