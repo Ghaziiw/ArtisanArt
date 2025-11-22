@@ -181,13 +181,14 @@
   margin-left:2%;
   border-radius: var(--general-border-radius);
   height: 200px;
-  border:1px dashed var(--login-btn-border);
+  border:2px dashed var(--login-btn-border);
   background-color: none;
   display: flex;
   flex-direction:column ;
   justify-content:center ;
   align-items: center;
   transition: all 300ms;
+  cursor: pointer;
 }
 
 .file-upload-wrapper:hover{
@@ -281,6 +282,8 @@
   color: #d9534f;
   font-size: 13px;
   text-align: center;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .form-group input, #biography{
