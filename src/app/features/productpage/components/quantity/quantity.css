@@ -1,0 +1,26 @@
+.quantity-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.quantity-container button {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: rgb(204, 81, 81);
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.quantity-container button:hover {
+  background: #ee544a;
+}
+
+.quantity-container span {
+  font-size: 18px;
+  font-weight: 600;
+}
