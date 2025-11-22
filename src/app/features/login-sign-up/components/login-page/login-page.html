@@ -23,10 +23,6 @@
           email
           #emailInput="ngModel"
         />
-        <div class="error-message" *ngIf="emailInput.invalid && emailInput.touched">
-          <span *ngIf="emailInput.errors?.['required']">email is required</span>
-          <span *ngIf="emailInput.errors?.['email']">invalid email</span>
-        </div>
       </div>
       <!-- Password Field -->
       <div class="form-group">
@@ -41,13 +37,9 @@
           class="form-input"
           [(ngModel)]="credentials.password"
           required
-          minlength="6"
+          minlength="8"
           #passwordInput="ngModel"
         />
-        <div class="error-message" *ngIf="passwordInput.invalid && passwordInput.touched">
-          <span *ngIf="passwordInput.errors?.['required']">Password is required</span>
-          <span *ngIf="passwordInput.errors?.['minlength']">6 characters minimum</span>
-        </div>
       </div>
       <!-- Submit Button -->
       <button 

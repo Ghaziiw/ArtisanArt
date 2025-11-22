@@ -112,3 +112,7 @@ div{
     background-color: var(--sign-up-btn-on-hover);
     transition: 300ms;
 }
+
+button {
+    cursor: pointer;
+}
