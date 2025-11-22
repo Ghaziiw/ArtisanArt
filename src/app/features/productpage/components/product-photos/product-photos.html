@@ -1,0 +1,15 @@
+<div class="photos-container">
+    <div class="main-image-container">
+        <img class="main-image" [src]="selectedImage"/>
+        <div class="offer-container">
+            <span class="offer"> - {{offer}} % </span>
+        </div>
+    </div>
+    <div class="other-images">
+        <img
+      *ngFor="let img of images"
+      [src]="img"
+      class="others"
+        />
+    </div>
+</div>
