@@ -66,6 +66,11 @@
   color: #666;
   line-height: 1.5;
   margin: 0 0 16px 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .price-rating {
@@ -117,11 +122,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-left: 1px solid #fad7d0;
+  border-left: 1px solid #D9AEA1;
   max-height: 200px;
-  min-width: 200px;
+  min-width: 25%;
   padding-left: 24px;
-  
+  width: 25%;
 }
 
 .seller-avatar {
@@ -169,4 +174,33 @@
   text-align: center;
   align-content: center;
   font-family: 'Outfit', sans-serif;
+}
+
+.actions {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  margin-right: 30px;
+}
+
+.add-btn {
+  display: flex;
+  align-items: center;
+  width: 90px;
+  height: 36px;
+  gap: 8px;
+  background-color: var(--sign-up-btn);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: var(--general-border-radius);
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background-color: var(--sign-up-btn-on-hover);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
