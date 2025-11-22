@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Header } from '../../../../shared/components/header/header';
@@ -9,6 +9,7 @@ import {
   CraftsmanSignUpDto,
 } from '../../../../core/services/signup.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { set } from 'better-auth';
 
 @Component({
   selector: 'app-sign-up-page',
@@ -17,7 +18,9 @@ import { AuthService } from '../../../../core/services/auth.service';
   templateUrl: './sign-up-page.html',
   styleUrls: ['./sign-up-page.css'],
 })
-export class SignUpPage {
+export class SignUpPage implements AfterViewInit {
+  @ViewChild('artisanInfo') artisanInfoRef?: ElementRef<HTMLElement>;
+
   // Basic credentials
   credentials = {
     fullname: '',
@@ -64,12 +67,32 @@ export class SignUpPage {
     private router: Router
   ) {}
 
+  ngAfterViewInit() {}
+
   /**
    * Select user type (client or artisan)
    */
-  selectUserType(type: string): void {
-    this.selectedUserType = type;
-    console.log('Selected user type:', this.selectedUserType);
+  selectUserType(type: string) {
+    if (type === 'client') {
+      // start hide animation only if element exists
+      const el = this.artisanInfoRef?.nativeElement;
+      if (el) {
+        el.classList.add('hide');
+        el.addEventListener(
+          'animationend',
+          () => {
+            // remove element by changing selectedUserType AFTER animation
+            this.selectedUserType = 'client'; // provoque *ngIf removal
+          },
+          { once: true }
+        );
+      } else {
+        this.selectedUserType = 'client';
+      }
+    } else {
+      this.selectedUserType = 'artisan';
+      // ViewChild va être mis à jour après change detection, tu peux setTimeout 0 si besoin
+    }
   }
 
   /**
@@ -94,6 +117,9 @@ export class SignUpPage {
       // Validate file size (max 1MB)
       if (file.size > 1024 * 1024) {
         this.fileError = 'Image must be less than 1 MB';
+        setTimeout(() => {
+          this.fileError = '';
+        }, 5000);
         return;
       }
 
@@ -117,18 +143,27 @@ export class SignUpPage {
   async onSubmit(form: NgForm) {
     if (!form.valid) {
       this.signUpError = 'Please fill in all required fields';
+      setTimeout(() => {
+        this.signUpError = '';
+      }, 5000);
       return;
     }
 
     // Validate passwords match
     if (this.credentials.password !== this.credentials.passwordConfirm) {
       this.signUpError = 'Passwords do not match';
+      setTimeout(() => {
+        this.signUpError = '';
+      }, 5000);
       return;
     }
 
     // Validate password length
-    if (this.credentials.password.length < 6) {
-      this.signUpError = 'Password must be at least 6 characters long';
+    if (this.credentials.password.length < 8) {
+      this.signUpError = 'Password must be at least 8 characters long';
+      setTimeout(() => {
+        this.signUpError = '';
+      }, 5000);
       return;
     }
 
@@ -145,6 +180,9 @@ export class SignUpPage {
       console.error('Sign up error:', error);
       this.signUpError = error?.error?.message || 'Sign up failed. Please try again.';
       this.isSubmitting = false;
+      setTimeout(() => {
+        this.signUpError = '';
+      }, 5000);
     }
   }
 
@@ -179,9 +217,11 @@ export class SignUpPage {
       },
       error: (err) => {
         console.error('Client sign up failed:', err);
-        this.signUpError =
-          err.error?.message || 'Failed to create account. Email might already be in use.';
+        this.signUpError = err.error?.message || 'Failed to create account.';
         this.isSubmitting = false;
+        setTimeout(() => {
+          this.signUpError = '';
+        }, 5000);
       },
     });
   }
@@ -199,6 +239,9 @@ export class SignUpPage {
     ) {
       this.signUpError = 'Please fill in all required professional information';
       this.isSubmitting = false;
+      setTimeout(() => {
+        this.signUpError = '';
+      }, 5000);
       return;
     }
 
@@ -249,10 +292,11 @@ export class SignUpPage {
       },
       error: (err) => {
         console.error('Craftsman sign up failed:', err);
-        this.signUpError =
-          err.error?.message ||
-          'Failed to create craftsman account. Email might already be in use.';
+        this.signUpError = err.error?.message || 'Failed to create craftsman account.';
         this.isSubmitting = false;
+        setTimeout(() => {
+          this.signUpError = '';
+        }, 5000);
       },
     });
   }

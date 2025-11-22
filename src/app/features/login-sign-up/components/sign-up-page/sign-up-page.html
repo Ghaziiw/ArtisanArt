@@ -31,10 +31,10 @@
 
       <form #signUpForm="ngForm" (ngSubmit)="onSubmit(signUpForm)">
         <div class="form-group">
-          <label for="full name" *ngIf="selectedUserType === 'client'"class="form-label">
+          <label for="fullname" *ngIf="selectedUserType === 'client'"class="form-label">
             Full Name
           </label>
-          <label for="full name" *ngIf="selectedUserType === 'artisan'" class="form-label">
+          <label for="fullname" *ngIf="selectedUserType === 'artisan'" class="form-label">
             Manager's Full Name
           </label>
           <input 
@@ -46,10 +46,6 @@
             required
             #fullNameInput="ngModel"
           />
-          <div class="error-message" *ngIf="fullNameInput.invalid && fullNameInput.touched">
-            <span *ngIf="fullNameInput.errors?.['required']">full name is required</span>
-            <span *ngIf="fullNameInput.errors?.['email']">invalid name</span>
-          </div>
         </div>
 
 
@@ -68,10 +64,6 @@
             email
             #emailInput="ngModel"
           />
-          <div class="error-message" *ngIf="emailInput.invalid && emailInput.touched">
-            <span *ngIf="emailInput.errors?.['required']">Email is required</span>
-            <span *ngIf="emailInput.errors?.['email']">Invalid Email</span>
-          </div>
         </div>
 
         <!-- Password Field -->
@@ -90,12 +82,7 @@
             minlength="8"
             #passwordInput="ngModel"
           />
-          <div class="error-message" *ngIf="passwordInput.invalid && passwordInput.touched">
-            <span *ngIf="passwordInput.errors?.['required']">Password is required</span>
-            <span *ngIf="passwordInput.errors?.['minlength']">A minimum of 8 characters is required</span>
-          </div>
         </div>
-
 
         <div class="form-group">
           <label for="password-confirm" class="form-label">
@@ -109,20 +96,13 @@
             class="form-input"
             [(ngModel)]="credentials.passwordConfirm"
             required
-            minlength="6"
+            minlength="8"
             #passwordConfirmInput="ngModel"
           />
-          <div class="error-message" *ngIf="passwordConfirmInput.invalid && passwordConfirmInput.touched">
-            <span *ngIf="passwordConfirmInput.errors?.['required']">Password Confirmation is required</span>
-            <span *ngIf="passwordConfirmInput.errors?.['minlength']">A minimum of 6 characters is required</span>
-          </div>
         </div>
 
-
-
-
         <!--Professional informations ( pour l'artisan )-->
-        <div class="artisanInfo" *ngIf="selectedUserType==='artisan'">
+        <div *ngIf="selectedUserType==='artisan'" #artisanInfo class="artisan-info">
           <hr>
           <div class="title-like-label">Professional Informations</div>
           <!-- 1. Company / Workshop name -->
@@ -141,9 +121,6 @@
               required
               #workshopName="ngModel"
             />
-            <div class="error-message" *ngIf="workshopName.invalid && workshopName.touched">
-              <span *ngIf="workshopName.errors?.['required']">Company / Workshop name is required</span>
-            </div>
           </div>
 
           <!-- 2. Specialty -->
@@ -162,9 +139,6 @@
               required
               #specialty="ngModel"
             />
-            <div class="error-message" *ngIf="specialty.invalid && specialty.touched">
-              <span *ngIf="specialty.errors?.['required']">Specialty is required</span>
-            </div>
           </div>
 
           <!-- 3. Biography -->
@@ -183,9 +157,6 @@
               required
               #biography="ngModel">
             </textarea>
-            <div class="error-message" *ngIf="biography.invalid && biography.touched">
-              <span *ngIf="biography.errors?.['required']">Biography is required</span>
-            </div>
           </div>
 
           <!-- 4. Telephone -->
@@ -204,9 +175,6 @@
               required
               #phone="ngModel"
             />
-            <div class="error-message" *ngIf="phone.invalid && phone.touched">
-              <span *ngIf="phone.errors?.['required']">Telephone is required</span>
-            </div>
           </div>
 
           <!-- 5. Workshop address -->
@@ -225,9 +193,6 @@
               required
               #address="ngModel"
             />
-            <div class="error-message" *ngIf="address.invalid && address.touched">
-              <span *ngIf="address.errors?.['required']">Workshop address is required</span>
-            </div>
           </div>
 
           <!-- 6. Delivery price (€) -->
@@ -248,9 +213,6 @@
               required
               #deliveryPrice="ngModel"
             />
-            <div class="error-message" *ngIf="deliveryPrice.invalid && deliveryPrice.touched">
-              <span *ngIf="deliveryPrice.errors?.['required']">Delivery price is required</span>
-            </div>
           </div>
 
           <!-- 7. Instagram -->
@@ -312,7 +274,7 @@
                 />
               
                 <!-- Default upload icon when no image -->
-                <svg id="upload-svg" *ngIf="!professionalInfo.profilePhotoUrl" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#935653" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <svg id="upload-svg" *ngIf="!professionalInfo.profilePhotoUrl" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#935653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
               
                 <p class="upload-text">{{ professionalInfo.profilePhotoUrl ? 'Change photo' : 'Click to select an image' }}</p>
                 <p class="upload-hint">PNG, JPG up to 1 MB</p>
@@ -341,9 +303,7 @@
 
         <!-- Login Link -->
         <div class="login-link">
-          <a href="#" (click)="onSignUpClick($event)" class="login-link">
-            You already have an account? Login now!
-          </a>
+          <a href="#" (click)="onSignUpClick($event)" class="login-link">You already have an account? Login now!</a>
         </div>
 
       </form>
