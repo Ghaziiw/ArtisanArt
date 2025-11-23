@@ -54,6 +54,7 @@ export class ArtisanProfile implements OnInit {
   loadCraftsmanProducts() {
     this.productService.getProducts(1, 100, { craftsmanId: this.craftsmanId }).subscribe({
       next: (response) => {
+        console.log(response.items)
         this.products = response.items;
       },
       error: (err) => {

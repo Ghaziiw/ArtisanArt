@@ -134,6 +134,11 @@
   font-weight: 500;
 }
 
+.contact-btn a {
+  text-decoration: none;
+  color: white;
+}
+
 .contact-btn:hover{
   background: var(--sign-up-btn-on-hover);
 }
