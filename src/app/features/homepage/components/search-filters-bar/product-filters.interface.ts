@@ -7,4 +7,5 @@ export interface ProductFilters {
   minRating?: number;
   freeShipping?: boolean;
   sortByPrice?: 'asc' | 'desc';
+  craftsmanId?: string;
 }
