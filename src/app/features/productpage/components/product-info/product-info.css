@@ -5,10 +5,12 @@
 }
 
 .category {
-  color: red;
-  font-size: 14px;
-  border-color: #e63946;
-  
+  display: inline-block;
+  border: 2px solid var(--border-color);
+  padding: 4px;
+  background-color: rgb(211, 175, 174);
+  border-radius: 12px;
+  color: var(--description-color);
 }
 
 .title {
@@ -29,7 +31,7 @@
 
 .price-container {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   align-items: center;
 }
 
@@ -47,6 +49,12 @@
 .economy {
   color: #e63946;
   font-size: 14px;
+  font-weight: bold;
+  display: inline-block;
+  border: 2px solid var(--color-palette1);
+  padding: 4px;
+  background-color: rgb(225, 174, 172);
+  border-radius: 12px;
 }
 
 .description-block h3 {
@@ -54,7 +62,6 @@
 }
 
 .stock {
-  color: red;
   font-weight: 600;
 }
 
@@ -66,3 +73,12 @@
   width: 20px;
   height: 20px;
 }
+
+h1{
+  color: var(--description-color);
+}
+
+.description-container {
+  color: var(--description-color);
+}
+
