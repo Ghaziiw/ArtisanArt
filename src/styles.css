@@ -67,6 +67,18 @@
     --general-border-radius: 10px;
     --selected-option-background:#f6e7e4;
     --description-color:rgb(131, 73, 73);
+
+    --background: #F5E6E0;
+    --border:#D9AEA1;
+    --card:#FFF8F5;
+    --accent:#D9AEA1;
+    --primary:#A64D4D;
+    --destructive:#d4183d;
+    --secondary:#EDD4CC;
+    --secondary-foreground: #5C3A3A;
+    --foreground: #5C3A3A;
+    --muted-foreground: #8D6B6B;
+    --input-background: #FFF8F5;
 }
 
 body{

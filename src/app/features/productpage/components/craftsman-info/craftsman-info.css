@@ -1,8 +1,8 @@
 .craftsman-container {
   padding: 16px;
-  background: antiquewhite;
+  background: var(--card);
   margin-top: 15px;
-  border: 2px solid var(--border-color);
+  border: 2px solid var(--border);
   border-radius: 12px;
 }
 
@@ -39,13 +39,14 @@
 }
 
 .job{
- color: var(--color-palette3);
+ color: var(--primary);
+ font-family: 'Outfit, sans-serif';
 }
 
 .location {
   display: flex;
   align-items: center;
-  color: var(--search-bar-gray);
+  color: var(--muted-foreground);
   font-size: 14px;
 }
 
@@ -62,14 +63,15 @@
 
 .rating-count {
   font-size: 14px;
-  color: var(--search-bar-gray);
+  color: var(--muted-foreground);
+  font-family: 'Outfit, sans-serif';
 }
 
 .store-btn {
   padding: 10px 16px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: var(--color-palette7);
+  background: var(--card);
   cursor: pointer;
   transition: 0.2s ease;
   height: fit-content;
@@ -80,13 +82,16 @@
 }
 
 .phone{
-  color: var(--search-bar-gray);
+  color: var(--muted-foreground);
+  font-family: 'Outfit, sans-serif';
 }
 
 .description{
-  color: var(--description-color);
+  color: var(--secondary-foreground);
+  font-family: 'Outfit, sans-serif';
 }
 
 h3{
-  color: var(--description-color);
+  color: var(--secondary-foreground);
+  font-family: 'Outfit, sans-serif';
 }

@@ -3,12 +3,14 @@
   flex-direction: column;
   gap: 25px;
   margin-top: 7px;
-  background: antiquewhite;
-  border: 2px solid var(--border-color);
+  background: var(--card);
+  border: 2px solid var(--border);
   border-radius: 12px;
   padding:12px;
+  font-family: 'Outfit, sans-serif';
 }
 
 h3{
   color: var(--description-color);
+  font-family: 'Outfit, sans-serif';
 }

@@ -6,11 +6,10 @@
 
 .category {
   display: inline-block;
-  border: 2px solid var(--border-color);
   padding: 4px;
-  background-color: rgb(211, 175, 174);
+  background-color: var(--secondary);
   border-radius: 12px;
-  color: var(--description-color);
+  color: var(--secondary-foreground);
 }
 
 .title {
@@ -25,7 +24,7 @@
 }
 
 .rating-count {
-  color: #555;
+  color: var(--muted-foreground);
   font-size: 14px;
 }
 
@@ -37,23 +36,25 @@
 
 .before-offer {
   text-decoration: line-through;
-  color: #777;
+  color: var(--muted-foreground);
+  font-size: 1.4rem;
 }
 
 .with-offer {
-  font-size: 22px;
-  font-weight: bold;
-  color: red;
+  font-size: 2rem;
+  color: var(--destructive);
+  font-family: 'Outfit, sans-serif';
+  font-weight:bold;
 }
 
 .economy {
-  color: #e63946;
+  color: var(--destructive);
   font-size: 14px;
   font-weight: bold;
   display: inline-block;
-  border: 2px solid var(--color-palette1);
+  border: 2px solid var(--destructive);
   padding: 4px;
-  background-color: rgb(225, 174, 172);
+  background-color: rgb(249, 194, 192);
   border-radius: 12px;
 }
 
@@ -75,10 +76,12 @@
 }
 
 h1{
-  color: var(--description-color);
+  color: var(--foreground);
+  font-family: 'Outfit, sans-serif';
 }
 
 .description-container {
-  color: var(--description-color);
+  color: var(--foreground);
+  font-family: 'Outfit, sans-serif';
 }
 
