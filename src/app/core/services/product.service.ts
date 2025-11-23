@@ -24,7 +24,6 @@ export interface Product {
   totalComments: number;
 }
 
-
 export interface ProductsResponse {
   items: Product[];
   meta: {
