@@ -1,60 +1,92 @@
 .craftsman-container {
-  margin-top: 30px;
-   background: #fff;
-   height: 300px;
-   border-radius: 30px;
+  padding: 16px;
+  background: antiquewhite;
+  margin-top: 15px;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+}
+
+.craftsman-details * {
+  margin-top: 2px;
+  margin-bottom: 2px;
 }
 
 .info-container {
   display: flex;
-  gap: 20 px;
-  padding: 20px;
-  border-radius: 12px;
+  align-items: flex-start;
+  gap: 24px;
 }
 
 .profile-img {
-  width: 70px;
-  height: 70px;
-  border-radius: 100%;
+  width: 80px;
+  height: 80px;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 2px solid var(--border-color);
+  object-fit: cover;
+  flex-shrink: 0;
 }
 
 .craftsman-details {
   flex: 1;
-  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.job {
-  color: #666;
+.craftsman-details  {
+  margin: 0;
+}
+
+.job{
+ color: var(--color-palette3);
 }
 
 .location {
-  margin: 5px 0;
-  color: red;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  color: var(--search-bar-gray);
+  font-size: 14px;
 }
 
 .rating {
   display: flex;
-  gap: 5px;
-  margin: 8px 0;
+  align-items: center;
+  gap: 8px;
+}
+
+.svg-star {
+  width: 18px;
+  height: 18px;
+}
+
+.rating-count {
+  font-size: 14px;
+  color: var(--search-bar-gray);
 }
 
 .store-btn {
-  margin-top: 10px;
-  background: rgb(218, 71, 71);
-  color: white;
-  padding: 10px 18px;
-  border: none;
+  padding: 10px 16px;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  height: 40px;
-  width: 150px;
+  background: var(--color-palette7);
+  cursor: pointer;
+  transition: 0.2s ease;
+  height: fit-content;
 }
 
 .store-btn:hover {
-  background: #d12e1f;
+  background: var(--color-palette5);
 }
 
-.svg-star{
-  width: 20px;
-  height: 20px;
+.phone{
+  color: var(--search-bar-gray);
+}
+
+.description{
+  color: var(--description-color);
+}
+
+h3{
+  color: var(--description-color);
 }
