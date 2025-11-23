@@ -6,7 +6,7 @@
 
 <div *ngIf="!isLoading && craftsman">
   <div class="banner">
-    <img [src]="'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1920'" alt="Artisan's banner image" class="banner-image">
+    <img [src]="craftsman.profileImage || '/assets/images/default-banner.jpeg'" alt="Artisan's banner image" class="banner-image">
     <div class="banner-overlay"></div>
   </div>
 
