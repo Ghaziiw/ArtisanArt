@@ -67,7 +67,7 @@ export class Product {
   updatedAt: Date;
 
   @OneToOne('Offer', (offer: Offer) => offer.product)
-  offer?: Offer;
+  offer?: Offer | null;
 
   @OneToMany(() => Comment, (comment) => comment.product, { eager: false })
   comments: Comment[];

@@ -66,7 +66,7 @@ export class ProductService {
     const isValid = start <= now && (!end || end >= now);
 
     if (!isValid) {
-      product.offer = undefined; // Remove invalid offer
+      product.offer = null; // Remove invalid offer
     }
 
     return product;
