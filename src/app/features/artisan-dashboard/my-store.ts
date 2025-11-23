@@ -1,38 +1,45 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Header } from '../../shared/components/header/header';
+import { MyStoreService, OrdersResponse } from '../../core/services/store.service';
+import { CraftsmanService, Craftsman } from '../../core/services/craftsman.service';
+import { ProductService, Product } from '../../core/services/product.service';
+import { AuthService } from '../../core/services/auth.service';
+import { OrderStatusRequest } from '../../core/services/store.service';
 
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  originalPrice?: number;
-  stock: number;
-  category: string;
-  image: string;
-}
-
-interface OrderItem {
+interface DisplayOrderItem {
   productName: string;
   quantity: number;
   price: number;
 }
 
-interface Order {
+interface DisplayOrder {
   id: string;
-  orderNumber: string;
-  customer: {
-    name: string;
-    email: string;
-  };
-  items: OrderItem[];
-  total: number;
+  userId: string;
+  status: OrderStatusRequest;
+  createdAt: string;
+  cin: string;
+  location: string;
+  state: string;
+  phone: string;
   deliveryPrice: number;
-  status: 'pending' | 'confirmed' | 'shipped' | 'delivered' | 'cancelled';
-  date: string;
+  user: {
+    email: string;
+    name: string;
+  };
+  orderNumber: string;
+  totalAmount: number;
+  shippingAddress: string;
+  items: DisplayOrderItem[];
+}
+
+interface Stats {
+  totalRevenue: number;
+  totalOrders: number;
+  pendingOrders: number;
+  totalProducts: number;
 }
 
 @Component({
@@ -43,9 +50,28 @@ interface Order {
   styleUrls: ['./my-store.css'],
 })
 export class MyStore implements OnInit {
+  public OrderStatusRequest = OrderStatusRequest;
+
+  // UI State
   activeTab: 'products' | 'orders' = 'products';
   showAddProduct = false;
   editingProduct: Product | null = null;
+  isLoading = false;
+
+  // Craftsman data
+  craftsmanId: string = 'yroUPsWElwUoGx7KvzXePkLhAJhSegBE';
+  craftsman: Craftsman | null = null;
+
+  // Data
+  products: Product[] = [];
+  orders: DisplayOrder[] = [];
+
+  stats: Stats = {
+    totalRevenue: 0,
+    totalOrders: 0,
+    pendingOrders: 0,
+    totalProducts: 0,
+  };
 
   // Product form
   productForm = {
@@ -58,169 +84,179 @@ export class MyStore implements OnInit {
     image: '',
   };
 
-  // Mock data - Products
-  products: Product[] = [
-    {
-      id: '1',
-      name: 'Vase en Céramique Artisanal',
-      description:
-        'Magnifique vase fait main en céramique traditionnelle tunisienne avec motifs berbères',
-      price: 45.99,
-      originalPrice: 59.99,
-      stock: 12,
-      category: 'Pottery',
-      image: 'http://localhost:3000/uploads/products/image1-1763571717048-363481342.jpg',
-    },
-    {
-      id: '2',
-      name: 'Plat Décoratif',
-      description: 'Plat décoratif en céramique avec des motifs traditionnels',
-      price: 35.0,
-      stock: 8,
-      category: 'Pottery',
-      image: 'http://localhost:3000/uploads/products/image1-1763571717048-363481342.jpg',
-    },
-    {
-      id: '3',
-      name: 'Théière Artisanale',
-      description: 'Théière en céramique peinte à la main, capacité 1L',
-      price: 52.5,
-      originalPrice: 65.0,
-      stock: 5,
-      category: 'Pottery',
-      image: 'http://localhost:3000/uploads/products/image1-1763571717048-363481342.jpg',
-    },
-  ];
+  constructor(
+    private productService: ProductService,
+    private authService: AuthService,
+    private myStoreService: MyStoreService,
+    private router: Router
+  ) {}
 
-  // Mock data - Orders
-  orders: Order[] = [
-    {
-      id: '1',
-      orderNumber: 'ORD-2024-001',
-      customer: {
-        name: 'Ahmed Ben Ali',
-        email: 'ahmed@example.com',
+  ngOnInit() {
+    // Get current user's ID
+    this.authService.user$.subscribe((user) => {
+      if (user) {
+        this.craftsmanId = user.id;
+        this.loadCraftsmanProducts();
+        this.loadCraftsmanOrders();
+      }
+    });
+  }
+
+  loadCraftsmanProducts() {
+    this.isLoading = true;
+
+    this.productService.getProducts(1, 100, { craftsmanId: this.craftsmanId }).subscribe({
+      next: (response) => {
+        this.products = response.items;
+        this.stats.totalProducts = response.items.length;
+        this.isLoading = false;
       },
-      items: [
-        { productName: 'Vase en Céramique Artisanal', quantity: 2, price: 45.99 },
-        { productName: 'Plat Décoratif', quantity: 1, price: 35.0 },
-      ],
-      total: 132.48,
-      deliveryPrice: 5.5,
-      status: 'pending',
-      date: '2024-11-23T10:30:00',
-    },
-    {
-      id: '2',
-      orderNumber: 'ORD-2024-002',
-      customer: {
-        name: 'Fatima Mansour',
-        email: 'fatima@example.com',
+      error: (err) => {
+        console.error('Failed to load products:', err);
+        this.isLoading = false;
       },
-      items: [{ productName: 'Théière Artisanale', quantity: 1, price: 52.5 }],
-      total: 58.0,
-      deliveryPrice: 5.5,
-      status: 'confirmed',
-      date: '2024-11-22T14:20:00',
-    },
-    {
-      id: '3',
-      orderNumber: 'ORD-2024-003',
-      customer: {
-        name: 'Karim Trabelsi',
-        email: 'karim@example.com',
+    });
+  }
+
+  loadCraftsmanOrders() {
+    this.isLoading = true;
+    this.myStoreService.getCraftsmanOrders(1, 100).subscribe({
+      next: (response: OrdersResponse) => {
+        console.log('Orders loaded:', response.items);
+        this.orders = response.items.map((order) => this.transformOrder(order));
+        this.updateStats();
+        this.isLoading = false;
       },
-      items: [{ productName: 'Vase en Céramique Artisanal', quantity: 1, price: 45.99 }],
-      total: 51.49,
-      deliveryPrice: 5.5,
-      status: 'shipped',
-      date: '2024-11-21T09:15:00',
-    },
-  ];
+      error: (err: any) => {
+        console.error('Failed to load orders:', err);
+        this.showAlert('Erreur lors du chargement des commandes', 'error');
+        this.isLoading = false;
+      },
+    });
+  }
 
-  constructor(private router: Router) {}
+  // ==================== ORDER TRANSFORMATION ====================
 
-  ngOnInit() {}
+  transformOrder(order: any): DisplayOrder {
+    // Calculate total amount
+    const itemsTotal = order.items.reduce((sum: number, item: any) => {
+      return sum + parseFloat(item.priceAtOrder) * item.quantity;
+    }, 0);
 
-  // Statistics
-  get stats() {
-    const totalRevenue = this.orders
-      .filter((o) => o.status !== 'cancelled')
-      .reduce((sum, order) => sum + order.total, 0);
+    const totalAmount = itemsTotal + parseFloat(order.deliveryPrice);
 
-    const pendingOrders = this.orders.filter((o) => o.status === 'pending').length;
+    // Generate order number from ID (last 8 characters)
+    const orderNumber = order.id.toUpperCase();
+
+    // Transform items
+    const items: DisplayOrderItem[] = order.items.map((item: any) => ({
+      productName: item.product.name,
+      quantity: item.quantity,
+      price: parseFloat(item.priceAtOrder),
+    }));
 
     return {
-      totalRevenue,
-      totalOrders: this.orders.length,
-      pendingOrders,
-      totalProducts: this.products.length,
+      id: order.id,
+      userId: order.userId,
+      status: order.status,
+      createdAt: order.createdAt,
+      cin: order.cin,
+      location: order.location,
+      state: order.state,
+      phone: order.phone,
+      deliveryPrice: parseFloat(order.deliveryPrice),
+      user: order.user,
+      orderNumber,
+      totalAmount,
+      shippingAddress: order.location,
+      items,
     };
   }
 
-  // Tab management
-  setActiveTab(tab: 'products' | 'orders') {
+  // ==================== STATS CALCULATION ====================
+
+  updateStats(): void {
+    this.stats.totalProducts = this.products.length;
+    this.stats.totalOrders = this.orders.length;
+    this.stats.pendingOrders = this.orders.filter((o) => o.status === 'PENDING').length;
+    this.stats.totalRevenue = this.orders
+      .filter((o) => o.status === OrderStatusRequest.DELIVERED)
+      .reduce((sum, order) => sum + order.totalAmount, 0);
+  }
+
+  // ==================== TAB MANAGEMENT ====================
+
+  setActiveTab(tab: 'products' | 'orders'): void {
     this.activeTab = tab;
   }
 
-  // Product management
-  handleAddProduct() {
+  // ==================== PRODUCT MANAGEMENT ====================
+
+  handleAddProduct(): void {
     this.showAddProduct = true;
     this.editingProduct = null;
     this.resetProductForm();
   }
 
-  handleEditProduct(product: Product) {
+  handleEditProduct(product: Product): void {
     this.editingProduct = product;
     this.showAddProduct = true;
     this.productForm = {
       name: product.name,
       description: product.description,
       price: product.price,
-      originalPrice: product.originalPrice || 0,
+      originalPrice: 0,
       stock: product.stock,
-      category: product.category,
-      image: product.image,
+      category: product.category?.name || '',
+      image: product.images?.[0] || '',
     };
   }
 
-  handleSubmitProduct(event: Event) {
-    event.preventDefault();
-
-    if (this.editingProduct) {
-      // Update existing product
-      const index = this.products.findIndex((p) => p.id === this.editingProduct!.id);
-      if (index !== -1) {
-        this.products[index] = {
-          ...this.editingProduct,
-          ...this.productForm,
-        };
-      }
-    } else {
-      // Add new product
-      const newProduct: Product = {
-        id: Date.now().toString(),
-        ...this.productForm,
-      };
-      this.products.unshift(newProduct);
-    }
-
-    this.handleCancelEdit();
-  }
-
-  handleCancelEdit() {
+  handleCancelEdit(): void {
     this.showAddProduct = false;
     this.editingProduct = null;
     this.resetProductForm();
   }
 
+  handleSubmitProduct(event: Event): void {
+    event.preventDefault();
+
+    if (!this.validateProductForm()) {
+      this.showAlert('Veuillez remplir tous les champs obligatoires', 'error');
+      return;
+    }
+
+    // For now, just show a message - API endpoints may not be available
+    this.showAlert('Fonctionnalité de modification à venir', 'error');
+    this.handleCancelEdit();
+  }
+
+  validateProductForm(): boolean {
+    return !!(
+      this.productForm.name &&
+      this.productForm.description &&
+      this.productForm.price > 0 &&
+      this.productForm.stock >= 0
+    );
+  }
+
   handleDeleteProduct(productId: string) {
     if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
-      this.products = this.products.filter((p) => p.id !== productId);
+      this.productService.deleteProduct(productId).subscribe({
+        next: () => {
+          // Supprimer du tableau local pour mise à jour de l'affichage
+          this.products = this.products.filter((p) => p.id !== productId);
+          alert('Produit supprimé avec succès !');
+        },
+        error: (err) => {
+          console.error('Erreur lors de la suppression du produit :', err);
+          alert('Impossible de supprimer le produit.');
+        },
+      });
     }
   }
 
-  resetProductForm() {
+  resetProductForm(): void {
     this.productForm = {
       name: '',
       description: '',
@@ -232,31 +268,65 @@ export class MyStore implements OnInit {
     };
   }
 
-  // Order management
-  updateOrderStatus(orderId: string, newStatus: Order['status']) {
-    const order = this.orders.find((o) => o.id === orderId);
-    if (order) {
-      order.status = newStatus;
-    }
-  }
+  // ==================== ORDER MANAGEMENT ====================
 
-  getOrderStatusBadge(status: Order['status']): { text: string; class: string } {
-    const statusMap = {
-      pending: { text: 'En attente', class: 'status-pending' },
-      confirmed: { text: 'Confirmée', class: 'status-confirmed' },
-      shipped: { text: 'Expédiée', class: 'status-shipped' },
-      delivered: { text: 'Livrée', class: 'status-delivered' },
-      cancelled: { text: 'Annulée', class: 'status-cancelled' },
+  getOrderStatusBadge(status: string): { text: string; class: string } {
+    const statusMap: Record<string, { text: string; class: string }> = {
+      PENDING: { text: 'En attente', class: 'status-pending' },
+      CONFIRMED: { text: 'Confirmée', class: 'status-confirmed' },
+      SHIPPED: { text: 'Expédiée', class: 'status-shipped' },
+      DELIVERED: { text: 'Livrée', class: 'status-delivered' },
+      CANCELLED: { text: 'Annulée', class: 'status-cancelled' },
     };
-    return statusMap[status];
+    return statusMap[status] || { text: status, class: '' };
   }
 
-  // Navigation
-  goBack() {
+  // ==================== UTILITY ====================
+
+  showAlert(message: string, type: 'success' | 'error'): void {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type}`;
+    alertDiv.textContent = message;
+    document.body.appendChild(alertDiv);
+
+    setTimeout(() => {
+      alertDiv.remove();
+    }, 3000);
+  }
+
+  goBack(): void {
     this.router.navigate(['/']);
   }
 
-  goToProfile() {
+  goToProfile(): void {
     this.router.navigate(['/profile']);
+  }
+
+  updateOrderStatus(
+    orderId: string,
+    newStatus: OrderStatusRequest
+  ) {
+    if (!orderId) return;
+
+    this.isLoading = true;
+
+    this.myStoreService.updateOrderStatus(orderId, newStatus).subscribe({
+      next: () => {
+        // Mettre à jour le statut local de la commande
+        const order = this.orders.find((o) => o.id === orderId);
+        if (order) {
+          order.status = newStatus;
+        }
+
+        // Mettre à jour les statistiques
+        this.updateStats();
+
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Erreur lors de la mise à jour du statut :', err);
+        this.isLoading = false;
+      },
+    });
   }
 }

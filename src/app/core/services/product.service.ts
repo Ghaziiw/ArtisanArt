@@ -71,4 +71,8 @@ export class ProductService {
 
     return this.http.get<ProductsResponse>(`${this.apiUrl}`, { params });
   }
+
+  deleteProduct(productId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${productId}`, { withCredentials: true });
+  }
 }
