@@ -218,6 +218,7 @@ export class ProductService {
   async createProduct(
     productData: CreateProductDto,
     craftsmanId: string,
+    files?: Express.Multer.File[],
   ): Promise<Product> {
     const categoryId = await this.categoryRepository.findOneBy({
       id: productData.categoryId,
@@ -228,12 +229,24 @@ export class ProductService {
       throw new BadRequestException('Category not found');
     }
 
-    const product = this.productRepository.create({
+    this.productRepository.create({
       ...productData,
       craftsmanId,
     });
 
-    return this.productRepository.save(product);
+    // Generate image URLs
+    const imageUrls =
+      files?.map((file) =>
+        this.uploadService.getFileUrl(file.filename, 'products'),
+      ) || [];
+
+    // Add images to product data
+    const productWithImages = {
+      ...productData,
+      images: imageUrls,
+    };
+
+    return this.productRepository.save(productWithImages);
   }
 
   // Update an existing product

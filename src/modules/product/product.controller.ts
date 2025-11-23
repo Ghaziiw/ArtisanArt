@@ -74,19 +74,7 @@ export class ProductController {
       this.uploadService.validateFiles(files);
     }
 
-    // Generate image URLs
-    const imageUrls =
-      files?.map((file) =>
-        this.uploadService.getFileUrl(file.filename, 'products'),
-      ) || [];
-
-    // Add images to product data
-    const productWithImages = {
-      ...productData,
-      images: imageUrls,
-    };
-
-    return await this.productService.createProduct(productWithImages, user.id);
+    return await this.productService.createProduct(productData, user.id, files);
   }
 
   // PATCH /products/:id → update an existing product
