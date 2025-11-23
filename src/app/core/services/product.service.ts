@@ -35,6 +35,15 @@ export interface ProductsResponse {
   }
 }
 
+export interface CreateProductDto {
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  categoryId?: string;
+  images?: File[];
+}
+
 export interface UpdateProductDto {
   name?: string;
   description?: string;
@@ -96,6 +105,33 @@ export class ProductService {
    */
   updateProduct(productId: string, updateData: UpdateProductDto): Observable<Product> {
     return this.http.patch<Product>(`${this.apiUrl}/${productId}`, updateData, {
+      withCredentials: true,
+    });
+  }
+
+    /**
+   * Creates a new product (Artisan)
+   * @param productData - Product data including images
+   */
+  addProduct(productData: CreateProductDto): Observable<Product> {
+    const formData = new FormData();
+    
+    formData.append('name', productData.name);
+    formData.append('description', productData.description);
+    formData.append('price', productData.price.toString());
+    formData.append('stock', productData.stock.toString());
+    
+    if (productData.categoryId) {
+      formData.append('categoryId', productData.categoryId);
+    }
+    
+    if (productData.images && productData.images.length > 0) {
+      productData.images.forEach(image => {
+        formData.append('images', image);
+      });
+    }
+
+    return this.http.post<Product>(`${this.apiUrl}`, formData, {
       withCredentials: true,
     });
   }

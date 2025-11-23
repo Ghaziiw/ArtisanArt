@@ -79,7 +79,7 @@
     <div *ngIf="!showAddProduct" class="add-product-btn-container">
       <button class="btn-primary" (click)="handleAddProduct()">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-        Ajouter un produit
+        Add Product
       </button>
     </div>
 
@@ -89,7 +89,7 @@
       <form (submit)="handleSubmitProduct($event)" class="product-form">
         <div class="input-section">
           <div class="input">
-            <label for="name">Nom du produit *</label>
+            <label for="name">Product Name *</label>
             <input 
               type="text" 
               id="name" 
@@ -99,7 +99,7 @@
           </div>
 
           <div class="input">
-            <label for="category">Catégorie *</label>
+            <label for="category">Category *</label>
               <select name="category" id="category" [(ngModel)]="productForm.category" required>
                 <option value="null" disabled selected>Select a category</option>
                 <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
@@ -119,7 +119,7 @@
 
         <div class="input-section">
           <div class="input">
-            <label for="price">Prix ($) *</label>
+            <label for="price">Price ($) *</label>
             <input 
               type="number" 
               id="price" 
@@ -155,7 +155,7 @@
         <div class="form-group">
           <label class="form-label">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#935653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-camera"><path d="M14.5 4h-5L8 7H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-1.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
-            Photos du produit (Max 5)
+            Product Photos (Max 5)
           </label>
         
           <div class="file-upload-wrapper" (click)="productImages.length < 5 && fileInput.click()">
@@ -173,8 +173,8 @@
             <div class="file-upload-box">
               <!-- Preview images if any are selected -->
               <div *ngIf="productImages.length > 0" class="images-preview-grid">
-                <div *ngFor="let image of productImages; let i = index" class="image-preview-item">
-                  <img [src]="image" alt="Product preview {{ i + 1 }}" />
+                <div *ngFor="let imageUrl of productImageUrls; let i = index" class="image-preview-item">
+                  <img [src]="imageUrl" [alt]="'Product preview ' + (i + 1)" />
                   <button 
                     type="button"
                     class="remove-image-btn" 
@@ -188,15 +188,15 @@
               <!-- Default upload icon when no images -->
               <div *ngIf="productImages.length === 0" class="upload-content">
                 <svg id="upload-svg" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#935653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                <p class="upload-text">Cliquez pour sélectionner des images</p>
-                <p class="upload-hint">PNG, JPG jusqu'à 1 MB (Max 5 images)</p>
+                <p class="upload-text">Click to add image</p>
+                <p class="upload-hint">PNG, JPG up to 1 MB (Max 5 images)</p>
               </div>
 
               <p *ngIf="productImages.length > 0 && productImages.length < 5" class="upload-text">
-                {{ productImages.length }}/5 images - Cliquez pour ajouter plus
+                {{ productImages.length }}/5 images - Click to add more
               </p>
               <p *ngIf="productImages.length >= 5" class="upload-text">
-                Limite atteinte (5/5 images)
+                Limit reached (5/5 images)
               </p>
             </div>
           </div>
@@ -208,10 +208,10 @@
 
         <div class="form-actions">
           <button type="submit" class="btn-primary">
-            {{ editingProduct ? 'Enregistrer' : 'Ajouter' }}
+            {{ editingProduct ? 'Save' : 'Add' }}
           </button>
           <button type="button" class="btn-secondary" (click)="handleCancelEdit()">
-            Annuler
+            Cancel
           </button>
         </div>
       </form>

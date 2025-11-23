@@ -930,3 +930,8 @@
   padding: 8px;
   border-radius: 50%;
 }
+
+.btn-primary {
+  width: 85px;
+  display:block;
+}

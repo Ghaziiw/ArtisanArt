@@ -5,7 +5,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Header } from '../../shared/components/header/header';
 import { MyStoreService, OrdersResponse } from '../../core/services/store.service';
 import { CraftsmanService, Craftsman } from '../../core/services/craftsman.service';
-import { ProductService, Product } from '../../core/services/product.service';
+import {
+  ProductService,
+  Product,
+  CreateProductDto,
+  UpdateProductDto,
+} from '../../core/services/product.service';
 import { AuthService } from '../../core/services/auth.service';
 import { OrderStatusRequest } from '../../core/services/store.service';
 import { Category, CategoryService } from '../../core/services/category.service';
@@ -60,7 +65,7 @@ export class MyStore implements OnInit {
   isLoading = false;
 
   // Craftsman data
-  craftsmanId: string = 'yroUPsWElwUoGx7KvzXePkLhAJhSegBE';
+  craftsmanId: string = '';
   craftsman: Craftsman | null = null;
 
   // Data
@@ -143,7 +148,7 @@ export class MyStore implements OnInit {
       },
       error: (err: any) => {
         console.error('Failed to load orders:', err);
-        this.showAlert('Erreur lors du chargement des commandes', 'error');
+        this.showAlert('Error loading orders', 'error');
         this.isLoading = false;
       },
     });
@@ -226,23 +231,83 @@ export class MyStore implements OnInit {
     };
   }
 
-  handleCancelEdit(): void {
-    this.showAddProduct = false;
-    this.editingProduct = null;
-    this.resetProductForm();
-  }
-
   handleSubmitProduct(event: Event): void {
     event.preventDefault();
 
     if (!this.validateProductForm()) {
-      this.showAlert('Veuillez remplir tous les champs obligatoires', 'error');
+      this.showAlert('Please fill in all required fields', 'error');
       return;
     }
 
-    // For now, just show a message - API endpoints may not be available
-    this.showAlert('Fonctionnalité de modification à venir', 'error');
-    this.handleCancelEdit();
+    // Verify that at least one image is present
+    if (this.productImages.length === 0) {
+      this.showAlert('Please add at least one image', 'error');
+      return;
+    }
+
+    this.isLoading = true;
+
+    if (this.editingProduct) {
+      const updateData: UpdateProductDto = {
+        name: this.productForm.name,
+        description: this.productForm.description,
+        price: this.productForm.price,
+        stock: this.productForm.stock,
+      };
+
+      if (this.productForm.category) {
+        updateData.categoryId = this.productForm.category;
+      }
+
+      this.productService.updateProduct(this.editingProduct.id, updateData).subscribe({
+        next: (updatedProduct) => {
+          // Update local product list
+          const index = this.products.findIndex((p) => p.id === updatedProduct.id);
+          if (index !== -1) {
+            this.products[index] = updatedProduct;
+          }
+
+          this.showAlert('Product updated successfully!', 'success');
+          this.handleCancelEdit();
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error updating product:', err);
+          this.showAlert('Unable to update product', 'error');
+          this.isLoading = false;
+        },
+      });
+    } else {
+      // Creation mode
+      const createData: CreateProductDto = {
+        name: this.productForm.name,
+        description: this.productForm.description,
+        price: this.productForm.price,
+        stock: this.productForm.stock,
+        images: this.productImages,
+      };
+
+      if (this.productForm.category) {
+        createData.categoryId = this.productForm.category;
+      }
+
+      this.productService.addProduct(createData).subscribe({
+        next: (newProduct) => {
+          // Add to local product list
+          this.products.unshift(newProduct);
+          this.stats.totalProducts = this.products.length;
+
+          this.showAlert('Product added successfully!', 'success');
+          this.handleCancelEdit();
+          this.isLoading = false;
+        },
+        error: (err) => {
+          console.error('Error creating product:', err);
+          this.showAlert('Unable to create product', 'error');
+          this.isLoading = false;
+        },
+      });
+    }
   }
 
   validateProductForm(): boolean {
@@ -286,11 +351,11 @@ export class MyStore implements OnInit {
 
   getOrderStatusBadge(status: string): { text: string; class: string } {
     const statusMap: Record<string, { text: string; class: string }> = {
-      PENDING: { text: 'En attente', class: 'status-pending' },
-      CONFIRMED: { text: 'Confirmée', class: 'status-confirmed' },
-      SHIPPED: { text: 'Expédiée', class: 'status-shipped' },
-      DELIVERED: { text: 'Livrée', class: 'status-delivered' },
-      CANCELLED: { text: 'Annulée', class: 'status-cancelled' },
+      PENDING: { text: 'Pending', class: 'status-pending' },
+      CONFIRMED: { text: 'Confirmed', class: 'status-confirmed' },
+      SHIPPED: { text: 'Shipped', class: 'status-shipped' },
+      DELIVERED: { text: 'Delivered', class: 'status-delivered' },
+      CANCELLED: { text: 'Cancelled', class: 'status-cancelled' },
     };
     return statusMap[status] || { text: status, class: '' };
   }
@@ -316,39 +381,37 @@ export class MyStore implements OnInit {
     this.router.navigate(['/profile']);
   }
 
-  updateOrderStatus(
-    orderId: string,
-    newStatus: OrderStatusRequest
-  ) {
+  updateOrderStatus(orderId: string, newStatus: OrderStatusRequest) {
     if (!orderId) return;
 
     this.isLoading = true;
 
     this.myStoreService.updateOrderStatus(orderId, newStatus).subscribe({
       next: () => {
-        // Mettre à jour le statut local de la commande
+        // Update local order status
         const order = this.orders.find((o) => o.id === orderId);
         if (order) {
           order.status = newStatus;
         }
 
-        // Mettre à jour les statistiques
+        // Update statistics
         this.updateStats();
 
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Erreur lors de la mise à jour du statut :', err);
+        console.error('Error updating status:', err);
         this.isLoading = false;
       },
     });
   }
 
-// ================== Image ==================
+  // ================== Image ==================
   productImages: File[] = [];
+  productImageUrls: string[] = []; // Store blob URLs
   fileError: string = '';
   private errorTimeout?: any;
-  
+
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input.files) return;
@@ -362,7 +425,7 @@ export class MyStore implements OnInit {
       return;
     }
 
-    files.forEach(file => {
+    files.forEach((file) => {
       // Verify size (1MB max)
       if (file.size > 1024 * 1024) {
         this.showError('Each image must be less than 1 MB');
@@ -377,6 +440,8 @@ export class MyStore implements OnInit {
 
       // Add the file to the array
       this.productImages.push(file);
+      // Create and store the blob URL
+      this.productImageUrls.push(URL.createObjectURL(file));
     });
 
     // Reset the input to allow re-selecting the same file
@@ -385,7 +450,27 @@ export class MyStore implements OnInit {
 
   removeImage(index: number, event: Event): void {
     event.stopPropagation(); // Prevent triggering the parent's click
+
+    // Revoke the blob URL to free memory
+    if (this.productImageUrls[index]) {
+      URL.revokeObjectURL(this.productImageUrls[index]);
+    }
+
     this.productImages.splice(index, 1);
+    this.productImageUrls.splice(index, 1);
+    this.clearError();
+  }
+
+  handleCancelEdit(): void {
+    this.showAddProduct = false;
+    this.editingProduct = null;
+
+    // Revoke all blob URLs
+    this.productImageUrls.forEach((url) => URL.revokeObjectURL(url));
+
+    this.productImages = [];
+    this.productImageUrls = [];
+    this.resetProductForm();
     this.clearError();
   }
 
@@ -407,5 +492,11 @@ export class MyStore implements OnInit {
 
   ngOnDestroy(): void {
     this.clearError();
+    // Clean up all blob URLs when the component is destroyed
+    this.productImageUrls.forEach((url) => URL.revokeObjectURL(url));
+  }
+
+  getImageUrl(file: File): string {
+    return URL.createObjectURL(file);
   }
 }
