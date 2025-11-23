@@ -1,0 +1,378 @@
+<app-header></app-header>
+
+<div class="store-container">
+    <!-- Header -->
+    <div class="store-header">
+        <div class="header-left">
+            <button class="btn-back" (click)="goBack()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+                Retour
+            </button>
+            <div class="store-info">
+                <img src="/assets/images/seller1.jpg" alt="Store" class="store-avatar" />
+                <div>
+                    <h1>Ma Boutique</h1>
+                    <p>Tableau de bord artisan</p>
+                </div>
+            </div>
+        </div>
+        <button class="btn-profile" (click)="goToProfile()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+        Mon Profil
+        </button>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-header">
+                <p>Revenus totaux</p>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a74f4e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1" /><circle cx="19" cy="21" r="1" /><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+            </div>
+            <p class="stat-value">${{ stats.totalRevenue.toFixed(2) }}</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-header">
+                <p>Commandes totales</p>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a74f4e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5M21 3l-7 7M4 20h5v-5M4 20l7-7" /></svg>
+            </div>
+            <p class="stat-value">{{ stats.totalOrders }}</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-header">
+                <p>En attente</p>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+            </div>
+            <p class="stat-value">{{ stats.pendingOrders }}</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-header">
+                <p>Produits</p>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a74f4e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            </div>
+            <p class="stat-value">{{ stats.totalProducts }}</p>
+        </div>
+    </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button
+      class="tab"
+      [class.active]="activeTab === 'products'"
+      (click)="setActiveTab('products')"
+    >
+      Produits ({{ products.length }})
+    </button>
+    <button class="tab" [class.active]="activeTab === 'orders'" (click)="setActiveTab('orders')">
+      Commandes ({{ orders.length }})
+    </button>
+  </div>
+
+  <!-- Products Tab -->
+  <div *ngIf="activeTab === 'products'" class="tab-content">
+    <!-- Add Product Button -->
+    <div *ngIf="!showAddProduct" class="add-product-btn-container">
+      <button class="btn-primary" (click)="handleAddProduct()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /><path d="M12 5v14" /></svg>
+        Ajouter un produit
+      </button>
+    </div>
+
+    <!-- Product Form -->
+    <div *ngIf="showAddProduct" class="product-form-card">
+      <h3>{{ editingProduct ? 'Modifier le produit' : 'Nouveau produit' }}</h3>
+      <form (submit)="handleSubmitProduct($event)">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="name">Nom du produit *</label>
+            <input type="text" id="name" [(ngModel)]="productForm.name" name="name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="category">Catégorie *</label>
+            <input
+              type="text"
+              id="category"
+              [(ngModel)]="productForm.category"
+              name="category"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description *</label>
+          <textarea
+            id="description"
+            [(ngModel)]="productForm.description"
+            name="description"
+            rows="3"
+            required
+          ></textarea>
+        </div>
+
+        <div class="form-grid-3">
+          <div class="form-group">
+            <label for="price">Prix ($) *</label>
+            <input
+              type="number"
+              id="price"
+              [(ngModel)]="productForm.price"
+              name="price"
+              step="0.01"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="originalPrice">Prix original ($)</label>
+            <input
+              type="number"
+              id="originalPrice"
+              [(ngModel)]="productForm.originalPrice"
+              name="originalPrice"
+              step="0.01"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="stock">Stock *</label>
+            <input type="number" id="stock" [(ngModel)]="productForm.stock" name="stock" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="image">URL de l'image</label>
+          <input
+            type="text"
+            id="image"
+            [(ngModel)]="productForm.image"
+            name="image"
+            placeholder="https://exemple.com/image.jpg"
+          />
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">
+            {{ editingProduct ? 'Enregistrer' : 'Ajouter' }}
+          </button>
+          <button type="button" class="btn-secondary" (click)="handleCancelEdit()">Annuler</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Products List -->
+    <div class="products-list">
+      <div *ngIf="products.length === 0" class="empty-state">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="64"
+          height="64"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path
+            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+          />
+        </svg>
+        <h3>Aucun produit</h3>
+        <p>Commencez par ajouter votre premier produit</p>
+      </div>
+
+      <div *ngFor="let product of products" class="product-card">
+        <img
+          [src]="product.image || '/assets/images/chachya.webp'"
+          [alt]="product.name"
+          class="product-image"
+        />
+
+        <div class="product-info">
+          <div class="product-header">
+            <div>
+              <h3>{{ product.name }}</h3>
+              <span class="product-category">{{ product.category }}</span>
+            </div>
+            <div class="product-actions">
+              <button class="btn-icon" (click)="handleEditProduct(product)">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                </svg>
+              </button>
+              <button class="btn-icon btn-delete" (click)="handleDeleteProduct(product.id)">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M3 6h18" />
+                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <p class="product-description">{{ product.description }}</p>
+
+          <div class="product-details">
+            <div class="product-price">
+              <p class="label">Prix</p>
+              <div class="price-container">
+                <span *ngIf="product.originalPrice" class="original-price"
+                  >${{ product.originalPrice.toFixed(2) }}</span
+                >
+                <span class="current-price">${{ product.price.toFixed(2) }}</span>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="product-stock">
+              <p class="label">Stock</p>
+              <p class="stock-value">{{ product.stock }} unités</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Orders Tab -->
+  <div *ngIf="activeTab === 'orders'" class="tab-content">
+    <div *ngIf="orders.length === 0" class="empty-state">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="64"
+        height="64"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <circle cx="8" cy="21" r="1" />
+        <circle cx="19" cy="21" r="1" />
+        <path
+          d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"
+        />
+      </svg>
+      <h3>Aucune commande</h3>
+      <p>Les commandes de vos clients apparaîtront ici</p>
+    </div>
+
+    <div *ngFor="let order of orders" class="order-card">
+      <div class="order-header">
+        <div>
+          <div class="order-title">
+            <h3>Commande #{{ order.orderNumber }}</h3>
+            <span class="status-badge" [ngClass]="getOrderStatusBadge(order.status).class">
+              {{ getOrderStatusBadge(order.status).text }}
+            </span>
+          </div>
+          <div class="order-customer">
+            <p>Client: {{ order.customer.name }}</p>
+            <p>Email: {{ order.customer.email }}</p>
+            <p>Date: {{ order.date | date : 'dd/MM/yyyy' }}</p>
+          </div>
+        </div>
+        <div class="order-total">
+          <p class="label">Total</p>
+          <p class="total-value">${{ order.total.toFixed(2) }}</p>
+        </div>
+      </div>
+
+      <div class="order-divider"></div>
+
+      <div class="order-items">
+        <p class="items-title">Articles:</p>
+        <div *ngFor="let item of order.items" class="order-item">
+          <span>{{ item.productName }} x{{ item.quantity }}</span>
+          <span class="item-price">${{ (item.price * item.quantity).toFixed(2) }}</span>
+        </div>
+        <div class="order-item delivery">
+          <span>Livraison</span>
+          <span class="item-price">${{ order.deliveryPrice.toFixed(2) }}</span>
+        </div>
+      </div>
+
+      <div
+        *ngIf="order.status !== 'delivered' && order.status !== 'cancelled'"
+        class="order-actions"
+      >
+        <div *ngIf="order.status === 'pending'">
+          <button class="btn-confirm" (click)="updateOrderStatus(order.id, 'confirmed')">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+            Confirmer
+          </button>
+          <button class="btn-cancel" (click)="updateOrderStatus(order.id, 'cancelled')">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
+            Annuler
+          </button>
+        </div>
+        <button
+          *ngIf="order.status === 'confirmed'"
+          class="btn-primary"
+          (click)="updateOrderStatus(order.id, 'shipped')"
+        >
+          Marquer comme expédiée
+        </button>
+        <button
+          *ngIf="order.status === 'shipped'"
+          class="btn-primary"
+          (click)="updateOrderStatus(order.id, 'delivered')"
+        >
+          Marquer comme livrée
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
