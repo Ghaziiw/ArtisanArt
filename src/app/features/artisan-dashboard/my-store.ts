@@ -343,4 +343,69 @@ export class MyStore implements OnInit {
       },
     });
   }
+
+// ================== Image ==================
+  productImages: File[] = [];
+  fileError: string = '';
+  private errorTimeout?: any;
+  
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files) return;
+
+    const files = Array.from(input.files);
+    this.clearError();
+
+    // Verify maximum number of images (5)
+    if (this.productImages.length + files.length > 5) {
+      this.showError('You can upload a maximum of 5 images');
+      return;
+    }
+
+    files.forEach(file => {
+      // Verify size (1MB max)
+      if (file.size > 1024 * 1024) {
+        this.showError('Each image must be less than 1 MB');
+        return;
+      }
+
+      // Verify type
+      if (!['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)) {
+        this.showError('Only PNG and JPG formats are accepted');
+        return;
+      }
+
+      // Add the file to the array
+      this.productImages.push(file);
+    });
+
+    // Reset the input to allow re-selecting the same file
+    input.value = '';
+  }
+
+  removeImage(index: number, event: Event): void {
+    event.stopPropagation(); // Prevent triggering the parent's click
+    this.productImages.splice(index, 1);
+    this.clearError();
+  }
+
+  private showError(message: string): void {
+    this.clearError();
+    this.fileError = message;
+    this.errorTimeout = setTimeout(() => {
+      this.fileError = '';
+    }, 5000);
+  }
+
+  private clearError(): void {
+    if (this.errorTimeout) {
+      clearTimeout(this.errorTimeout);
+      this.errorTimeout = undefined;
+    }
+    this.fileError = '';
+  }
+
+  ngOnDestroy(): void {
+    this.clearError();
+  }
 }

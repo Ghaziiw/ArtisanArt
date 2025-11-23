@@ -151,14 +151,59 @@
           </div>
         </div>
 
-        <div class="input">
-          <label for="image">URL de l'image</label>
-          <input 
-            type="text" 
-            id="image" 
-            [(ngModel)]="productForm.image" 
-            name="image" 
-            placeholder="https://exemple.com/image.jpg">
+        <!-- Image Upload Section -->
+        <div class="form-group">
+          <label class="form-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#935653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-camera"><path d="M14.5 4h-5L8 7H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-1.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+            Photos du produit (Max 5)
+          </label>
+        
+          <div class="file-upload-wrapper" (click)="productImages.length < 5 && fileInput.click()">
+            <input 
+              type="file"
+              id="productImages"
+              name="productImages"
+              accept="image/png, image/jpeg, image/jpg"
+              (change)="onFileSelected($event)"
+              #fileInput
+              multiple
+              hidden
+            />
+          
+            <div class="file-upload-box">
+              <!-- Preview images if any are selected -->
+              <div *ngIf="productImages.length > 0" class="images-preview-grid">
+                <div *ngFor="let image of productImages; let i = index" class="image-preview-item">
+                  <img [src]="image" alt="Product preview {{ i + 1 }}" />
+                  <button 
+                    type="button"
+                    class="remove-image-btn" 
+                    (click)="removeImage(i, $event)"
+                    title="Supprimer">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                  </button>
+                </div>
+              </div>
+            
+              <!-- Default upload icon when no images -->
+              <div *ngIf="productImages.length === 0" class="upload-content">
+                <svg id="upload-svg" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#935653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <p class="upload-text">Cliquez pour sélectionner des images</p>
+                <p class="upload-hint">PNG, JPG jusqu'à 1 MB (Max 5 images)</p>
+              </div>
+
+              <p *ngIf="productImages.length > 0 && productImages.length < 5" class="upload-text">
+                {{ productImages.length }}/5 images - Cliquez pour ajouter plus
+              </p>
+              <p *ngIf="productImages.length >= 5" class="upload-text">
+                Limite atteinte (5/5 images)
+              </p>
+            </div>
+          </div>
+        
+          <div class="error-message" *ngIf="fileError">
+            {{ fileError }}
+          </div>
         </div>
 
         <div class="form-actions">
