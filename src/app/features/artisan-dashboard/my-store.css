@@ -741,3 +741,62 @@
   display: flex;
   gap: 12px;
 }
+
+.product-form-card input, .product-form-card textarea, select{
+  font-weight: 300;
+  padding: 0 16px;
+  border: 1px solid var(--login-btn-border);
+  border-radius: 10px;
+  font-size: 13px;
+  transition: all 0.2s;
+  background-color: var(--header-backgrounnd);
+  color: var(--login-btn-text);
+  height: 40px;
+}
+
+.product-form-card input:focus, .product-form-card textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--login-btn-text);
+  box-shadow: 0 0 0 3px var(--login-btn-border);
+}
+
+.name-category-box {
+  display: flex;
+  gap: 250px;
+}
+
+.product-form{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.input{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: var(--login-btn-text);
+  width: 48%;
+}
+
+.input label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.product-form-card textarea {
+  width: 97%;
+  height: 100px;
+}
+
+.description-input {
+  width: 100%;
+}

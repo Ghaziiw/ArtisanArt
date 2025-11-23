@@ -8,6 +8,7 @@ import { CraftsmanService, Craftsman } from '../../core/services/craftsman.servi
 import { ProductService, Product } from '../../core/services/product.service';
 import { AuthService } from '../../core/services/auth.service';
 import { OrderStatusRequest } from '../../core/services/store.service';
+import { Category, CategoryService } from '../../core/services/category.service';
 
 interface DisplayOrderItem {
   productName: string;
@@ -84,11 +85,14 @@ export class MyStore implements OnInit {
     image: '',
   };
 
+  categories: Category[] = [];
+
   constructor(
     private productService: ProductService,
     private authService: AuthService,
     private myStoreService: MyStoreService,
-    private router: Router
+    private router: Router,
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit() {
@@ -98,7 +102,17 @@ export class MyStore implements OnInit {
         this.craftsmanId = user.id;
         this.loadCraftsmanProducts();
         this.loadCraftsmanOrders();
+        this.loadCategories();
       }
+    });
+  }
+
+  loadCategories() {
+    this.categoryService.getCategories().subscribe({
+      next: (res) => {
+        this.categories = res.items;
+      },
+      error: (err) => console.error('Failed to load categories:', err),
     });
   }
 

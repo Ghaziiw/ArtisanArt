@@ -35,6 +35,15 @@ export interface ProductsResponse {
   }
 }
 
+export interface UpdateProductDto {
+  name?: string;
+  description?: string;
+  price?: number;
+  stock?: number;
+  categoryId?: string;
+  images?: string[];
+}
+
 @Injectable({ providedIn: 'root' })
 export class ProductService {
   private apiUrl = 'http://localhost:3000/products';
@@ -72,7 +81,22 @@ export class ProductService {
     return this.http.get<ProductsResponse>(`${this.apiUrl}`, { params });
   }
 
+  /**
+   * Deletes a product by ID (Artisan/Admin)
+   * @param productId - ID of the product to delete
+   */
   deleteProduct(productId: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${productId}`, { withCredentials: true });
+  }
+
+    /**
+   * Updates a product (Artisan/Admin)
+   * @param productId - ID of the product to update
+   * @param updateData - Product data to update
+   */
+  updateProduct(productId: string, updateData: UpdateProductDto): Observable<Product> {
+    return this.http.patch<Product>(`${this.apiUrl}/${productId}`, updateData, {
+      withCredentials: true,
+    });
   }
 }

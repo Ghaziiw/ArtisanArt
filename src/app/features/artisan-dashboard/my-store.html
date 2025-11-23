@@ -75,6 +75,102 @@
 
   <!-- Products Tab -->
   <div *ngIf="activeTab === 'products'" class="tab-content">
+    <!-- Add Product Button -->
+    <div *ngIf="!showAddProduct" class="add-product-btn-container">
+      <button class="btn-primary" (click)="handleAddProduct()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        Ajouter un produit
+      </button>
+    </div>
+
+    <!-- Product Form -->
+    <div *ngIf="showAddProduct" class="product-form-card">
+      <h3>{{ editingProduct ? 'Modifier le produit' : 'Nouveau produit' }}</h3>
+      <form (submit)="handleSubmitProduct($event)" class="product-form">
+        <div class="input-section">
+          <div class="input">
+            <label for="name">Nom du produit *</label>
+            <input 
+              type="text" 
+              id="name" 
+              [(ngModel)]="productForm.name" 
+              name="name" 
+              required>
+          </div>
+
+          <div class="input">
+            <label for="category">Catégorie *</label>
+              <select name="category" id="category" [(ngModel)]="productForm.category" required>
+                <option value="null" disabled selected>Select a category</option>
+                <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+              </select>
+          </div>
+        </div>
+
+        <div class="input description-input">
+          <label for="description">Description *</label>
+          <textarea 
+            id="description" 
+            [(ngModel)]="productForm.description" 
+            name="description" 
+            rows="3" 
+            required></textarea>
+        </div>
+
+        <div class="input-section">
+          <div class="input">
+            <label for="price">Prix ($) *</label>
+            <input 
+              type="number" 
+              id="price" 
+              [(ngModel)]="productForm.price" 
+              name="price" 
+              step="0.01" 
+              required>
+          </div>
+
+          <div class="input">
+            <label for="originalPrice">discount %</label>
+            <input 
+              type="number" 
+              id="originalPrice" 
+              [(ngModel)]="productForm.originalPrice" 
+              name="originalPrice" 
+              step="1" min="0" max="100" value="0">
+          </div>
+
+          <div class="input">
+            <label for="stock">Stock *</label>
+            <input 
+              type="number" 
+              id="stock" 
+              [(ngModel)]="productForm.stock" 
+              name="stock" 
+              min="0"
+              required>
+          </div>
+        </div>
+
+        <div class="input">
+          <label for="image">URL de l'image</label>
+          <input 
+            type="text" 
+            id="image" 
+            [(ngModel)]="productForm.image" 
+            name="image" 
+            placeholder="https://exemple.com/image.jpg">
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">
+            {{ editingProduct ? 'Enregistrer' : 'Ajouter' }}
+          </button>
+          <button type="button" class="btn-secondary" (click)="handleCancelEdit()">
+            Annuler
+          </button>
+        </div>
+      </form>
+    </div>
     <!-- Products List -->
     <div class="products-list">
       <div *ngIf="products.length === 0 && !isLoading" class="empty-state">
@@ -101,36 +197,10 @@
             </div>
             <div class="product-actions">
               <button class="btn-icon" (click)="handleEditProduct(product)">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="currentColor"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" /></svg>
               </button>
               <button class="btn-icon btn-delete" (click)="handleDeleteProduct(product.id)">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M3 6h18" />
-                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="currentColor"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /></svg>
               </button>
             </div>
           </div>
@@ -217,36 +287,11 @@
       >
         <div *ngIf="order.status === 'PENDING'" class="pending-actions">
           <button class="btn-confirm" (click)="updateOrderStatus(order.id, OrderStatusRequest.CONFIRMED)">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M20 6 9 17l-5-5" />
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="currentColor"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
             Confirm
           </button>
           <button class="btn-cancel" (click)="updateOrderStatus(order.id, OrderStatusRequest.CANCELLED)">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="currentColor"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
             Cancel
           </button>
         </div>
