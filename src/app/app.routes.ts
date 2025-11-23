@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { Profile } from './features/profile/profile';
 import { LoginPage } from './features/login-sign-up/components/login-page/login-page';
 import { SignUpPage } from './features/login-sign-up/components/sign-up-page/sign-up-page';
+import { ArtisanProfile } from './features/artisan-profile/artisan-profile';
 
 export const routes: Routes = [
   {
@@ -19,6 +20,10 @@ export const routes: Routes = [
   {
     path: 'signup',
     component: SignUpPage,
+  },
+  {
+    path: 'artisan-profile',
+    component: ArtisanProfile,
   },
   {
     path: '**',
