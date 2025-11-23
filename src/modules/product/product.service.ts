@@ -114,6 +114,12 @@ export class ProductService {
     if (filters.freeShipping === 'true') {
       qb.andWhere('craftsman.deliveryPrice = 0');
     }
+
+    if (filters.craftsmanId) {
+      qb.andWhere('craftsman.userId = :craftsmanId', {
+        craftsmanId: filters.craftsmanId,
+      });
+    }
   }
 
   // Retrieve all products with their categories

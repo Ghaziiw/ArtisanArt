@@ -43,4 +43,8 @@ export class ProductFilterDto {
   @IsOptional()
   @IsBooleanString()
   freeShipping?: string;
+
+  @IsOptional()
+  @IsUUID('4')
+  craftsmanId?: string;
 }
