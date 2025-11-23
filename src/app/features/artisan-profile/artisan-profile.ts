@@ -52,7 +52,7 @@ export class ArtisanProfile implements OnInit {
   }
 
   loadCraftsmanProducts() {
-    this.productService.getProducts(1, 20, { craftsmanId: this.craftsmanId }).subscribe({
+    this.productService.getProducts(1, 100, { craftsmanId: this.craftsmanId }).subscribe({
       next: (response) => {
         this.products = response.items;
       },

@@ -67,6 +67,7 @@ export class ProductService {
       if (filters.craftsmanName) params = params.set('craftsmanName', filters.craftsmanName);
       if (filters.minRating != null) params = params.set('minRating', filters.minRating.toString());
       if (filters.freeShipping) params = params.set('freeShipping', 'true');
+      if (filters.craftsmanId) params = params.set('craftsmanId',filters.craftsmanId)
     }
 
     return this.http.get<ProductsResponse>(`${this.apiUrl}`, { params });
