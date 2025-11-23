@@ -1,6 +1,6 @@
 .cart-btn {
   width: 100%;
-  background: #e63946;
+  background-color: var(--sign-up-btn);
   color: white;
   border: none;
   padding: 14px 18px;
@@ -8,11 +8,12 @@
   font-size: 17px;
   cursor: pointer;
   font-weight: 600;
-  transition: 0.2s;
+  transition: all 0.3s ease;
+  transition: background-color 0.2s;
 }
 
 .cart-btn:hover {
-  background: #d62839;
+  background-color: var(--sign-up-btn-on-hover);
 }
 
 .add-cart-container {
