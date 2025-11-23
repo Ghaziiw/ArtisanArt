@@ -1,21 +1,21 @@
 <div class="review" *ngFor="let comment of comments">
 
-  <div>
-      <img [src]="comment.clientImg" class="avatar"/>
-  </div>
+  <img [src]="comment.clientImg" class="avatar" />
 
   <div class="review-header">
       <span class="client-name">{{ comment.clientName }}</span>
-      <span>{{ comment.createdAt }}</span>
-        <div class="rating">
-            <span *ngFor="let star of getStarsArray(comment.rating)">
-                <img class="svg-star" src="assets/images/F7StarFill.svg" alt="star">
-            </span>
-        </div>
+      <span class="date">{{ comment.createdAt }}</span>
 
-        <div class="content">
-            <p>{{ comment.content }}</p>
-        </div>
+      <div class="rating">
+          <span *ngFor="let star of getStarsArray(comment.rating)">
+              <img class="svg-star" src="assets/images/F7StarFill.svg" alt="star">
+          </span>
+      </div>
+
+      <div class="content">
+          <p>{{ comment.content }}</p>
+      </div>
   </div>
 
 </div>
+

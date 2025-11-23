@@ -6,8 +6,9 @@
 .review-form-container {
   padding: 20px;
   border-radius: 12px;
-  background: #f6c9c9;
+  background-color: rgb(234, 207, 206);
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border: 2px solid var(--border-color);
 }
 
 .review-form-container h3 {
@@ -25,18 +26,29 @@
 }
 
 .publish-btn {
-  width: 100%;
+  width: 200px;
   margin-top: 15px;
-  padding: 12px;
+  padding: 7px;
   font-size: 16px;
   border: none;
   background: #a95548;
-  color: #f6c9c9;
+  color: white;
   border-radius: 10px;
   cursor: pointer;
   transition: 0.2s;
+  font-weight: bold;
 }
 
 .publish-btn:hover {
   background: #de6659;
+}
+
+h3, p{
+  color: var(--description-color);
+}
+
+textarea {
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;  
 }
