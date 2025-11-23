@@ -2,10 +2,12 @@ import { Component } from '@angular/core';
 import { Header } from '../../shared/components/header/header';
 import { ProductCard } from "./product-card/product-card";
 import { CommonModule } from '@angular/common';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-artisan-profile',
-  imports: [Header, ProductCard, CommonModule],
+  standalone: true,
+  imports: [Header, ProductCard, CommonModule, RouterLink],
   templateUrl: './artisan-profile.html',
   styleUrl: './artisan-profile.css',
 })

@@ -12,7 +12,7 @@ export interface Product {
   category: { id: string; name: string } | null;
   images: string[] | null;
   craftsman: {
-    id: string;
+    userId: string;
     businessName: string;
     workshopAddress: string;
     profileImage: string | null;

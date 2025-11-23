@@ -22,7 +22,7 @@ export const routes: Routes = [
     component: SignUpPage,
   },
   {
-    path: 'artisan-profile',
+    path: 'artisan-profile/:id',
     component: ArtisanProfile,
   },
   {
