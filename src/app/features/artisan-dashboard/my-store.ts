@@ -211,6 +211,18 @@ export class MyStore implements OnInit {
 
   // ==================== PRODUCT MANAGEMENT ====================
 
+  productFormError: string = '';
+
+  setFormError(message: string): void {
+    this.productFormError = message;
+
+    // Optionnel : effacer automatiquement après 5s
+    setTimeout(() => {
+      this.productFormError = '';
+    }, 5000);
+  }
+
+
   handleAddProduct(): void {
     this.showAddProduct = true;
     this.editingProduct = null;
@@ -235,13 +247,7 @@ export class MyStore implements OnInit {
     event.preventDefault();
 
     if (!this.validateProductForm()) {
-      this.showAlert('Please fill in all required fields', 'error');
-      return;
-    }
-
-    // Verify that at least one image is present
-    if (this.productImages.length === 0) {
-      this.showAlert('Please add at least one image', 'error');
+      this.setFormError('Please fill in all required fields');
       return;
     }
 
@@ -259,6 +265,21 @@ export class MyStore implements OnInit {
         updateData.categoryId = this.productForm.category;
       }
 
+      // Default values for untouched fields
+      if (!this.productForm.price) {
+        this.productForm.price = 0;
+      }
+
+      if (!this.productForm.originalPrice) {
+        this.productForm.originalPrice = 0;
+      }
+
+      // Normalize offer: convert 0% to null
+      const offer =
+        this.productForm.originalPrice > 0
+          ? { percentage: Number(this.productForm.originalPrice) }
+          : null;
+
       this.productService.updateProduct(this.editingProduct.id, updateData).subscribe({
         next: (updatedProduct) => {
           // Update local product list
@@ -273,7 +294,7 @@ export class MyStore implements OnInit {
         },
         error: (err) => {
           console.error('Error updating product:', err);
-          this.showAlert('Unable to update product', 'error');
+          this.setFormError('Unable to update product');
           this.isLoading = false;
         },
       });
@@ -303,7 +324,7 @@ export class MyStore implements OnInit {
         },
         error: (err) => {
           console.error('Error creating product:', err);
-          this.showAlert('Unable to create product', 'error');
+          this.setFormError('Unable to create product');
           this.isLoading = false;
         },
       });
@@ -314,7 +335,7 @@ export class MyStore implements OnInit {
     return !!(
       this.productForm.name &&
       this.productForm.description &&
-      this.productForm.price > 0 &&
+      this.productForm.price >= 0 &&
       this.productForm.stock >= 0
     );
   }

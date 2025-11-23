@@ -932,6 +932,9 @@
 }
 
 .btn-primary {
-  width: 85px;
   display:block;
+}
+
+.add-product-btn{
+  width: 85px;
 }
