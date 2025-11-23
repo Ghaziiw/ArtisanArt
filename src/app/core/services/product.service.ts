@@ -12,7 +12,7 @@ export interface Product {
   category: { id: string; name: string } | null;
   images: string[] | null;
   craftsman: {
-    id: string;
+    userId: string;
     businessName: string;
     workshopAddress: string;
     profileImage: string | null;
@@ -23,7 +23,6 @@ export interface Product {
   avgRating: number;
   totalComments: number;
 }
-
 
 export interface ProductsResponse {
   items: Product[];
@@ -67,6 +66,7 @@ export class ProductService {
       if (filters.craftsmanName) params = params.set('craftsmanName', filters.craftsmanName);
       if (filters.minRating != null) params = params.set('minRating', filters.minRating.toString());
       if (filters.freeShipping) params = params.set('freeShipping', 'true');
+      if (filters.craftsmanId) params = params.set('craftsmanId',filters.craftsmanId)
     }
 
     return this.http.get<ProductsResponse>(`${this.apiUrl}`, { params });

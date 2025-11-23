@@ -54,7 +54,7 @@
     </button>
   </div>
 
-  <div class="seller">
+  <div class="seller" (click)="navigateToArtisan($event)" style="cursor: pointer;">
     <img [src]="product.craftsman.profileImage?.length ? product.craftsman.profileImage : '/assets/images/seller1.jpg'" alt="Seller" class="seller-avatar">
     <div class="seller-name">{{ product.craftsman.businessName || 'Artisan inconnu' }}</div>
     <div class="location">{{ product.craftsman.workshopAddress || 'Adresse non disponible' }}</div>

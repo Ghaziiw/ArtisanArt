@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { ShoppingCartService } from '../../../../../core/services/shopping-cart.service';
 import { AuthService } from '../../../../../core/services/auth.service';
 import { Router } from '@angular/router';
-import { FormsModule, NgForm, NgModel } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-item-display',
@@ -27,6 +27,14 @@ export class ItemDisplay {
     private authService: AuthService,
     private router: Router
   ) {}
+
+  /**
+   * Navigate to artisan profile
+   */
+  navigateToArtisan(event: Event): void {
+    event.stopPropagation();
+    this.router.navigate(['/artisan-profile', this.product.craftsman.userId]);
+  }
 
   /**
    * Add product to cart
