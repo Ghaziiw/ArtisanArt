@@ -10,7 +10,10 @@
   </div>
   
   <div class="product-page-bottom">
-    <app-reviews-container></app-reviews-container>
+    <app-reviews-container
+      *ngIf="product"
+      [comments]="product.comments">
+    </app-reviews-container>
   </div>
 
 </div>

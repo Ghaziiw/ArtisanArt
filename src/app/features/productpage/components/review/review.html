@@ -1,13 +1,13 @@
 <div class="review" *ngFor="let comment of comments">
 
-  <img [src]="comment.clientImg" class="avatar" />
+  <img [src]="comment.user?.image" class="avatar" />
 
   <div class="review-header">
-      <span class="client-name">{{ comment.clientName }}</span>
+      <span class="client-name">{{ comment.user?.name }}</span>
       <span class="date">{{ comment.createdAt }}</span>
 
       <div class="rating">
-          <span *ngFor="let star of getStarsArray(comment.rating)">
+          <span *ngFor="let star of getStarsArray(comment.mark)">
               <img class="svg-star" src="assets/images/F7StarFill.svg" alt="star">
           </span>
       </div>
