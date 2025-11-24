@@ -32,4 +32,13 @@ export class CraftsmanService {
   getCraftsmanById(craftsmanId: string): Observable<Craftsman> {
     return this.http.get<Craftsman>(`${this.apiUrl}/${craftsmanId}`);
   }
+
+  /**
+   * Fetches the profile of the authenticated craftsman
+   */
+  getMyProfile(): Observable<Craftsman> {
+    return this.http.get<Craftsman>(`${this.apiUrl}/profile/me`, {
+      withCredentials: true,
+    });
+  }
 }

@@ -14,6 +14,7 @@ import {
 import { AuthService } from '../../core/services/auth.service';
 import { OrderStatusRequest } from '../../core/services/store.service';
 import { Category, CategoryService } from '../../core/services/category.service';
+import { filter, switchMap } from 'rxjs';
 
 interface DisplayOrderItem {
   productName: string;
@@ -97,18 +98,36 @@ export class MyStore implements OnInit {
     private authService: AuthService,
     private myStoreService: MyStoreService,
     private router: Router,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private craftsmanService: CraftsmanService
   ) {}
 
   ngOnInit() {
-    // Get current user's ID
-    this.authService.user$.subscribe((user) => {
-      if (user) {
-        this.craftsmanId = user.id;
+    this.authService.user$.pipe(
+      filter(user => !!user), // Ensure user is not null
+      switchMap(user => {
+        this.craftsmanId = user!.id;
         this.loadCraftsmanProducts();
         this.loadCraftsmanOrders();
         this.loadCategories();
-      }
+        return this.craftsmanService.getMyProfile();
+      })
+    ).subscribe({
+      next: (craftsman) => {
+        this.craftsman = craftsman;
+      },
+      error: (err) => console.error('Failed to load craftsman profile:', err)
+    });
+  }
+
+  loadCraftsman() {
+    this.craftsmanService.getMyProfile().subscribe({
+      next: (craftsman) => {
+        this.craftsman = craftsman;
+      },
+      error: (err) => {
+        console.error('Failed to load craftsman profile:', err);
+      },
     });
   }
 
