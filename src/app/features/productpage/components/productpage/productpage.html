@@ -1,7 +1,11 @@
 <div class="product-page">
 
   <div class="product-page-top">
-    <app-product-photos></app-product-photos>
+    <app-product-photos
+    [images]="product.images"
+    [offer]="offer.percentage"
+    ></app-product-photos>
+
     <app-product-info 
     [product]="product"
     [offer]="offer"></app-product-info>
