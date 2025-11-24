@@ -112,3 +112,10 @@ body{
     margin: 20px 60px;
     gap: 20px;
 }
+
+.full-width-container{
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
