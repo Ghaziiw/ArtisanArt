@@ -5,6 +5,7 @@ import { ReviewsContainer } from '../reviews-container/reviews-container';
 import { CraftsmanInfo } from '../craftsman-info/craftsman-info';
 import { SpecificProductService, SpecificProduct } from '../../../../core/services/specific-product.service';
 import { CommonModule } from '@angular/common';
+import { Offer, OfferService } from '../../../../core/services/offer.service';
 @Component({
   selector: 'app-productpage',
   imports: [ProductInfo, ProductPhotos, ReviewsContainer, CraftsmanInfo, CommonModule],
@@ -13,7 +14,12 @@ import { CommonModule } from '@angular/common';
 })
 export class Productpage {
   product !: SpecificProduct;
-  constructor(private specificProductService: SpecificProductService){}
+  offer !: Offer;
+  
+  constructor(
+    private specificProductService: SpecificProductService,
+    private offerService : OfferService
+  ){}
   ngOnInit() : void {
       this.specificProductService
       .getProductById("469f25da-d42c-4dde-987d-d021182445f4") //pour tester
@@ -21,6 +27,14 @@ export class Productpage {
         //console.log('Productpage received product:', data);
         this.product = data;
       });
+
+      this.offerService
+      .getOffer("469f25da-d42c-4dde-987d-d021182445f4") //pour tester
+      .subscribe((data) => {
+        //console.log('Productpage received offer:', data);
+        this.offer = data;
+      });
+
   }
 
 }

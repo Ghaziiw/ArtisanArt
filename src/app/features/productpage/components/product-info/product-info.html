@@ -1,12 +1,12 @@
-<div class="product-info">
-    <h3><span class="category"> {{categorie}} </span></h3>
-    <h1> {{productName}} </h1>
+@if (product) { <div class="product-info">
+    <h3><span class="category"> {{product.category?.name}} </span></h3>
+    <h1> {{product.name}} </h1>
     <div class="rating">
         <span *ngFor="let star of starsArray">
             <img class="svg-star" src="assets/images/F7StarFill.svg" alt="star">
         </span>
         <span class="rating-count">
-            {{ rating }} ({{ reviewsCount }} avis)
+            {{ rating }} ({{ product.comments.length }} avis)
         </span>
     </div>
 
@@ -18,8 +18,8 @@
 
     <div class="description-container">
         <h3> Description </h3>
-        <p> {{description}} </p>
-        <p class="stock"> {{stock}} articles en stock </p>
+        <p> {{product.description}} </p>
+        <p class="stock"> {{product.stock}} articles en stock </p>
     </div>
 
     <div class="quantity-container">
@@ -33,3 +33,4 @@
     <app-shopping-cart-btn></app-shopping-cart-btn>
 
 </div>
+}
