@@ -2,11 +2,9 @@ import {
   IsString,
   IsNumber,
   IsOptional,
-  IsArray,
   Min,
   MinLength,
   IsUUID,
-  IsUrl,
 } from 'class-validator';
 
 export class CreateProductDto {
@@ -28,9 +26,4 @@ export class CreateProductDto {
   @IsOptional()
   @IsUUID()
   categoryId?: string;
-
-  @IsOptional()
-  @IsArray()
-  @IsUrl({}, { each: true })
-  images?: string[];
 }

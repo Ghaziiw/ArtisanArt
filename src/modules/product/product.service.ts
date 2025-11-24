@@ -66,7 +66,7 @@ export class ProductService {
     const isValid = start <= now && (!end || end >= now);
 
     if (!isValid) {
-      product.offer = undefined; // Remove invalid offer
+      product.offer = null; // Remove invalid offer
     }
 
     return product;
@@ -113,6 +113,12 @@ export class ProductService {
 
     if (filters.freeShipping === 'true') {
       qb.andWhere('craftsman.deliveryPrice = 0');
+    }
+
+    if (filters.craftsmanId) {
+      qb.andWhere('craftsman.userId = :craftsmanId', {
+        craftsmanId: filters.craftsmanId,
+      });
     }
   }
 
@@ -212,6 +218,7 @@ export class ProductService {
   async createProduct(
     productData: CreateProductDto,
     craftsmanId: string,
+    files?: Express.Multer.File[],
   ): Promise<Product> {
     const categoryId = await this.categoryRepository.findOneBy({
       id: productData.categoryId,
@@ -222,39 +229,89 @@ export class ProductService {
       throw new BadRequestException('Category not found');
     }
 
-    const product = this.productRepository.create({
+    this.productRepository.create({
       ...productData,
       craftsmanId,
     });
 
-    return this.productRepository.save(product);
+    // Generate image URLs
+    const imageUrls =
+      files?.map((file) =>
+        this.uploadService.getFileUrl(file.filename, 'products'),
+      ) || [];
+
+    // Add images to product data
+    const productWithImages = {
+      ...productData,
+      craftsmanId,
+      images: imageUrls,
+    };
+
+    return this.productRepository.save(productWithImages);
   }
 
   // Update an existing product
   async update(
     id: string,
-    updateProductDto: UpdateProductDto,
+    dto: UpdateProductDto,
     craftsmanId: string,
-  ): Promise<Product> {
-    const product = await this.findOne(id);
+    files?: Express.Multer.File[],
+  ): Promise<Product | null> {
+    const product = await this.productRepository.findOne({
+      where: { id },
+    });
 
-    // Verify product exists
     if (!product) {
       throw new BadRequestException('Product not found');
     }
 
-    // Check if user is the owner or admin
     if (product.craftsmanId !== craftsmanId) {
-      throw new ForbiddenException(
-        'You do not have permission to update this product',
-      );
+      throw new ForbiddenException('Not allowed');
     }
 
-    Object.assign(product, updateProductDto);
+    const newUrls =
+      files?.map((file) =>
+        this.uploadService.getFileUrl(file.filename, 'products'),
+      ) ?? [];
 
-    product.updatedAt = new Date();
+    const keep = dto.imagesToKeep ?? [];
+    const finalImages = [...keep, ...newUrls];
 
-    return await this.productRepository.save(product);
+    if (finalImages.length > 5) {
+      await this.uploadService.deleteMultipleFiles(newUrls);
+      throw new BadRequestException('Max 5 images allowed');
+    }
+
+    const oldImages = product.images ?? [];
+    const imagesToDelete = oldImages.filter((img) => !keep.includes(img));
+
+    // Prepare update data
+    const updateData: any = {
+      updatedAt: new Date(),
+      images: finalImages,
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { imagesToKeep, images, ...updateFields } = dto;
+    Object.assign(updateData, updateFields);
+
+    // Use QueryBuilder to avoid relation issues
+    await this.productRepository
+      .createQueryBuilder()
+      .update(Product)
+      .set(updateData)
+      .where('id = :id', { id })
+      .execute();
+
+    if (imagesToDelete.length) {
+      await this.uploadService.deleteMultipleFiles(imagesToDelete);
+    }
+
+    // Reload with all relations
+    return await this.productRepository.findOne({
+      where: { id },
+      relations: ['category', 'craftsman', 'offer', 'comments'],
+    });
   }
 
   // Delete a product

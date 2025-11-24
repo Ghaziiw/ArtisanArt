@@ -14,6 +14,7 @@ import { ProductService } from '../product/product.service';
 import { ViewOrderDto } from './dto/view-order.dto';
 import { IPaginationMeta, Pagination } from 'nestjs-typeorm-paginate';
 import { OrderFilterDto } from './dto/order-filter.dto';
+import { Product } from '../product/product.entity';
 
 /**
  * OrderService handles operations related to orders,
@@ -93,7 +94,11 @@ export class OrderService {
       // Deduct stock quantities
       for (const item of craftsmanItems) {
         item.product.stock -= item.quantity;
-        await manager.save(item.product);
+        await manager.update(
+          Product,
+          { id: item.product.id },
+          { stock: item.product.stock },
+        );
       }
 
       // Create order

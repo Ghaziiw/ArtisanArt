@@ -460,7 +460,7 @@ curl -X DELETE "http://localhost:3000/categories/id_expl" \
 ### Lister tous les produits (Public)
 
 **Pagination :** Oui (`page`, `limit`)  
-**Filtres :** `name`, `categoriesId`, `minPrice`, `maxPrice`, `sortByPrice`, `craftsmanName`, `minRating`, `freeShipping`                
+**Filtres :** `name`, `categoriesId`, `minPrice`, `maxPrice`, `sortByPrice`, `craftsmanName`, `craftsmanId`, `minRating`, `freeShipping`                
 
 ```bash
 curl -X GET "http://localhost:3000/products?page=1&limit=20"
@@ -505,26 +505,25 @@ curl -X POST "http://localhost:3000/products" \
 ### Mettre à jour un produit (Artisan/Admin)
 
 ```bash
-curl -X PATCH "http://localhost:3000/products/id_expl" \
+curl -X PATCH "http://localhost:3000/products/<product_id>" \
 -b cookies.txt \
--H "Content-Type: application/json" \
--d '{
-        "name": "Traditional Vase",
-        "description": "Handmade traditional Tunisian vase",
-        "price": 45.99,
-        "stock": 10,
-        "categoryId": "id_expl",
-        "images": [
-            "https://example.com/vase1.jpg",
-            "https://example.com/vase2.jpg"
-        ]
-    }'
+-H "Content-Type: multipart/form-data" \
+-F "name=Traditional Vase" \
+-F "description=Handmade traditional Tunisian vase" \
+-F "price=45.99" \
+-F "stock=10" \
+-F "categoryId=<category_id>" \
+-F "imagesToKeep[]=https://example.com/old1.jpg" \
+-F "imagesToKeep[]=https://example.com/old2.jpg" \
+-F "images=@./vase1.jpg" \
+-F "images=@./vase2.jpg"
 ```
 
 > **Remarque :** Les champs optionnels sont :
 >
 > - `categoryId`
 > - `images`
+> - `imagesToKeep`
 
 ### Mettre à Jour les Images d'un Produit
 

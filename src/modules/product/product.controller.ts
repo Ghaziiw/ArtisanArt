@@ -74,31 +74,33 @@ export class ProductController {
       this.uploadService.validateFiles(files);
     }
 
-    // Generate image URLs
-    const imageUrls =
-      files?.map((file) =>
-        this.uploadService.getFileUrl(file.filename, 'products'),
-      ) || [];
-
-    // Add images to product data
-    const productWithImages = {
-      ...productData,
-      images: imageUrls,
-    };
-
-    return await this.productService.createProduct(productWithImages, user.id);
+    return await this.productService.createProduct(productData, user.id, files);
   }
 
   // PATCH /products/:id → update an existing product
   @Patch(':id')
   @RequirePermissions(Permission.PRODUCTS_UPDATE)
   @UseGuards(CraftsmanExpirationGuard)
+  @UseInterceptors(
+    FilesInterceptor('images', 5, multerConfig),
+    CleanupFilesInterceptor,
+  )
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateProductDto: UpdateProductDto,
+    @UploadedFiles() files: Express.Multer.File[],
     @CurrentUser() user: AuthUser,
   ) {
-    return await this.productService.update(id, updateProductDto, user.id);
+    // Validate files if provided
+    if (files && files.length > 0) {
+      this.uploadService.validateFiles(files);
+    }
+    return await this.productService.update(
+      id,
+      updateProductDto,
+      user.id,
+      files,
+    );
   }
 
   // PATCH /products/:id/images → update product images

@@ -8,7 +8,7 @@ import {
   CreateDateColumn,
 } from 'typeorm';
 import { User } from '../user/user.entity';
-import { IsEnum, IsString, Length, Matches } from 'class-validator';
+import { IsString, Length, Matches } from 'class-validator';
 import { OrderStatus } from './enums/order-status.enum';
 import { TunisianState } from './enums/tunisian-state.enum';
 import { OrderItem } from './order-item.entity';
@@ -45,7 +45,7 @@ export class Order {
   @Length(1, 255, { message: 'Location must be between 1 and 255 characters' })
   location: string;
 
-  @IsEnum(TunisianState, { message: 'Invalid state' })
+  @Column({ type: 'enum', enum: TunisianState, default: TunisianState.TUNIS })
   state: TunisianState;
 
   @Column({ type: 'varchar', length: 8, nullable: false })
