@@ -253,42 +253,65 @@ export class ProductService {
   // Update an existing product
   async update(
     id: string,
-    updateProductDto: UpdateProductDto,
+    dto: UpdateProductDto,
     craftsmanId: string,
     files?: Express.Multer.File[],
-  ): Promise<Product> {
-    const product = await this.findOne(id);
+  ): Promise<Product | null> {
+    const product = await this.productRepository.findOne({
+      where: { id },
+    });
 
-    // Verify product exists
     if (!product) {
       throw new BadRequestException('Product not found');
     }
 
-    // Check if user is the owner or admin
     if (product.craftsmanId !== craftsmanId) {
-      throw new ForbiddenException(
-        'You do not have permission to update this product',
-      );
+      throw new ForbiddenException('Not allowed');
     }
 
-    this.updateProductImages(
-      id,
-      craftsmanId,
-      files
-        ? files.map((file) =>
-            this.uploadService.getFileUrl(file.filename, 'products'),
-          )
-        : [],
-      true,
-    ).catch(() => {
-      // Ignore errors here, as they will be handled in the main update flow
+    const newUrls =
+      files?.map((file) =>
+        this.uploadService.getFileUrl(file.filename, 'products'),
+      ) ?? [];
+
+    const keep = dto.imagesToKeep ?? [];
+    const finalImages = [...keep, ...newUrls];
+
+    if (finalImages.length > 5) {
+      await this.uploadService.deleteMultipleFiles(newUrls);
+      throw new BadRequestException('Max 5 images allowed');
+    }
+
+    const oldImages = product.images ?? [];
+    const imagesToDelete = oldImages.filter((img) => !keep.includes(img));
+
+    // Prepare update data
+    const updateData: any = {
+      updatedAt: new Date(),
+      images: finalImages,
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { imagesToKeep, images, ...updateFields } = dto;
+    Object.assign(updateData, updateFields);
+
+    // Use QueryBuilder to avoid relation issues
+    await this.productRepository
+      .createQueryBuilder()
+      .update(Product)
+      .set(updateData)
+      .where('id = :id', { id })
+      .execute();
+
+    if (imagesToDelete.length) {
+      await this.uploadService.deleteMultipleFiles(imagesToDelete);
+    }
+
+    // Reload with all relations
+    return await this.productRepository.findOne({
+      where: { id },
+      relations: ['category', 'craftsman', 'offer', 'comments'],
     });
-
-    Object.assign(product, updateProductDto);
-
-    product.updatedAt = new Date();
-
-    return await this.productRepository.save(product);
   }
 
   // Delete a product

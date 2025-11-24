@@ -513,6 +513,8 @@ curl -X PATCH "http://localhost:3000/products/<product_id>" \
 -F "price=45.99" \
 -F "stock=10" \
 -F "categoryId=<category_id>" \
+-F "imagesToKeep[]=https://example.com/old1.jpg" \
+-F "imagesToKeep[]=https://example.com/old2.jpg" \
 -F "images=@./vase1.jpg" \
 -F "images=@./vase2.jpg"
 ```
@@ -521,6 +523,7 @@ curl -X PATCH "http://localhost:3000/products/<product_id>" \
 >
 > - `categoryId`
 > - `images`
+> - `imagesToKeep`
 
 ### Mettre à Jour les Images d'un Produit
 

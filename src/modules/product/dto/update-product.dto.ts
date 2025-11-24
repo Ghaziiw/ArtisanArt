@@ -37,4 +37,8 @@ export class UpdateProductDto {
   @IsArray()
   @IsUrl({}, { each: true })
   images?: string[];
+
+  @IsOptional()
+  @IsArray()
+  imagesToKeep?: string[];
 }
