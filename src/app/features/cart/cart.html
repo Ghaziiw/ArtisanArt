@@ -1,0 +1,53 @@
+<app-header></app-header>
+<div class="main-body">
+    <button class="return-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#935653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Return
+    </button>
+
+    <div class="empty-cart">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#925653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart-icon lucide-shopping-cart"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+        <h2>Your cart is empty!</h2>
+        <p>Add products to your cart to start buying</p>
+        <button class="keep-shopping-btn">Keep Shopping</button>
+    </div>
+    <div class="not-empty-cart">
+        <!-- Left Column - Cart Items -->
+        <div class="cart-items-column">
+            <app-cart-product-card class="product-card-div"></app-cart-product-card>
+            <app-cart-product-card class="product-card-div"></app-cart-product-card>
+            <app-cart-product-card class="product-card-div"></app-cart-product-card>
+        </div>
+        <!-- Right Card - Order Summary -->
+        <div class="card summary-card">
+            <h2 class="summary-title">Order Summary</h2>
+            
+            <div class="summary-section">
+                <div class="summary-item">
+                    <span class="label">Sub-total</span>
+                    <span class="value">$879.96</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Total Delivery</span>
+                    <span class="value">$13.98</span>
+                </div>
+            </div>
+
+            <div class="summary-total">
+                <div class="summary-total-row">
+                    <span class="summary-total-label">Total</span>
+                    <span class="summary-total-price">$893.94</span>
+                </div>
+            </div>
+
+            <button class="checkout-btn">
+                Order all
+            </button>
+
+            <p class="order-note">
+                Order everything together or order seperately from each seller
+
+            </p>
+        </div>
+    </div>
+</div>

@@ -4,6 +4,7 @@
   height: 400px;
   border-radius: calc(var(--general-border-radius) + 5px) calc(var(--general-border-radius) + 5px) 0 0;
   border: 1px solid var(--login-btn-border);
+  object-fit: cover;
 }
 
 .content {

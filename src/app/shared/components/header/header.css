@@ -78,7 +78,7 @@ div{
     left: 35px;
 }
 
-#profile-login-signup{
+#right-side-btns{
     height: 64px;
 
 }
@@ -88,12 +88,12 @@ div{
 }
 
 
-#profile-btn{
+#profile-btn, #shop-btn, #cart-btn{
     align-items: center;
     justify-content: center;
 }
 
-#profile-btn>svg, #logout-btn>svg{
+#profile-btn>svg, #logout-btn>svg, #shop-btn>svg, #cart-btn>svg{
     margin-left: -3px;
     position: relative;
     top:3px;
