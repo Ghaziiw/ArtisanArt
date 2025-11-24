@@ -66,6 +66,8 @@
     --search-bar-gray: #888;
     --general-border-radius: 10px;
     --selected-option-background:#f6e7e4;
+    --secondary-text-color: #8D6B6B;
+    --price-red: #c91239;
 }
 
 body{
@@ -109,4 +111,11 @@ body{
     align-items: center;
     margin: 20px 60px;
     gap: 20px;
+}
+
+.full-width-container{
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
