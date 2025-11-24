@@ -81,12 +81,26 @@ export class ProductController {
   @Patch(':id')
   @RequirePermissions(Permission.PRODUCTS_UPDATE)
   @UseGuards(CraftsmanExpirationGuard)
+  @UseInterceptors(
+    FilesInterceptor('images', 5, multerConfig),
+    CleanupFilesInterceptor,
+  )
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateProductDto: UpdateProductDto,
+    @UploadedFiles() files: Express.Multer.File[],
     @CurrentUser() user: AuthUser,
   ) {
-    return await this.productService.update(id, updateProductDto, user.id);
+    // Validate files if provided
+    if (files && files.length > 0) {
+      this.uploadService.validateFiles(files);
+    }
+    return await this.productService.update(
+      id,
+      updateProductDto,
+      user.id,
+      files,
+    );
   }
 
   // PATCH /products/:id/images → update product images

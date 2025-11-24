@@ -255,6 +255,7 @@ export class ProductService {
     id: string,
     updateProductDto: UpdateProductDto,
     craftsmanId: string,
+    files?: Express.Multer.File[],
   ): Promise<Product> {
     const product = await this.findOne(id);
 
@@ -269,6 +270,19 @@ export class ProductService {
         'You do not have permission to update this product',
       );
     }
+
+    this.updateProductImages(
+      id,
+      craftsmanId,
+      files
+        ? files.map((file) =>
+            this.uploadService.getFileUrl(file.filename, 'products'),
+          )
+        : [],
+      true,
+    ).catch(() => {
+      // Ignore errors here, as they will be handled in the main update flow
+    });
 
     Object.assign(product, updateProductDto);
 
