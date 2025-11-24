@@ -243,6 +243,7 @@ export class ProductService {
     // Add images to product data
     const productWithImages = {
       ...productData,
+      craftsmanId,
       images: imageUrls,
     };
 
