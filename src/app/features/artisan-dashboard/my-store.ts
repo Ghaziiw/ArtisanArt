@@ -216,12 +216,10 @@ export class MyStore implements OnInit {
   setFormError(message: string): void {
     this.productFormError = message;
 
-    // Optionnel : effacer automatiquement après 5s
     setTimeout(() => {
       this.productFormError = '';
     }, 5000);
   }
-
 
   handleAddProduct(): void {
     this.showAddProduct = true;
@@ -232,13 +230,22 @@ export class MyStore implements OnInit {
   handleEditProduct(product: Product): void {
     this.editingProduct = product;
     this.showAddProduct = true;
+
+    // Clean up new images
+    this.productImageUrls.forEach((url) => URL.revokeObjectURL(url));
+    this.productImages = [];
+    this.productImageUrls = [];
+
+    // Load existing images of the product
+    this.existingImageUrls = product.images ? [...product.images] : [];
+
     this.productForm = {
       name: product.name,
       description: product.description,
       price: product.price,
-      originalPrice: 0,
+      originalPrice: product.offer?.percentage || 0,
       stock: product.stock,
-      category: product.category?.name || '',
+      category: product.category?.id || '',
       image: product.images?.[0] || '',
     };
   }
@@ -254,6 +261,7 @@ export class MyStore implements OnInit {
     this.isLoading = true;
 
     if (this.editingProduct) {
+      // Edit mode
       const updateData: UpdateProductDto = {
         name: this.productForm.name,
         description: this.productForm.description,
@@ -261,28 +269,24 @@ export class MyStore implements OnInit {
         stock: this.productForm.stock,
       };
 
+      // Handle category correctly
       if (this.productForm.category) {
         updateData.categoryId = this.productForm.category;
+      } else {
+        updateData.categoryId = null;
       }
 
-      // Default values for untouched fields
-      if (!this.productForm.price) {
-        this.productForm.price = 0;
-      }
+      // To let the backend know which images to keep
+      updateData.imagesToKeep = this.existingImageUrls;
 
-      if (!this.productForm.originalPrice) {
-        this.productForm.originalPrice = 0;
+      // Add new images if they have been selected
+      if (this.productImages.length > 0) {
+        updateData.images = this.productImages;
       }
-
-      // Normalize offer: convert 0% to null
-      const offer =
-        this.productForm.originalPrice > 0
-          ? { percentage: Number(this.productForm.originalPrice) }
-          : null;
 
       this.productService.updateProduct(this.editingProduct.id, updateData).subscribe({
         next: (updatedProduct) => {
-          // Update local product list
+          // Update local list
           const index = this.products.findIndex((p) => p.id === updatedProduct.id);
           if (index !== -1) {
             this.products[index] = updatedProduct;
@@ -294,12 +298,13 @@ export class MyStore implements OnInit {
         },
         error: (err) => {
           console.error('Error updating product:', err);
-          this.setFormError('Unable to update product');
+          console.error('Error details:', err.error);
+          this.setFormError(err.error?.message || 'Unable to update product. Please try again.');
           this.isLoading = false;
         },
       });
     } else {
-      // Creation mode
+      // Create mode
       const createData: CreateProductDto = {
         name: this.productForm.name,
         description: this.productForm.description,
@@ -314,9 +319,8 @@ export class MyStore implements OnInit {
 
       this.productService.addProduct(createData).subscribe({
         next: (newProduct) => {
-          // Add to local product list
-          this.products.unshift(newProduct);
-          this.stats.totalProducts = this.products.length;
+          // Reload products to have complete data (populated category)
+          this.loadCraftsmanProducts();
 
           this.showAlert('Product added successfully!', 'success');
           this.handleCancelEdit();
@@ -324,7 +328,7 @@ export class MyStore implements OnInit {
         },
         error: (err) => {
           console.error('Error creating product:', err);
-          this.setFormError('Unable to create product');
+          this.setFormError(err.error?.message || 'Unable to create product. Please try again.');
           this.isLoading = false;
         },
       });
@@ -332,25 +336,39 @@ export class MyStore implements OnInit {
   }
 
   validateProductForm(): boolean {
-    return !!(
-      this.productForm.name &&
-      this.productForm.description &&
-      this.productForm.price >= 0 &&
-      this.productForm.stock >= 0
+    // Check basic required fields
+    const basicFieldsValid = !!(
+      (
+        this.productForm.name &&
+        this.productForm.description &&
+        this.productForm.price >= 0 &&
+        this.productForm.stock >= 0 &&
+        this.productForm.category
+      )
     );
+
+    // In create mode, at least one image is required
+    if (!this.editingProduct) {
+      return basicFieldsValid && this.productImages.length > 0;
+    }
+
+    // In edit mode, check that there is at least one image (existing or new)
+    const hasImages = this.existingImageUrls.length > 0 || this.productImages.length > 0;
+    return basicFieldsValid && hasImages;
   }
 
   handleDeleteProduct(productId: string) {
-    if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+    if (confirm('Are you sure you want to delete this product?')) {
       this.productService.deleteProduct(productId).subscribe({
         next: () => {
-          // Supprimer du tableau local pour mise à jour de l'affichage
+          // Remove from local array
           this.products = this.products.filter((p) => p.id !== productId);
-          alert('Produit supprimé avec succès !');
+          this.stats.totalProducts = this.products.length;
+          this.showAlert('Product deleted successfully!', 'success');
         },
         error: (err) => {
-          console.error('Erreur lors de la suppression du produit :', err);
-          alert('Impossible de supprimer le produit.');
+          console.error('Error deleting product:', err);
+          this.showAlert('Unable to delete product', 'error');
         },
       });
     }
@@ -366,6 +384,13 @@ export class MyStore implements OnInit {
       category: '',
       image: '',
     };
+
+    // Clean up new images
+    this.productImageUrls.forEach((url) => URL.revokeObjectURL(url));
+    this.productImages = [];
+    this.productImageUrls = [];
+    this.existingImageUrls = [];
+    this.productFormError = '';
   }
 
   // ==================== ORDER MANAGEMENT ====================
@@ -387,6 +412,17 @@ export class MyStore implements OnInit {
     const alertDiv = document.createElement('div');
     alertDiv.className = `alert alert-${type}`;
     alertDiv.textContent = message;
+    alertDiv.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      background: ${type === 'success' ? '#10b981' : '#ef4444'};
+      color: white;
+      border-radius: 8px;
+      z-index: 1000;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    `;
     document.body.appendChild(alertDiv);
 
     setTimeout(() => {
@@ -418,20 +454,28 @@ export class MyStore implements OnInit {
         // Update statistics
         this.updateStats();
 
+        this.showAlert('Order status updated successfully!', 'success');
         this.isLoading = false;
       },
       error: (err) => {
         console.error('Error updating status:', err);
+        this.showAlert('Unable to update order status', 'error');
         this.isLoading = false;
       },
     });
   }
 
-  // ================== Image ==================
-  productImages: File[] = [];
-  productImageUrls: string[] = []; // Store blob URLs
+  // ================== Image Management ==================
+  productImages: File[] = []; // New image files selected
+  productImageUrls: string[] = []; // Blob URLs of new images
+  existingImageUrls: string[] = []; // URLs of existing product images
   fileError: string = '';
   private errorTimeout?: any;
+
+  // Calculate total number of images (existing + new)
+  get totalImagesCount(): number {
+    return this.existingImageUrls.length + this.productImages.length;
+  }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -440,39 +484,60 @@ export class MyStore implements OnInit {
     const files = Array.from(input.files);
     this.clearError();
 
-    // Verify maximum number of images (5)
-    if (this.productImages.length + files.length > 5) {
-      this.showError('You can upload a maximum of 5 images');
+    // Check maximum number of images (5 in total)
+    if (this.totalImagesCount + files.length > 5) {
+      this.showError(
+        `You can upload a maximum of 5 images in total. Currently you have ${this.totalImagesCount} image(s).`
+      );
+      input.value = '';
       return;
     }
 
+    let hasError = false;
+
     files.forEach((file) => {
-      // Verify size (1MB max)
+      // Check size (1MB max)
       if (file.size > 1024 * 1024) {
-        this.showError('Each image must be less than 1 MB');
+        this.showError(`File "${file.name}" is too large. Maximum size is 1 MB.`);
+        hasError = true;
         return;
       }
 
-      // Verify type
+      // Check type
       if (!['image/png', 'image/jpeg', 'image/jpg'].includes(file.type)) {
-        this.showError('Only PNG and JPG formats are accepted');
+        this.showError(`File "${file.name}" is not a valid format. Only PNG and JPG are accepted.`);
+        hasError = true;
         return;
       }
 
-      // Add the file to the array
-      this.productImages.push(file);
-      // Create and store the blob URL
-      this.productImageUrls.push(URL.createObjectURL(file));
+      if (!hasError) {
+        // Add file to array
+        this.productImages.push(file);
+        // Create and store blob URL
+        this.productImageUrls.push(URL.createObjectURL(file));
+      }
     });
 
-    // Reset the input to allow re-selecting the same file
+    // Reset input to allow re-selecting the same file
     input.value = '';
+
+    // If error, clean up any images that may have been added
+    if (hasError) {
+      // Keep only the valid images already added
+      console.log('Some files were rejected due to validation errors');
+    }
   }
 
-  removeImage(index: number, event: Event): void {
-    event.stopPropagation(); // Prevent triggering the parent's click
+  removeExistingImage(index: number, event: Event): void {
+    event.stopPropagation();
+    this.existingImageUrls.splice(index, 1);
+    this.clearError();
+  }
 
-    // Revoke the blob URL to free memory
+  removeNewImage(index: number, event: Event): void {
+    event.stopPropagation();
+
+    // Revoke blob URL to free memory
     if (this.productImageUrls[index]) {
       URL.revokeObjectURL(this.productImageUrls[index]);
     }
@@ -491,8 +556,10 @@ export class MyStore implements OnInit {
 
     this.productImages = [];
     this.productImageUrls = [];
+    this.existingImageUrls = [];
     this.resetProductForm();
     this.clearError();
+    this.productFormError = '';
   }
 
   private showError(message: string): void {
