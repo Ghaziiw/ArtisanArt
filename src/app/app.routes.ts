@@ -3,6 +3,8 @@ import { Profile } from './features/profile/profile';
 import { LoginPage } from './features/login-sign-up/components/login-page/login-page';
 import { SignUpPage } from './features/login-sign-up/components/sign-up-page/sign-up-page';
 import { ArtisanProfile } from './features/artisan-profile/artisan-profile';
+import { Cart } from './features/cart/cart';
+import { AdminCtrlPage } from './features/admin-ctrl-page/admin-ctrl-page';
 
 export const routes: Routes = [
   {
@@ -24,6 +26,14 @@ export const routes: Routes = [
   {
     path: 'artisan-profile/:id',
     component: ArtisanProfile,
+  },
+  {
+    path: 'cart',
+    component: Cart,
+  },
+  {
+    path: 'admin-panel',
+    component: AdminCtrlPage,
   },
   {
     path: '**',
