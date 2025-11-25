@@ -14,7 +14,7 @@ export interface OrderItem {
 export interface Order {
   id: string;
   userId: string;
-  status: 'PENDING' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+  status: OrderStatusRequest;
   createdAt: string;
   cin: string;
   location: string;

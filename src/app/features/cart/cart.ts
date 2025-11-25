@@ -7,6 +7,8 @@ import { GroupedCartResponse, ShoppingCartService } from '../../core/services/sh
 import { User } from '../../core/services/auth.service';
 import { AuthService } from '../../core/services/auth.service';
 import { first } from 'rxjs';
+import { OrderService } from '../../core/services/order.service';
+import { TunisianState } from '../../core/services/store.service';
 
 @Component({
   selector: 'app-cart',
@@ -23,7 +25,8 @@ export class Cart implements OnInit {
   constructor(
     private cartService: ShoppingCartService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private orderService: OrderService
   ) {}
 
   ngOnInit(): void {
@@ -74,6 +77,13 @@ export class Cart implements OnInit {
    * Handle item removed event
    */
   onItemRemoved(): void {
+    if (!this.cartData) return;
+
+    // Remove groups that no longer have products
+    this.cartData.craftsmanGroups = this.cartData.craftsmanGroups.filter(
+      group => group.items.length > 0
+    );
+
     this.recalcCartSummary();
   }
 
@@ -106,6 +116,65 @@ export class Cart implements OnInit {
       (sum, group) => sum + group.total,
       0
     );
+  }
+
+  cin = "12345678";
+  location = "sfax gremda";
+  state = TunisianState.SFAX;
+  phone = "12345678";
+
+  orderError: string = "";
+
+  orderAll() {
+    if (!this.cartData || this.cartData.craftsmanGroups.length === 0) {
+      this.orderError = "Your cart is empty!";
+      setTimeout(() => {
+        this.orderError = "";
+      }, 5000);
+      return;
+    }
+
+    const confirmed = confirm("Confirm your order for all items?");
+    if (!confirmed) return;
+
+    this.isLoading = true;
+    this.cartError = "";
+
+    const orderData = {
+      cin: this.cin,
+      location: this.location,
+      state: this.state,
+      phone: this.phone,
+    };
+
+    this.orderService.checkoutAllCraftsmen(orderData).subscribe({
+      next: (response) => {
+        this.isLoading = false;
+
+        // Clear the cart locally
+        if (this.cartData) {
+          this.cartData.craftsmanGroups = [];
+          this.cartData.totalItems = 0;
+          this.cartData.grandTotal = 0;
+        }
+
+        this.router.navigate(['/orders']);
+      },
+
+      error: (err) => {
+        this.isLoading = false;
+
+        const message =
+          err.error?.message ??
+          err.error?.error ??
+          "Failed to create the order. Please try again.";
+
+        this.orderError = message;
+        setTimeout(() => {
+          this.orderError = "";
+        }, 5000);
+      },
+    });
   }
 
 }

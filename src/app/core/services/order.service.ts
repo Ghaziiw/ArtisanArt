@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Order } from './store.service';
+import { Order, TunisianState } from './store.service';
 
 export interface CreateOrderDto {
   cin: string;
   location: string;
-  state: string;
+  state: TunisianState;
   phone: string;
 }
 
