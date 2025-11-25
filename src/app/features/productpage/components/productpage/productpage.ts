@@ -75,13 +75,23 @@ export class Productpage {
         this.quantity = qty;
       }
 
-      addToCart() {
-        this.shoppingCartService.addToCart({
-        productId: "469f25da-d42c-4dde-987d-d021182445f4", //pour tester
-        quantity: this.quantity
-      });
+addToCart() {
+  console.log("clicked!");
 
-      console.log("Produit ajouté au panier :", this.quantity);
+  this.shoppingCartService.addToCart({
+    productId: "469f25da-d42c-4dde-987d-d021182445f4",
+    quantity: this.quantity
+  }).subscribe({
+    next: (response) => { 
+      //console.log("OK :", response);
+    },
+    error: (err) => {
+      //console.error("ERREUR  :", err);
     }
+  });
+
+  //console.log("Produit ajouté au panier :", this.quantity);
+}
+
 
 }
