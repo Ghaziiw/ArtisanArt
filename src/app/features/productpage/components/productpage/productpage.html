@@ -20,7 +20,8 @@
   <div class="product-page-bottom">
     <app-reviews-container
       *ngIf="product"
-      [comments]="product.comments">
+      [comments]="product.comments"
+      (feedback)="saveReview($event)">
     </app-reviews-container>
   </div>
 

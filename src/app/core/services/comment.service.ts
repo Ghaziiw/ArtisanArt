@@ -35,15 +35,14 @@ export class CommentService{
         return this.http.get<CommentsResponse>(`${this.apiUrl}/${productId}`, { params });
     }
 
-    addComment(commentData: createCommentDto) : Observable<Comment>{
-        const formData = new FormData();
-        formData.append('productId', commentData.productId);
-        formData.append('content', commentData.content);
-        formData.append('mark', commentData.mark.toString());
-        return this.http.post<Comment>(`${this.apiUrl}`, formData, {
-              withCredentials: true,
-            });
-    }
+
+    addComment(commentData: createCommentDto): Observable<Comment> {
+      return this.http.post<Comment>(
+    `${this.apiUrl}`,
+    commentData,  
+    { withCredentials: true }
+  );
+}
 
 
 
