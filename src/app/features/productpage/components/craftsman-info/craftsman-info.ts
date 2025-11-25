@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input, SimpleChange } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { Craftsman } from '../../../../core/services/craftsman.service';
 @Component({
   selector: 'app-craftsman-info',
   imports: [CommonModule],
@@ -8,19 +8,20 @@ import { CommonModule } from '@angular/common';
   styleUrl: './craftsman-info.css',
 })
 export class CraftsmanInfo {
-    craftsmanimg : string ="../../../../assets/images/seller1.jpg";
-    storeName: string = "TechGear" ; 
-    job : string ="Audio Specialist" ;
-    location : string ="New York" ;
-    rating : number = 4.8;
-    description : string = "Passionate about bringing audio" ;
-    reviewsCount : number = 1250 ;
-    phone : number = 11111111 ; 
+    @Input() craftsman !: Craftsman;
+    rating : number = 0;
+    starsArray: number[] = [] ;
 
+    ngOnChanges(changes: SimpleChange): void {
+      if(this.craftsman){
+        this.computeRating();
+      }
+    }
 
-    get starsArray() {
+    private computeRating(){
+      this.rating=this.craftsman.avgRating;
       const rounded = Math.round(this.rating); 
-      return Array(rounded).fill(0);
+      this.starsArray = Array(rounded).fill(0);
     }
 
 

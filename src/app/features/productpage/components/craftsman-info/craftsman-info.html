@@ -1,17 +1,17 @@
-<div class="craftsman-container">
+@if(craftsman){<div class="craftsman-container">
     <h3>A propos de l'artisan </h3>
     <div class="info-container"> 
         <div>
-            <img [src]="craftsmanimg" class="profile-img" />
+            <img [src]="craftsman.profileImage" class="profile-img" />
         </div>
 
         <div class="craftsman-details">
-            <h3> {{storeName}}</h3>
-            <p> {{job}} </p>
+            <h3> {{craftsman.businessName}}</h3>
+            <p> {{craftsman.specialty}} </p>
         
 
         <div class="location">
-            {{location}}
+            {{craftsman.workshopAddress}}
         </div>
 
         <div class="rating">
@@ -19,12 +19,12 @@
                 <img class="svg-star" src="assets/images/F7StarFill.svg" alt="star">
             </span>
             <span class="rating-count">
-                {{ rating }} ({{ reviewsCount }} avis)
+                {{ craftsman.avgRating }} ({{ craftsman.totalComments }} avis)
             </span>
         </div>
 
-        <p class="description"> {{description}}</p>
-        <p class="phone">Téléphone: {{phone}}</p> 
+        <p class="description"> {{craftsman.bio}}</p>
+        <p class="phone">Téléphone: {{craftsman.phone}}</p> 
         </div>
 
         <button class="store-btn"> Voir la boutique </button>
@@ -32,3 +32,4 @@
     </div>
 
 </div>
+}

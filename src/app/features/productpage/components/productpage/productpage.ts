@@ -6,6 +6,7 @@ import { CraftsmanInfo } from '../craftsman-info/craftsman-info';
 import { SpecificProductService, SpecificProduct } from '../../../../core/services/specific-product.service';
 import { CommonModule } from '@angular/common';
 import { Offer, OfferService } from '../../../../core/services/offer.service';
+import { CraftsmanService, Craftsman  } from '../../../../core/services/craftsman.service';
 @Component({
   selector: 'app-productpage',
   imports: [ProductInfo, ProductPhotos, ReviewsContainer, CraftsmanInfo, CommonModule],
@@ -15,10 +16,12 @@ import { Offer, OfferService } from '../../../../core/services/offer.service';
 export class Productpage {
   product !: SpecificProduct;
   offer !: Offer;
-  
+  craftsman !: Craftsman;
+
   constructor(
     private specificProductService: SpecificProductService,
-    private offerService : OfferService
+    private offerService : OfferService,
+    private craftsmanService: CraftsmanService
   ){}
   ngOnInit() : void {
       this.specificProductService
@@ -33,6 +36,13 @@ export class Productpage {
       .subscribe((data) => {
         //console.log('Productpage received offer:', data);
         this.offer = data;
+      });
+
+      this.craftsmanService
+      .getCraftsmanById("vsJLETIYDpMLk07qlNdn1rNVmIHZVydv") //pour tester
+      .subscribe((data) => {
+        //console.log('Productpage received craftsman:', data);
+        this.craftsman = data;
       });
 
   }
