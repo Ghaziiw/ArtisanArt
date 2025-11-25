@@ -92,5 +92,8 @@
       <span class="total-price">${{ craftsmanGroup.total.toFixed(2) }}</span>
     </div>
   </div>
-  <button class="checkout-btn">Order from {{ craftsmanGroup.craftsman.businessName }}</button>
+  <div class="error-message" *ngIf="orderError">
+    {{ orderError }}
+  </div>
+  <button class="checkout-btn" (click)="orderFromCraftsman(craftsmanGroup.craftsman.id)">Order from {{ craftsmanGroup.craftsman.businessName }}</button>
 </div>

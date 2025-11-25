@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShoppingCartService, CraftsmanGroup, ShoppingCartItem} from '../../../core/services/shopping-cart.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { OrderService } from '../../../core/services/order.service';
+import { TunisianState } from '../../../core/services/store.service';
 
 @Component({
   selector: 'app-cart-product-card',
@@ -16,7 +18,10 @@ export class CartProductCard {
 
   isUpdating = false;
 
-  constructor(private cartService: ShoppingCartService) {}
+  constructor(
+    private cartService: ShoppingCartService,
+    private orderService: OrderService
+  ) {}
 
   /**
    * Calculate the price after discount for a product
@@ -126,6 +131,54 @@ export class CartProductCard {
       0
     );
     this.craftsmanGroup.total = this.craftsmanGroup.subtotal + this.craftsmanGroup.deliveryPrice;
+  }
+
+  orderError = "";
+
+  orderFromCraftsman(craftsmanId: string) {
+    const craftsmanGroup = this.craftsmanGroup;
+
+    if (!craftsmanGroup || craftsmanGroup.items.length === 0) {
+      return;
+    }
+
+    if (!confirm(`Confirm your order from ${craftsmanGroup.craftsman.businessName}?`)) {
+      return;
+    }
+
+    this.isUpdating = true;
+
+    const orderData = {
+      cin: "12345678",
+      location: "sfax gremda",
+      state: TunisianState.SFAX,
+      phone: "12345678",
+    };
+
+    this.orderService.checkoutSingleCraftsman(craftsmanId, orderData).subscribe({
+      next: () => {
+        // Remove this craftsman group completely
+        this.craftsmanGroup.items = [];
+
+        // Notify parent so it updates UI
+        this.itemRemoved.emit();
+
+        this.isUpdating = false;
+      },
+      error: (err) => {
+        this.isUpdating = false;
+
+        const message =
+          err.error?.message ??
+          err.error?.error ??
+          "Failed to place the order.";
+
+        this.orderError = message;
+        setTimeout(() => {
+          this.orderError = "";
+        }, 5000);
+      },
+    });
   }
 
 }
