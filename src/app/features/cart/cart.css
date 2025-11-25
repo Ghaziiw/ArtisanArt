@@ -26,6 +26,12 @@
   border: 1px solid var(--login-btn-border);
   background-color: var(--login-btn-background);
   cursor: pointer;
+  transition: all 300ms;
+}
+
+.return-btn:hover {
+  background-color: var(--login-btn-background-on-hover);
+  transition: all 300ms;
 }
 
 .empty-cart {
