@@ -42,24 +42,24 @@ export class CartProductCard {
   /**
    * Increment quantity
    */
-  incrementQuantity(productId: string, currentQty: number) {
+  incrementQuantity(item: ShoppingCartItem) {
     if (this.isUpdating) return;
 
     this.isUpdating = true;
-    this.productQuantityErrors[productId] = ''; // reset l'erreur
-
-    this.cartService.updateCartItem(productId, currentQty + 1).subscribe({
+    this.productQuantityErrors[item.productId] = ''; // reset l'erreur
+    this.cartService.updateCartItem(item.productId, item.quantity + 1).subscribe({
       next: () => {
+        item.quantity += 1; // Update quantity locally
+        this.recalcTotals();
         this.isUpdating = false;
       },
       error: (err) => {
         this.isUpdating = false;
         const message = err.error?.message || 'An unexpected error occurred';
-        this.productQuantityErrors[productId] = message;
+        this.productQuantityErrors[item.productId] = message;
 
-        // Supprimer le message après 5 secondes
         setTimeout(() => {
-          this.productQuantityErrors[productId] = '';
+          this.productQuantityErrors[item.productId] = '';
         }, 5000);
       }
     });
@@ -68,47 +68,29 @@ export class CartProductCard {
   /**
    * Decrement quantity
    */
-  decrementQuantity(productId: string, currentQty: number) {
-    if (currentQty <= 1 || this.isUpdating) return;
+  decrementQuantity(item: ShoppingCartItem) {
+    if (item.quantity <= 1 || this.isUpdating) return;
 
     this.isUpdating = true;
-    this.productQuantityErrors[productId] = ''; // reset l'erreur
-
-    this.cartService.updateCartItem(productId, currentQty - 1).subscribe({
+    this.productQuantityErrors[item.productId] = ''; // reset the error
+    this.cartService.updateCartItem(item.productId, item.quantity - 1).subscribe({
       next: () => {
+        item.quantity -= 1; // Update quantity locally
+        this.recalcTotals(); // Recalculate totals
         this.isUpdating = false;
       },
       error: (err) => {
         this.isUpdating = false;
         const message = err.error?.message || 'An unexpected error occurred';
-        this.productQuantityErrors[productId] = message;
+        this.productQuantityErrors[item.productId] = message;
 
-        // Supprimer le message après 5 secondes
+        // Remove the message after 5 seconds
         setTimeout(() => {
-          this.productQuantityErrors[productId] = '';
+          this.productQuantityErrors[item.productId] = '';
         }, 5000);
       }
     });
   }
-
-  /**
-   * Update cart item quantity
-   */
-  // private updateQuantity(productId: string, newQuantity: number): void {
-  //   this.isUpdating = true;
-
-  //   this.cartService.updateCartItem(productId, newQuantity).subscribe({
-  //     next: () => {
-  //       this.isUpdating = false;
-  //       this.quantityUpdated.emit();
-  //     },
-  //     error: (err: any) => {
-  //       console.error('Failed to update quantity:', err);
-  //       this.isUpdating = false;
-  //       alert('Failed to update quantity');
-  //     }
-  //   });
-  // }
 
   /**
    * Remove item from cart
@@ -120,8 +102,11 @@ export class CartProductCard {
 
     this.cartService.removeFromCart(productId).subscribe({
       next: () => {
+        this.craftsmanGroup.items = this.craftsmanGroup.items.filter(
+          item => item.productId !== productId
+        ); // Remove item locally
+        this.recalcTotals(); // Recalculate totals
         this.isUpdating = false;
-        this.itemRemoved.emit();
       },
       error: (err: any) => {
         console.error('Failed to remove item:', err);
@@ -130,4 +115,14 @@ export class CartProductCard {
       }
     });
   }
+
+  /** Recalculate subtotal and total for the craftsman group */
+  private recalcTotals() {
+    this.craftsmanGroup.subtotal = this.craftsmanGroup.items.reduce(
+      (sum, item) => sum + this.getFinalPrice(item) * item.quantity,
+      0
+    );
+    this.craftsmanGroup.total = this.craftsmanGroup.subtotal + this.craftsmanGroup.deliveryPrice;
+  }
+
 }

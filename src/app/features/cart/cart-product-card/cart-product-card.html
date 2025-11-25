@@ -52,15 +52,15 @@
           <div class="quantity-controls">
             <button
               class="quantity-btn"
-              (click)="decrementQuantity(item.productId, item.quantity)"
+              (click)="decrementQuantity(item)"
               [disabled]="isUpdating || item.quantity <= 1"
             >
               -
             </button>
-            <input type="text" [value]="item.quantity" class="quantity-input" readonly />
+            <input type="text" [value]="item.quantity" class="quantity-input" readonly disabled />
             <button
               class="quantity-btn"
-              (click)="incrementQuantity(item.productId, item.quantity)"
+              (click)="incrementQuantity(item)"
               [disabled]="isUpdating"
             >
               +

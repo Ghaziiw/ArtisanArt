@@ -84,12 +84,13 @@
   width: 100px;
   height: 100px;
   overflow: hidden;
+  object-fit: cover;
 }
 .discount-label {
   position: absolute;
   top: 8px;
   left: 8px;
-  background: white;
+  background: var(--login-btn-background);
   padding: 2px 8px;
   border-radius: 4px;
   font-size: 11px;
@@ -152,8 +153,8 @@
 .quantity-btn {
   width: 32px;
   height: 32px;
-  border: 1px solid #e0e0e0;
-  background: white;
+  border: 1px solid var(--border-color);
+  background: var(--body-background);
   border-radius: 6px;
   cursor: pointer;
   font-size: 16px;
@@ -161,23 +162,40 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 300ms;
 }
+
 .quantity-btn:hover {
-  background-color: #f8f8f8;
+  background-color: var(--color-palette6);
+  transition: all 300ms;
 }
+
 .quantity-input {
   width: 50px;
   height: 32px;
-  border: 1px solid #e0e0e0;
+  border: none;
   border-radius: 6px;
   text-align: center;
   font-size: 14px;
+  background-color: transparent;
 }
+
+.quantity-input:disabled {
+  background-color: transparent;
+  color: var(--secondary-text-color);
+}
+
 .delete-btn {
   background-color: var(--header-backgrounnd);
   cursor: pointer;
   padding: 6px 8px;
   border-radius: var(--general-border-radius);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
 }
 
 .delete-btn:hover {
