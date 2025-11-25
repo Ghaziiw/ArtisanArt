@@ -37,7 +37,10 @@
 
     </div>
     
-    <app-shopping-cart-btn></app-shopping-cart-btn>
+    <app-shopping-cart-btn
+    (addToCart)="notifyAddToCart()"
+    
+    ></app-shopping-cart-btn>
 
 </div>
 }

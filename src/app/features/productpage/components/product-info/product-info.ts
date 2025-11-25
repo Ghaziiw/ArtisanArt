@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Quantity } from '../quantity/quantity';
 import { ShoppingCartBtn } from '../shopping-cart-btn/shopping-cart-btn';
@@ -13,13 +13,16 @@ import { Offer } from '../../../../core/services/offer.service';
 })
 export class ProductInfo {
  @Input() product!: SpecificProduct;
-  @Input() offer!: Offer;
+ @Input() offer!: Offer;
+ @Output() quantitySelected = new EventEmitter<number>();
+ @Output() addProductToCart = new EventEmitter<void>();
 
   beforeOffer: number = 0;
   withOffer: number = 0;
   economy: number = 0;
   rating: number = 0;
   starsArray: number[] = [];
+  quantity : number = 1;
 
   ngOnChanges(changes: SimpleChanges): void {
     //console.log("received product:", this.product);
@@ -61,10 +64,13 @@ export class ProductInfo {
     return Array(rounded).fill(0);
   }
 
-  quantity = 1;
-
   onQuantityChanged(newquantity: number) {
     this.quantity = newquantity;
+    this.quantitySelected.emit(this.quantity);
+  }
+
+  notifyAddToCart() {
+    this.addProductToCart.emit();
   }
 
 }

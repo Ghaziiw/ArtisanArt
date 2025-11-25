@@ -9,6 +9,7 @@ import { Offer, OfferService } from '../../../../core/services/offer.service';
 import { CraftsmanService, Craftsman  } from '../../../../core/services/craftsman.service';
 import { CommentService } from '../../../../core/services/comment.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { ShoppingCartService } from '../../../../core/services/shopping-cart.service';
 @Component({
   selector: 'app-productpage',
   imports: [ProductInfo, ProductPhotos, ReviewsContainer, CraftsmanInfo, CommonModule],
@@ -19,6 +20,8 @@ export class Productpage {
   product !: SpecificProduct;
   offer !: Offer;
   craftsman !: Craftsman;
+  quantity: number = 1;
+
 
   constructor(
     private specificProductService: SpecificProductService,
@@ -26,6 +29,7 @@ export class Productpage {
     private craftsmanService: CraftsmanService,
     private commentService: CommentService,
     private authService: AuthService,
+    private shoppingCartService: ShoppingCartService
   ){}
 
 
@@ -66,5 +70,18 @@ export class Productpage {
         )
 
       }
+
+      onQuantitySelected(qty: number) {
+        this.quantity = qty;
+      }
+
+      addToCart() {
+        this.shoppingCartService.addToCart({
+        productId: "469f25da-d42c-4dde-987d-d021182445f4", //pour tester
+        quantity: this.quantity
+      });
+
+      console.log("Produit ajouté au panier :", this.quantity);
+    }
 
 }

@@ -8,7 +8,10 @@
 
     <app-product-info 
     [product]="product"
-    [offer]="offer"></app-product-info>
+    [offer]="offer"
+    (quantitySelected)="onQuantitySelected($event)"
+    (addProductToCart)="addToCart()"
+  ></app-product-info>
   </div>
 
   <div class="craftsman">
