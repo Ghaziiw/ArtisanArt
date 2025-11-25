@@ -67,14 +67,14 @@ export class Cart implements OnInit {
    * Handle quantity update event
    */
   onQuantityUpdated(): void {
-    this.loadCart(); // Reload cart to get updated totals
+    this.recalcCartSummary();
   }
 
   /**
    * Handle item removed event
    */
   onItemRemoved(): void {
-    this.loadCart(); // Reload cart to get updated data
+    this.recalcCartSummary();
   }
 
   /**
@@ -90,4 +90,22 @@ export class Cart implements OnInit {
   keepShopping(): void {
     this.router.navigate(['/']);
   }
+
+  /** Recalculate cart summary (total items and grand total) */
+  private recalcCartSummary() {
+    if (!this.cartData) return;
+
+    // Total items
+    this.cartData.totalItems = this.cartData.craftsmanGroups.reduce(
+      (sum, group) => sum + group.items.reduce((s, item) => s + item.quantity, 0),
+      0
+    );
+
+    // Grand total
+    this.cartData.grandTotal = this.cartData.craftsmanGroups.reduce(
+      (sum, group) => sum + group.total,
+      0
+    );
+  }
+
 }

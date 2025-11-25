@@ -50,7 +50,8 @@ export class CartProductCard {
     this.cartService.updateCartItem(item.productId, item.quantity + 1).subscribe({
       next: () => {
         item.quantity += 1; // Update quantity locally
-        this.recalcTotals();
+        this.recalcTotals(); // Recalculate totals
+        this.quantityUpdated.emit(); // Notify parent component
         this.isUpdating = false;
       },
       error: (err) => {
@@ -77,6 +78,7 @@ export class CartProductCard {
       next: () => {
         item.quantity -= 1; // Update quantity locally
         this.recalcTotals(); // Recalculate totals
+        this.quantityUpdated.emit(); // Notify parent component
         this.isUpdating = false;
       },
       error: (err) => {
@@ -106,6 +108,7 @@ export class CartProductCard {
           item => item.productId !== productId
         ); // Remove item locally
         this.recalcTotals(); // Recalculate totals
+        this.itemRemoved.emit(); // Notify parent component
         this.isUpdating = false;
       },
       error: (err: any) => {
