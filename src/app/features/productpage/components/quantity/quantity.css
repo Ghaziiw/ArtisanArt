@@ -1,0 +1,27 @@
+.quantity-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--secondary-foreground);
+}
+
+.quantity-container button {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: solid 1px var(--border);
+  color: var(--secondary-foreground);
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.quantity-container button:hover {
+  background:var(--accent);
+}
+
+.quantity-container span {
+  font-size: 18px;
+  font-weight: 600;
+}
+
