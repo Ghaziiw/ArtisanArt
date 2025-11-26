@@ -21,6 +21,7 @@
   color: var(--login-btn-text);
   align-self: flex-start;
   margin: 0 0 32px;
+  margin-left: 15px;
 }
 
 .form {
@@ -148,6 +149,7 @@
   font-family: 'Outfit';
   font-weight: 400;
   margin: 0;
+  margin-left: 15px;
 }
 
 

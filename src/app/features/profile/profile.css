@@ -4,6 +4,7 @@
     color: var(--login-btn-text);
     align-self: flex-start;
     margin: 0 0 32px;
+    margin-top: 20px;
 }
 
 
