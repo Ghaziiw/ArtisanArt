@@ -14,12 +14,17 @@ import { Observable, map } from 'rxjs';
 export class Header {
   // Observable to check if user is an artisan
   isArtisan$: Observable<boolean>;
+  // Observable to check if user is an admin
+  isAdmin$: Observable<boolean>;
 
   constructor(public authService: AuthService, private router: Router) {
-    // Create an observable that checks if the current user is an artisan
-    this.isArtisan$ = this.authService.user$.pipe(
-      map(user => user?.role === 'artisan')
+    this.isAdmin$ = this.authService.user$.pipe(
+      map(user => user ? user.role?.toLowerCase() === 'admin' : false)
     );
+    this.isArtisan$ = this.authService.user$.pipe(
+      map(user => user ? user.role?.toLowerCase() === 'artisan' : false)
+    );
+    console.log(this.isAdmin$, this.isArtisan$);
   }
 
   async logout() {

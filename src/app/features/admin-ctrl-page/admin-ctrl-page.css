@@ -1,15 +1,15 @@
-.full-width-container{
-    border-bottom: 1px solid var(--login-btn-border);
+.full-width-container {
+  border-bottom: 1px solid var(--login-btn-border);
 }
-.container{
-    width: 1200px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 20px;
+.container {
+  width: 1200px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
 }
 
-.return-btn{
+.return-btn {
   align-self: flex-start;
   height: 35px;
   width: 100px;
@@ -17,8 +17,9 @@
   align-items: center;
   justify-content: center;
   font-size: 14px;
-  font-weight:500;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: 500;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   color: var(--login-btn-text);
   border-radius: var(--general-border-radius);
   border: 1px solid var(--login-btn-border);
@@ -26,23 +27,22 @@
   cursor: pointer;
 }
 
-.return-btn:hover{
+.return-btn:hover {
   background-color: var(--login-btn-background-on-hover);
 }
 
-
-.logo-background{
-    height: 40px;
-    width: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--secondary-text-color);
-    border-radius: 20px;
+.logo-background {
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--secondary-text-color);
+  border-radius: 20px;
 }
 
-.horizontal-div{
-    margin-top:0;
+.horizontal-div {
+  margin-top: 0;
 }
 
 .title {
@@ -54,345 +54,349 @@
   margin-top: 0;
 }
 
-.horizontal-div>div>p{
-    margin: 0;
-    font-size: 12px;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    color: var(--secondary-text-color);
+.horizontal-div > div > p {
+  margin: 0;
+  font-size: 12px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--secondary-text-color);
 }
 
-.main-body{
-    width:1168px;
-    margin: 0;
-    padding: 32px 16px;
-    justify-self: center;
+.main-body {
+  width: 1168px;
+  margin: 0;
+  padding: 32px 16px;
+  justify-self: center;
 }
 
-.stats{
+.stats {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 15px;
   margin: 0 0 32px 0;
 }
 
-.stat-card{
-    background-color: var(--header-backgrounnd);
-    height: 90px;
-    align-items: flex-start;
-    padding-left: 15px;
-    padding-bottom: 10px;
-    border: 1px solid var(--login-btn-border);
-    border-radius: var(--general-border-radius);
+.stat-card {
+  background-color: var(--header-backgrounnd);
+  height: 90px;
+  align-items: flex-start;
+  padding-left: 15px;
+  padding-bottom: 10px;
+  border: 1px solid var(--login-btn-border);
+  border-radius: var(--general-border-radius);
 }
 
-.stat-card>p{
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    font-size: 12px;
-    color: var(--secondary-text-color);
+.stat-card > p {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 12px;
+  color: var(--secondary-text-color);
 }
 
-.stat-card>h1{
-    font-size: 30px;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    color: var(--login-btn-text);
+.stat-card > h1 {
+  font-size: 30px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--login-btn-text);
 }
 
-.total-users{
-    grid: 1;
+.total-users {
+  grid: 1;
 }
-.artisans{
-    grid: 2;
+.artisans {
+  grid: 2;
 }
-.clients{
-    grid: 3;
+.clients {
+  grid: 3;
 }
-.renewables{
-    grid: 4;
-}
-
-.search-bar>input{
-    padding: 4px 12px 4px 40px;
-    border: none;
-    background: none;
-    width: 98%;
-    height: 36px;
-    color: var(--secondary-text-color);
-    padding-left: 40px;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    font-weight: 400;
-    font-size: 15px;
+.renewables {
+  grid: 4;
 }
 
-.search-bar>input:focus{
-    border-color: var(--search-bar-gray);
-    box-shadow: 0 0 0 3px var(--login-btn-border);
-    border: 1px solid var(--login-btn-text);
-    border-radius: var(--general-border-radius);
-    outline: none;
-    transition: 150ms;
+.search-bar > input {
+  padding: 4px 12px 4px 40px;
+  border: none;
+  background: none;
+  width: 98%;
+  height: 36px;
+  color: var(--secondary-text-color);
+  padding-left: 40px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  transition: all 150ms;
 }
 
-.search-bar{
-    max-width: 1168px;
-    background-color: var(--header-backgrounnd);
-    border: 1px solid var(--login-btn-border);
-    margin-bottom: 32px;
-    padding: 24px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    padding-left: 0px;
-    color:var(--login-btn-text);
-    height:39px;
-    width: 100%;
-    border-radius: var(--general-border-radius);
-    transition: 150ms;
+.search-bar > input:focus {
+  border-color: var(--search-bar-gray);
+  box-shadow: 0 0 0 3px var(--login-btn-border);
+  border: 1px solid var(--login-btn-text);
+  border-radius: var(--general-border-radius);
+  outline: none;
+  transition: 150ms;
 }
 
-.search-bar>svg{
-    position: relative;
-    left: 35px;
+.search-bar {
+  max-width: 1168px;
+  background-color: var(--header-backgrounnd);
+  border: 1px solid var(--login-btn-border);
+  margin-bottom: 32px;
+  padding: 24px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 0px;
+  color: var(--login-btn-text);
+  height: 25px;
+  width: 100%;
+  border-radius: var(--general-border-radius);
 }
 
-.liste-comptes{
-    width: 1152px;
-    padding:24px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--header-backgrounnd);
-    border: 1px solid var(--login-btn-border);
-    border-radius: var(--general-border-radius);
+.search-bar > svg {
+  position: relative;
+  left: 35px;
 }
 
-.tablist{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap:6px;
-    width: 100%;
-    height: 32px;
-    background-color: var(--login-btn-border);
-    border-radius: var(--general-border-radius);
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 7px;
-    margin-bottom: 20px;
+.liste-comptes {
+  width: 1152px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--header-backgrounnd);
+  border: 1px solid var(--login-btn-border);
+  border-radius: var(--general-border-radius);
 }
 
-.tab{
-    height: 28px;
-    width:100%;
-    text-align: center;
-    font-size: 14px;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    color: var(--login-btn-text);
-    font-weight:500;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-radius: 14px;
+.tablist {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  width: 100%;
+  height: 32px;
+  background-color: var(--login-btn-border);
+  border-radius: 16px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2px;
+  margin-bottom: 20px;
+}
+
+.tab {
+  height: 28px;
+  width: 100%;
+  text-align: center;
+  font-size: 14px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--login-btn-text);
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 14px;
+  cursor: pointer;
 }
 
 /* change this to only fit the selected tab*/
-.activeTab{
-    background-color: var(--header-backgrounnd);
+.activeTab {
+  background-color: var(--header-backgrounnd);
+  transition: all 300ms;
 }
 
-#all-tab{
-    grid:1;
+#all-tab {
+  grid: 1;
 }
-#artisans-tab{
-    grid:2;
+#artisans-tab {
+  grid: 2;
 }
-#clients-tab{
-    grid:3;
+#clients-tab {
+  grid: 3;
 }
-
-
-
-
-
-
-
 
 .table-container {
-    background-color: var(--header-backgrounnd);
-    border-radius: 8px;
-    overflow-x: auto;
-    width: 1152px;
-    padding: 24px;
+  background-color: var(--header-backgrounnd);
+  border-radius: 8px;
+  overflow-x: auto;
+  width: 1152px;
+  padding: 24px;
 }
 
 .table-container::-webkit-scrollbar {
-    height: 10px;
+  height: 10px;
 }
 
 .table-container::-webkit-scrollbar-track {
-    background: none;
-    border-radius: 5px;
+  background: none;
+  border-radius: 5px;
 }
 
 .table-container::-webkit-scrollbar-thumb {
-    background: var(--secondary-text-color);
-    border-radius: 5px;
-    transition: all 100ms;
+  background: var(--secondary-text-color);
+  border-radius: 5px;
+  transition: all 100ms;
 }
 
 .table-container::-webkit-scrollbar-thumb:hover {
-    background: var(--login-btn-text);
-    transition: all 100ms;
+  background: var(--login-btn-text);
+  transition: all 100ms;
 }
 
 .user-table {
-    width: 100%;
-    min-width: 1400px;
-    border-collapse: collapse;
-    background:none;
+  width: 100%;
+  border-collapse: collapse;
+  background: none;
 }
 
 .user-table thead {
-    background:none;
-    font-size: 14px;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    color: var(--login-btn-text);
+  background: none;
+  font-size: 14px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--login-btn-text);
 }
 
 .user-table th {
-    padding: 16px;
-    text-align: left;
-    font-weight: 600;
-    font-size: 14px;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    color: var(--login-btn-text);
-    border-bottom: 2px solid #e0d5c7;
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 14px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--login-btn-text);
+  border-bottom: 2px solid #e0d5c7;
+  text-align: center;
 }
 
 .user-table tbody tr {
-    border-bottom: 1px solid #e0d5c7;
-    transition: background-color 0.2s;
+  border-bottom: 1px solid #e0d5c7;
+  transition: background-color 0.2s;
 }
 
 .user-table tbody tr:hover {
-    background-color: var(--login-btn-background);
+  background-color: var(--login-btn-background);
 }
 
 .user-table td {
-    padding: 16px;
-    font-size: 14px;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    color: var(--login-btn-text);
+  padding: 16px;
+  font-size: 14px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--login-btn-text);
 }
 
 .user-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background-color: #d4c4b0;
-    flex-shrink: 0;
-    overflow: hidden;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #d4c4b0;
+  flex-shrink: 0;
+  overflow: hidden;
 }
 
-.avatar>img{    
-    width: 32px;
+.avatar > img {
+  width: 32px;
 }
 
 .subscription {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .subscription .date {
-    font-size: 13px;
-    color: #666;
+  font-size: 13px;
+  color: #666;
 }
 
 .badge {
-    display: inline-block;
-    padding: 2px 3px;
-    text-align: center;
-    width: 50px;
+  display: inline-block;
+  padding: 2px 3px;
+  text-align: center;
+  width: 50px;
 
-    border-radius: 5px;
-    font-size: 12px;
-    font-weight: 600;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .badge-expired {
-    background-color: var(--price-red);
-    color: white;
-    font-size: 12px;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: var(--price-red);
+  color: white;
+  font-size: 12px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 .status-badge {
-    display: inline-block;
-    padding: 2px 5px;
-    border-radius: 5px;
-    font-size: 12px;
-    font-weight: 600;
-    text-align: center;
+  display: inline-block;
+  padding: 2px 5px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
 }
 
 .status-active {
-    background-color: var(--secondary-text-color);
-    color: white;
+  background-color: var(--secondary-text-color);
+  color: white;
 }
 
 .status-suspended {
-    background-color: var(--login-btn-background);
-    color: #5a4a3a;
+  background-color: var(--login-btn-background);
+  color: #5a4a3a;
 }
 
 .actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
 }
 
 .btn-modify {
-    background-color: var(--login-btn-background);
-    color: var(--login-btn-text);
-    border: 1px solid var(--login-btn-border);
+  background-color: var(--login-btn-background);
+  color: var(--login-btn-text);
+  border: 1px solid var(--login-btn-border);
 }
 
 .btn-modify:hover {
-    background-color: var(--login-btn-background-on-hover);
+  background-color: var(--login-btn-background-on-hover);
 }
 
 .btn-suspend {
-    background-color: var(--price-red);
-    color: white;
+  background-color: var(--price-red);
+  color: white;
 }
 
 .btn-suspend:hover {
-    background-color: #c82333;
+  background-color: #c82333;
 }
 
 .btn-activate {
-    background-color: var(--secondary-text-color);
-    color: white;
+  background-color: var(--secondary-text-color);
+  color: white;
 }
 
 .btn-activate:hover {
-    background-color: var(--login-btn-text);
+  background-color: var(--login-btn-text);
 }
