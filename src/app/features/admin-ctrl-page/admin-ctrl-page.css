@@ -301,10 +301,13 @@
   background-color: #d4c4b0;
   flex-shrink: 0;
   overflow: hidden;
+  border: 1px solid var(--login-btn-border);
 }
 
 .avatar > img {
   width: 32px;
+  height: 32px;
+  object-fit: cover;
 }
 
 .subscription {

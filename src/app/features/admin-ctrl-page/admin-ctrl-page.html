@@ -16,23 +16,24 @@
     </div>
   </div>
 </div>
+
 <div class="main-body">
   <div class="stats">
     <div class="stat-card" id="total-users">
       <p>Total Users</p>
-      <h1>8</h1>
+      <h1>{{ totalUsers }}</h1>
     </div>
     <div class="stat-card" id="artisans">
       <p>Artisans</p>
-      <h1>4</h1>
+      <h1>{{ totalArtisans }}</h1>
     </div>
     <div class="stat-card" id="clients">
       <p>Clients</p>
-      <h1>4</h1>
+      <h1>{{ totalClients }}</h1>
     </div>
     <div class="stat-card" id="renewables">
       <p>Need renewal</p>
-      <h1>4</h1>
+      <h1>{{ needRenewal }}</h1>
     </div>
   </div>
 
@@ -43,6 +44,7 @@
       name="search-account"
       id="search-account"
       placeholder="search by name, company, specialty or email..."
+      (input)="onSearch($event)"
     />
   </div>
 
@@ -51,26 +53,26 @@
       <div
         class="tab"
         id="all-tab"
-        (click)="currentTab = 'all'"
+        (click)="changeTab('all')"
         [ngClass]="{ activeTab: currentTab === 'all' }"
       >
-        all (8)
+        All ({{ totalUsers }})
       </div>
       <div
         class="tab"
         id="artisans-tab"
-        (click)="currentTab = 'artisans'"
+        (click)="changeTab('artisans')"
         [ngClass]="{ activeTab: currentTab === 'artisans' }"
       >
-        Artisans(4)
+        Artisans ({{ totalArtisans }})
       </div>
       <div
         class="tab"
         id="clients-tab"
-        (click)="currentTab = 'clients'"
+        (click)="changeTab('clients')"
         [ngClass]="{ activeTab: currentTab === 'clients' }"
       >
-        Clients(4)
+        Clients ({{ totalClients }})
       </div>
     </div>
 
@@ -89,236 +91,75 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr *ngFor="let user of filteredUsers">
             <td>
               <div class="user-info">
-                <div class="avatar">
-                  <img [src]="'/assets/images/seller1.jpg'" />
+                <div class="avatar" *ngIf="user.craftsmanInfo?.profileImage || user.image">
+                  <img [src]="user.craftsmanInfo?.profileImage || user.image || '/assets/images/default-avatar.jpg'" alt="User avatar" />
                 </div>
-                <span>TechGear Store</span>
+                <span>{{ user.craftsmanInfo?.businessName || user.name }}</span>
               </div>
             </td>
-            <td>contact@techgear.com</td>
-            <td>TechGear Audio Solutions</td>
-            <td>Audio Equipment Specialist</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.craftsmanInfo?.businessName || '-' }}</td>
+            <td>{{ user.craftsmanInfo?.specialty || '-' }}</td>
             <td>
-              <div class="subscription">
-                <span class="date">15 janv. 2025</span>
-                <span class="badge badge-expired">Expiré</span>
+              <div class="subscription" *ngIf="user.craftsmanInfo?.expirationDate; else noExpiration">
+                <span class="date">{{ formatDate(user.craftsmanInfo ? user.craftsmanInfo.expirationDate : null) }}</span>
+                <span 
+                  class="badge" 
+                  [ngClass]="{
+                    'badge-expired': getExpirationStatus(user.craftsmanInfo ? user.craftsmanInfo.expirationDate : null) === 'expired',
+                    'badge-active': getExpirationStatus(user.craftsmanInfo ? user.craftsmanInfo.expirationDate : null) === 'active'
+                  }"
+                >
+                  {{ isExpired(user.craftsmanInfo ? user.craftsmanInfo.expirationDate : null) ? 'Expired' : 'Active' }}
+                </span>
               </div>
+              <ng-template #noExpiration>
+                <span>-</span>
+              </ng-template>
             </td>
-            <td><span class="status-badge status-active">Actif</span></td>
-            <td>15 janv. 2024</td>
             <td>
-              <div class="actions">
-                <button class="btn btn-modify">
-                  <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="#925653"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>
+              <span 
+                class="status-badge" 
+                [ngClass]="{
+                  'status-active': user.role !== 'admin',
+                  'status-suspended': user.role === 'admin'
+                }"
+              >
+                {{ user.role === 'admin' ? 'Admin' : isExpired(user.craftsmanInfo ? user.craftsmanInfo.expirationDate : null) ? 'Expired' : 'Active'}}
+              </span>
+            </td>
+            <td>{{ formatDate(user.createdAt) }}</td>
+            <td>
+              <div class="actions" *ngIf="!isAdmin(user); else adminCell">
+                <button 
+                  class="btn btn-modify" 
+                  (click)="onModifySubscription(user)" 
+                  *ngIf="user.role === 'artisan'"
+                  title="Modifier la date d'expiration"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#925653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>
                   Change
                 </button>
-                <button class="btn btn-suspend">
-                  <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="#FFFFFF"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"class="lucide lucide-ban-icon lucide-ban"><path d="M4.929 4.929 19.07 19.071" /><circle cx="12" cy="12" r="10" /></svg>
+                <button 
+                  class="btn btn-suspend" 
+                  (click)="onSuspendUser(user)"
+                  title="Suspendre l'utilisateur"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ban-icon lucide-ban"><path d="M4.929 4.929 19.07 19.071" /><circle cx="12" cy="12" r="10" /></svg>
                   Suspend
                 </button>
               </div>
+              <ng-template #adminCell>
+                <span class="admin-label">-</span>
+              </ng-template>
             </td>
           </tr>
-          <tr>
-            <td>
-              <div class="user-info">
-                <div class="avatar">
-                  <img [src]="'/assets/images/seller1.jpg'" />
-                </div>
-                <span>Fashion Boutique</span>
-              </div>
-            </td>
-            <td>hello@fashionboutique.com</td>
-            <td>Chic Fashion House</td>
-            <td>Women's Fashion</td>
-            <td>
-              <div class="subscription">
-                <span class="date">20 déc. 2024</span>
-                <span class="badge badge-expired">Expiré</span>
-              </div>
-            </td>
-            <td><span class="status-badge status-active">Actif</span></td>
-            <td>20 févr. 2024</td>
-            <td>
-              <div class="actions">
-                <button class="btn btn-modify">
-                  <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="#925653"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>
-                  Change
-                </button>
-                <button class="btn btn-suspend">
-                  <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="#FFFFFF"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"class="lucide lucide-ban-icon lucide-ban"><path d="M4.929 4.929 19.07 19.071" /><circle cx="12" cy="12" r="10" /></svg>
-                  Suspend
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="user-info">
-                <div class="avatar">
-                  <img [src]="'/assets/images/seller1.jpg'" />
-                </div>
-                <span>Home Essentials</span>
-              </div>
-            </td>
-            <td>info@homeessentials.com</td>
-            <td>Atelier Céramique</td>
-            <td>Handmade Ceramics</td>
-            <td>
-              <div class="subscription">
-                <span class="date">10 mars 2025</span>
-                <span class="badge badge-expired">Expiré</span>
-              </div>
-            </td>
-            <td><span class="status-badge status-active">Actif</span></td>
-            <td>10 mars 2024</td>
-            <td>
-              <div class="actions">
-                <button class="btn btn-modify">
-                  <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="#925653"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>
-                  Change
-                </button>
-                <button class="btn btn-suspend">
-                  <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="#FFFFFF"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"class="lucide lucide-ban-icon lucide-ban"><path d="M4.929 4.929 19.07 19.071" /><circle cx="12" cy="12" r="10" /></svg>
-                  Suspend
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="user-info">
-                <div class="avatar">
-                  <img [src]="'/assets/images/seller1.jpg'" />
-                </div>
-                <span>Beauty Naturals</span>
-              </div>
-            </td>
-            <td>contact@beautynaturals.com</td>
-            <td>Natural Beauty Co.</td>
-            <td>Natural Beauty Products</td>
-            <td>
-              <div class="subscription">
-                <span class="date">05 nov. 2024</span>
-                <span class="badge badge-expired">Expiré</span>
-              </div>
-            </td>
-            <td><span class="status-badge status-suspended">Suspendu</span></td>
-            <td>05 avr. 2024</td>
-            <td>
-              <div class="actions">
-                <button class="btn btn-modify">
-                  <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="#925653"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>
-                  Change
-                </button>
-                <button class="btn btn-activate">
-                  <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="#ffffff"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"class="lucide lucide-check-icon lucide-check"><path d="M20 6 9 17l-5-5" /></svg>
-                  Activate
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="user-info">
-                <span>Alice Martin</span>
-              </div>
-            </td>
-            <td>alice.martin@email.com</td>
-            <td>-</td>
-            <td>-</td>
-            <td></td>
-            <td><span class="status-badge status-active">Actif</span></td>
-            <td>12 juin 2024</td>
-            <td>
-              <div class="actions">
-                <button class="btn btn-modify">
-                  <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="#925653"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>
-                  Change
-                </button>
-                <button class="btn btn-suspend">
-                  <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="#FFFFFF"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"class="lucide lucide-ban-icon lucide-ban"><path d="M4.929 4.929 19.07 19.071" /><circle cx="12" cy="12" r="10" /></svg>
-                  Suspend
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="user-info">
-                <span>Bob Johnson</span>
-              </div>
-            </td>
-            <td>bob.j@email.com</td>
-            <td>-</td>
-            <td>-</td>
-            <td></td>
-            <td><span class="status-badge status-active">Actif</span></td>
-            <td>22 juil. 2024</td>
-            <td>
-              <div class="actions">
-                <button class="btn btn-modify">
-                  <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="#925653"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>
-                  Change
-                </button>
-                <button class="btn btn-suspend">
-                  <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="#FFFFFF"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"class="lucide lucide-ban-icon lucide-ban"><path d="M4.929 4.929 19.07 19.071" /><circle cx="12" cy="12" r="10" /></svg>
-                  Suspend
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="user-info">
-                <span>Claire Dubois</span>
-              </div>
-            </td>
-            <td>claire.d@email.com</td>
-            <td>-</td>
-            <td>-</td>
-            <td></td>
-            <td><span class="status-badge status-active">Actif</span></td>
-            <td>15 août 2024</td>
-            <td>
-              <div class="actions">
-                <button class="btn btn-modify">
-                  <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="#925653"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>
-                  Change
-                </button>
-                <button class="btn btn-suspend">
-                  <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="#FFFFFF"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"class="lucide lucide-ban-icon lucide-ban"><path d="M4.929 4.929 19.07 19.071" /><circle cx="12" cy="12" r="10" /></svg>
-                  Suspend
-                </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="user-info">
-                <span>David Chen</span>
-              </div>
-            </td>
-            <td>david.c@email.com</td>
-            <td>-</td>
-            <td>-</td>
-            <td></td>
-            <td><span class="status-badge status-suspended">Suspendu</span></td>
-            <td>03 sept. 2024</td>
-            <td>
-              <div class="actions">
-                <button class="btn btn-modify">
-                  <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="#925653"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>
-                  Change
-                </button>
-                <button class="btn btn-activate">
-                  <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="#ffffff"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"class="lucide lucide-check-icon lucide-check"><path d="M20 6 9 17l-5-5" /></svg>
-                  Activate
-                </button>
-              </div>
+          <tr *ngIf="filteredUsers.length === 0">
+            <td colspan="8" style="text-align: center; padding: 2rem; color: #666;">
+              No users found matching your criteria.
             </td>
           </tr>
         </tbody>

@@ -41,4 +41,11 @@ export class CraftsmanService {
       withCredentials: true,
     });
   }
+
+  /** 
+   * Fetches all craftsmen
+   */
+  getAllCraftsmen(): Observable<Craftsman[]> {
+    return this.http.get<Craftsman[]>(this.apiUrl);
+  }
 }

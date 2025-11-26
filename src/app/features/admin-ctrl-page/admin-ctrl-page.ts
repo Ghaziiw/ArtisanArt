@@ -1,6 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Header } from "../../shared/components/header/header";
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { AdminPanelService } from '../../core/services/admin-panel.service';
+import { User } from '../../core/services/auth.service';
+import { Craftsman } from '../../core/services/craftsman.service';
+
+interface CombinedUser extends User {
+  craftsmanInfo?: Craftsman;
+}
 
 @Component({
   selector: 'app-admin-ctrl-page',
@@ -8,8 +16,173 @@ import { CommonModule } from '@angular/common';
   templateUrl: './admin-ctrl-page.html',
   styleUrl: './admin-ctrl-page.css',
 })
-export class AdminCtrlPage {
-  currentTab: 'all' | 'clients' | 'artisans'='all';
+export class AdminCtrlPage implements OnInit {
+  currentTab: 'all' | 'clients' | 'artisans' = 'all';
+  users: CombinedUser[] = [];
+  filteredUsers: CombinedUser[] = [];
+  currentUserId: string | null = null;
+  
+  totalUsers = 0;
+  totalArtisans = 0;
+  totalClients = 0;
+  needRenewal = 0;
 
+  constructor(
+    private http: HttpClient,
+    private adminPanelService: AdminPanelService
+  ) {}
+
+  ngOnInit() {
+    this.loadCurrentUser();
+    this.loadUsers();
+  }
+
+  loadCurrentUser() {
+    // Retrieve the current user from localStorage or your authentication service
+    const currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+      this.currentUserId = JSON.parse(currentUser).id;
+    }
+  }
+
+  async loadUsers() {
+    try {
+      // Load all users via the service
+      this.adminPanelService.getAllUsers(undefined, 1, 100).subscribe({
+        next: async (usersResponse) => {
+          // Load all craftsmen
+          const craftsmenResponse: any = await this.http.get('http://localhost:3000/craftsmen?page=1&limit=100').toPromise();
+
+          // Create a map of craftsmen by userId
+          const craftsmenMap = new Map<string, Craftsman>();
+          craftsmenResponse.items.forEach((craftsman: Craftsman) => {
+            craftsmenMap.set(craftsman.userId, craftsman);
+          });
+
+          // Combine the data
+          this.users = usersResponse.items.map((user: User) => {
+            const combinedUser: CombinedUser = { ...user };
+            if (user.role === 'artisan' && craftsmenMap.has(user.id)) {
+              combinedUser.craftsmanInfo = craftsmenMap.get(user.id);
+            }
+            return combinedUser;
+          });
+
+          // Exclude the current admin user from the list
+          this.users = this.users.filter(user => user.id !== this.currentUserId);
+
+          this.calculateStats();
+          this.filterUsers();
+        },
+        error: (error) => {
+          console.error('Erreur lors du chargement des utilisateurs:', error);
+        }
+      });
+    } catch (error) {
+      console.error('Erreur lors du chargement des utilisateurs:', error);
+    }
+  }
+
+  calculateStats() {
+    this.totalUsers = this.users.length;
+    this.totalArtisans = this.users.filter(u => u.role === 'artisan').length;
+    this.totalClients = this.users.filter(u => u.role === 'client').length;
+
+    const now = new Date();
+    this.needRenewal = this.users.filter(u => {
+      if (u.role === 'artisan' && u.craftsmanInfo?.expirationDate) {
+        const expirationDate = new Date(u.craftsmanInfo.expirationDate);
+        return expirationDate < now;
+      }
+      return false;
+    }).length;
+  }
+
+  filterUsers() {
+    switch (this.currentTab) {
+      case 'artisans':
+        this.filteredUsers = this.users.filter(u => u.role === 'artisan');
+        break;
+      case 'clients':
+        this.filteredUsers = this.users.filter(u => u.role === 'client');
+        break;
+      default:
+        this.filteredUsers = [...this.users];
+    }
+  }
+
+  changeTab(tab: 'all' | 'clients' | 'artisans') {
+    this.currentTab = tab;
+    this.filterUsers();
+  }
+
+  isExpired(expirationDate: string | null): boolean {
+    if (!expirationDate) return true;
+    return new Date(expirationDate) < new Date();
+  }
+
+  getExpirationStatus(expirationDate: string | null): 'expired' | 'active' | null {
+    if (!expirationDate) return null;
+    return this.isExpired(expirationDate) ? 'expired' : 'active';
+  }
+
+  formatDate(dateString: string | null): string {
+    if (!dateString) return '-';
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = { 
+      day: '2-digit', 
+      month: 'short', 
+      year: 'numeric' 
+    };
+    return date.toLocaleDateString('fr-FR', options);
+  }
+
+  // Check if the user is admin to hide actions
+  isAdmin(user: CombinedUser): boolean {
+    return user.role === 'admin';
+  }
+
+  // MMethods to be implemented later
+  onModifySubscription(user: CombinedUser) {
+    console.log('Modify expiration date for:', user.name);
+    // TODO: Implement logic
+  }
+
+  onSuspendUser(user: CombinedUser) {
+    console.log('Suspend user:', user.name);
+    // TODO: Implement logic
+  }
+
+  onActivateUser(user: CombinedUser) {
+    console.log('Activate user:', user.name);
+    // TODO: Implement logic
+  }
+
+  // MMethod for search (to be implemented later)
+  onSearch(event: Event) {
+    const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
+    
+    if (!searchTerm) {
+      // If the search is empty, display all users filtered by tab
+      this.filterUsers();
+      return;
+    }
+    
+    // Filter locally on name, email, businessName and specialty
+    this.filteredUsers = this.users.filter(user => {
+      const matchesTab = 
+        this.currentTab === 'all' ||
+        (this.currentTab === 'artisans' && user.role === 'artisan') ||
+        (this.currentTab === 'clients' && user.role === 'client');
+      
+      if (!matchesTab) return false;
+      
+      const nameMatch = user.name.toLowerCase().includes(searchTerm);
+      const emailMatch = user.email.toLowerCase().includes(searchTerm);
+      const businessNameMatch = user.craftsmanInfo?.businessName?.toLowerCase().includes(searchTerm);
+      const specialtyMatch = user.craftsmanInfo?.specialty?.toLowerCase().includes(searchTerm);
+      
+      return nameMatch || emailMatch || businessNameMatch || specialtyMatch;
+    });
+  }
 }
-
