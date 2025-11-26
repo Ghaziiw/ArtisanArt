@@ -3,8 +3,9 @@ import { Header } from "../../shared/components/header/header";
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AdminPanelService } from '../../core/services/admin-panel.service';
-import { User } from '../../core/services/auth.service';
+import { AuthService, User } from '../../core/services/auth.service';
 import { Craftsman } from '../../core/services/craftsman.service';
+import { RouterLink } from '@angular/router';
 
 interface CombinedUser extends User {
   craftsmanInfo?: Craftsman;
@@ -12,12 +13,12 @@ interface CombinedUser extends User {
 
 @Component({
   selector: 'app-admin-ctrl-page',
-  imports: [Header, CommonModule],
+  imports: [Header, CommonModule, RouterLink],
   templateUrl: './admin-ctrl-page.html',
   styleUrl: './admin-ctrl-page.css',
 })
 export class AdminCtrlPage implements OnInit {
-  currentTab: 'all' | 'clients' | 'artisans' = 'all';
+  currentTab: 'all' | 'clients' | 'artisans' | 'admin' = 'all';
   users: CombinedUser[] = [];
   filteredUsers: CombinedUser[] = [];
   currentUserId: string | null = null;
@@ -25,15 +26,22 @@ export class AdminCtrlPage implements OnInit {
   totalUsers = 0;
   totalArtisans = 0;
   totalClients = 0;
+  totalAdmins = 0;
   needRenewal = 0;
 
   constructor(
     private http: HttpClient,
-    private adminPanelService: AdminPanelService
+    private adminPanelService: AdminPanelService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
-    this.loadCurrentUser();
+    this.authService.user$.subscribe(user => {
+      if (user) {
+        this.currentUserId = user.id;
+      }
+    });
+
     this.loadUsers();
   }
 
@@ -87,6 +95,7 @@ export class AdminCtrlPage implements OnInit {
     this.totalUsers = this.users.length;
     this.totalArtisans = this.users.filter(u => u.role === 'artisan').length;
     this.totalClients = this.users.filter(u => u.role === 'client').length;
+    this.totalAdmins = this.users.filter(u => u.role === 'admin' && u.id !== this.currentUserId).length;
 
     const now = new Date();
     this.needRenewal = this.users.filter(u => {
@@ -106,12 +115,15 @@ export class AdminCtrlPage implements OnInit {
       case 'clients':
         this.filteredUsers = this.users.filter(u => u.role === 'client');
         break;
+      case 'admin':
+        this.filteredUsers = this.users.filter(u => u.role === 'admin');
+        break;
       default:
         this.filteredUsers = [...this.users];
     }
   }
 
-  changeTab(tab: 'all' | 'clients' | 'artisans') {
+  changeTab(tab: 'all' | 'clients' | 'artisans' | 'admin') {
     this.currentTab = tab;
     this.filterUsers();
   }
@@ -151,6 +163,10 @@ export class AdminCtrlPage implements OnInit {
   onSuspendUser(user: CombinedUser) {
     console.log('Suspend user:', user.name);
     // TODO: Implement logic
+  }
+
+  onDeleteUser(user: CombinedUser){
+
   }
 
   onActivateUser(user: CombinedUser) {
