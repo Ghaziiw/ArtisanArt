@@ -10,6 +10,7 @@ import { CraftsmanService, Craftsman  } from '../../../../core/services/craftsma
 import { CommentService } from '../../../../core/services/comment.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ShoppingCartService } from '../../../../core/services/shopping-cart.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-productpage',
   imports: [ProductInfo, ProductPhotos, ReviewsContainer, CraftsmanInfo, CommonModule],
@@ -24,9 +25,11 @@ export class Productpage {
   alertMessage: string='';
   alertType: 'success' | 'error' = 'success';
   showAlert: boolean = false;
+  productId: string = '';
 
 
   constructor(
+    private route: ActivatedRoute,
     private specificProductService: SpecificProductService,
     private offerService : OfferService,
     private craftsmanService: CraftsmanService,
@@ -37,33 +40,40 @@ export class Productpage {
 
 
   ngOnInit() : void {
+    // Get product ID from route parameters
+    this.route.paramMap.subscribe(params => {
+      this.productId = params.get('id') || '';
+      if (this.productId) {
+        this.loadProductData();
+      }
+    });}
+
+
+    loadProductData(){
       this.specificProductService
-      .getProductById("469f25da-d42c-4dde-987d-d021182445f4") //pour tester
+      .getProductById(this.productId) 
       .subscribe((data) => {
-        //console.log('Productpage received product:', data);
         this.product = data;
       });
 
       this.offerService
-      .getOffer("469f25da-d42c-4dde-987d-d021182445f4") //pour tester
+      .getOffer(this.productId) 
       .subscribe((data) => {
-        //console.log('Productpage received offer:', data);
         this.offer = data;
       });
 
       this.craftsmanService
-      .getCraftsmanById("vsJLETIYDpMLk07qlNdn1rNVmIHZVydv") //pour tester
+      .getCraftsmanById(this.product.craftsmanId) 
       .subscribe((data) => {
-        //console.log('Productpage received craftsman:', data);
         this.craftsman = data;
       });
 
-  }
+    }
 
   saveReview(event: {mark: number, content: string}) {
         console.log("Données reçues du child :", event);
         this.commentService.addComment({
-        productId: "469f25da-d42c-4dde-987d-d021182445f4"/*this.product.id*/,
+        productId: this.productId,
         content: event.content,
         mark: event.mark
         }).subscribe({
@@ -101,7 +111,7 @@ addToCart() {
   console.log("clicked!");
 
   this.shoppingCartService.addToCart({
-    productId: "469f25da-d42c-4dde-987d-d021182445f4",
+    productId: this.productId,
     quantity: this.quantity
   }).subscribe({
     next: (response) => { 
@@ -112,7 +122,6 @@ addToCart() {
     }
   });
 
-  //console.log("Produit ajouté au panier :", this.quantity);
 }
 
 
