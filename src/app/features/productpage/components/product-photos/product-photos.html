@@ -10,7 +10,7 @@
 
     <div class="other-images">
         <img
-            *ngFor="let img of images"
+            *ngFor="let img of images.slice(1)"
             [src]="img"
             class="others"
             (click)="changeSelected(img)"

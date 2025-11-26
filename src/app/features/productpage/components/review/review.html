@@ -4,7 +4,7 @@
 
   <div class="review-header">
       <span class="client-name">{{ comment.user?.name }}</span>
-      <span class="date">{{ comment.createdAt }}</span>
+      <span class="date">{{ dateOnly(comment.createdAt) }}</span>
 
       <div class="rating">
           <span *ngFor="let star of getStarsArray(comment.mark)">

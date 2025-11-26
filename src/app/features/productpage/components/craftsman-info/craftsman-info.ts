@@ -19,7 +19,7 @@ export class CraftsmanInfo {
     }
 
     private computeRating(){
-      this.rating=this.craftsman.avgRating;
+      this.rating=Number(this.craftsman.avgRating.toFixed(2));
       const rounded = Math.round(this.rating); 
       this.starsArray = Array(rounded).fill(0);
     }

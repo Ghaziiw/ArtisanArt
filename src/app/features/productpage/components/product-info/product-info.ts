@@ -35,7 +35,6 @@ export class ProductInfo {
 
   private computePrices() {
     this.beforeOffer = parseFloat(this.product.price);
-
     if (this.offer && this.offer.percentage) {
       const discount = (this.beforeOffer * this.offer.percentage) / 100;
       this.withOffer = this.beforeOffer - discount;
@@ -50,6 +49,7 @@ export class ProductInfo {
     if (this.product.comments.length > 0) {
       const total = this.product.comments.reduce((sum, c) => sum + c.mark, 0);
       this.rating = total / this.product.comments.length;
+      this.rating = Number(this.rating.toFixed(2));
       const rounded = Math.round(this.rating);
       this.starsArray = Array(rounded).fill(0);
     } else {
