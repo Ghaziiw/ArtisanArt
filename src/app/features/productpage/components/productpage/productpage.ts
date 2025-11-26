@@ -21,6 +21,9 @@ export class Productpage {
   offer !: Offer;
   craftsman !: Craftsman;
   quantity: number = 1;
+  alertMessage: string='';
+  alertType: 'success' | 'error' = 'success';
+  showAlert: boolean = false;
 
 
   constructor(
@@ -63,20 +66,31 @@ export class Productpage {
         productId: "469f25da-d42c-4dde-987d-d021182445f4"/*this.product.id*/,
         content: event.content,
         mark: event.mark
-        }).subscribe(
-          () => {
-            console.log("commented successfully");
-
+        }).subscribe({
+          next: () => {
+            this.showStyledAlert('Commentaire publié avec succès !', 'success');
             this.specificProductService
             .getProductById(this.product.id)
             .subscribe((updatedProduct) => {
             this.product.comments = updatedProduct.comments;
             });
-
-
+          },
+          error: () => {
+            this.showStyledAlert('Erreur lors de l’envoi du commentaire.', 'error');
           }
-        )
+        }
+      )
+    }
 
+    showStyledAlert(message: string, type: 'success' | 'error') {
+      this.alertMessage = message;
+      this.alertType = type;
+      this.showAlert = true;
+
+      // Masquer l’alert après 3 secondes
+      setTimeout(() => {
+        this.showAlert = false;
+       }, 3000);
       }
 
       onQuantitySelected(qty: number) {
@@ -91,10 +105,10 @@ addToCart() {
     quantity: this.quantity
   }).subscribe({
     next: (response) => { 
-      //console.log("OK :", response);
+      this.showStyledAlert('Produit ajouté au panier avec succès !', 'success');
     },
     error: (err) => {
-      //console.error("ERREUR  :", err);
+      this.showStyledAlert('Erreur lors de l’ajout au panier.', 'error');
     }
   });
 
