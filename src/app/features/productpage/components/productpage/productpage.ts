@@ -10,7 +10,7 @@ import { CraftsmanService, Craftsman  } from '../../../../core/services/craftsma
 import { CommentService } from '../../../../core/services/comment.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ShoppingCartService } from '../../../../core/services/shopping-cart.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'app-productpage',
   imports: [ProductInfo, ProductPhotos, ReviewsContainer, CraftsmanInfo, CommonModule],
@@ -30,6 +30,7 @@ export class Productpage {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private specificProductService: SpecificProductService,
     private offerService : OfferService,
     private craftsmanService: CraftsmanService,
@@ -123,6 +124,10 @@ addToCart() {
   });
 
 }
+
+  goBack() {
+    this.router.navigate(['/']);
+  }
 
 
 }
