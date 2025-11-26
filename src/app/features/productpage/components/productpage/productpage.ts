@@ -66,6 +66,14 @@ export class Productpage {
         }).subscribe(
           () => {
             console.log("commented successfully");
+
+            this.specificProductService
+            .getProductById(this.product.id)
+            .subscribe((updatedProduct) => {
+            this.product.comments = updatedProduct.comments;
+            });
+
+
           }
         )
 
