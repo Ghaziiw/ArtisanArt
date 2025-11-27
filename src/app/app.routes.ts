@@ -10,6 +10,7 @@ import { ProductPage } from './features/product-page/product-page';
 import { AboutPage } from './features/about-page/about-page';
 import { HowItWorks } from './features/how-it-works/how-it-works';
 import { Faq } from './features/faq/faq';
+import { TermsOfUse } from './features/terms-of-use/terms-of-use';
 
 export const routes: Routes = [
   {
@@ -59,6 +60,10 @@ export const routes: Routes = [
   {
     path: 'faq',
     component: Faq,
+  },
+  {
+    path: 'terms-of-use',
+    component: TermsOfUse,
   },
   {
     path: '**',
