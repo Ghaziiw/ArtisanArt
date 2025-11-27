@@ -127,7 +127,7 @@ export class UserService {
   }
 
   // Delete a user by ID (admin function)
-  async deleteUserAdmin(userId: string): Promise<DeleteResult> {
+  async deleteUser(userId: string): Promise<DeleteResult> {
     const user = await this.findOne(userId);
 
     // Check if user exists

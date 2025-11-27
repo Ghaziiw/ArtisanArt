@@ -27,8 +27,14 @@ export class Product {
   @Column('text')
   description: string;
 
-  @Column('decimal', { precision: 10, scale: 2 })
-  @Min(0, { message: 'Price must be at least 0' })
+  @Column('decimal', {
+    precision: 10,
+    scale: 2,
+    transformer: {
+      to: (value: number) => value, // vers la DB
+      from: (value: string | null) => (value !== null ? Number(value) : null), // depuis la DB → number
+    },
+  })
   price: number;
 
   @Column({ default: 0 })
