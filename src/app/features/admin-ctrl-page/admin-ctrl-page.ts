@@ -153,18 +153,14 @@ export class AdminCtrlPage implements OnInit {
     return date.toLocaleDateString('fr-FR', options);
   }
 
-  onModifySubscription(user: CombinedUser) {
-    console.log('Modify expiration date for:', user.name);
-    // TODO: Implement logic
-  }
-
   onSuspendUser(user: CombinedUser) {
     if (!confirm(`Suspend ${user.name}?`)) return;
 
     this.craftsmanService.updateExpirationDate(user.id, null).subscribe({
       next: () => {
-        // Mise à jour locale (expirationDate = null)
+        // Update locally (expirationDate = null)
         user.craftsmanInfo!.expirationDate = null;
+        this.calculateStats();
       },
       error: (err: any) => {
         console.error("Error suspending user:", err);
@@ -222,7 +218,7 @@ export class AdminCtrlPage implements OnInit {
   }
 
   openDatePicker(dateInput: HTMLInputElement, user: CombinedUser) {
-    dateInput.showPicker(); // affiche le calendrier natif
+    dateInput.showPicker();
   }
 
   onDateSelected(event: any, user: CombinedUser) {
@@ -232,8 +228,8 @@ export class AdminCtrlPage implements OnInit {
       next: () => {
         if (user.craftsmanInfo) {
           user.craftsmanInfo.expirationDate = newExpDate;
+          this.calculateStats();
         }
-        console.log("Expiration date updated:", newExpDate);
       },
       error: (err) => console.error(err)
     });
