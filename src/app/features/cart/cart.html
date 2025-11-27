@@ -62,9 +62,11 @@
         </div>
       </div>
 
-            <button class="checkout-btn">
-                Order all
-            </button>
+      <div class="error-message" *ngIf="orderError">
+        {{ orderError }}
+      </div>
+
+      <button class="checkout-btn" (click)="orderAll()">Order All</button>
 
       <p class="order-note">Order everything together or order separately from each seller</p>
     </div>
