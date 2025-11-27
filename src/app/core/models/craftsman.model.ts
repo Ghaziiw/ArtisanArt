@@ -13,3 +13,14 @@ export interface Craftsman {
   avgRating: number;
   totalComments: number;
 }
+
+export interface CraftsmenResponse {
+  items: Craftsman[];
+  meta: {
+    totalItems: number;
+    itemCount: number;
+    itemsPerPage: number;
+    totalPages: number;
+    currentPage: number;
+  };
+}

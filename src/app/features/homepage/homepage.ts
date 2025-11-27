@@ -4,34 +4,36 @@ import { SearchFiltersBar } from './components/search-filters-bar/search-filters
 import { SearchResultsTab } from './components/search-results-tab/search-results-tab';
 import { ProductFilters } from './components/search-filters-bar/product-filters.interface';
 import { Footer } from "../../shared/components/footer/footer";
-import { ArtisanProfile } from "../artisan-profile/artisan-profile";
 import { ArtisanCard } from "./components/artisan-card/artisan-card";
+import { CraftsmanService } from '../../core/services/craftsman.service';
+import { Craftsman } from '../../core/models';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-homepage',
-  standalone: true,
-  imports: [Header, SearchFiltersBar, SearchResultsTab, Footer, ArtisanProfile, ArtisanCard],
-  template: `
-    <app-header></app-header>
-    <div class="horizontal-div">
-      <app-search-filters-bar (filtersChange)="onFiltersChange($event)"></app-search-filters-bar>
-      <app-search-results-tab [filters]="currentFilters"></app-search-results-tab>
-    </div>
-    <div class="artisan-search" style="display: flex; flex-direction: row; flex-wrap: wrap; gap: 20px; align-self: center; justify-self: center; max-width: 1250px;">
-        <app-artisan-card></app-artisan-card>
-        <app-artisan-card></app-artisan-card>
-        <app-artisan-card></app-artisan-card>
-        <app-artisan-card></app-artisan-card>
-        <app-artisan-card></app-artisan-card>
-        <app-artisan-card></app-artisan-card>
-        <app-artisan-card></app-artisan-card>
-        <app-artisan-card></app-artisan-card>
-    </div>
-    <app-footer></app-footer>
-  `,
+  imports: [
+    Header,
+    SearchFiltersBar,
+    SearchResultsTab,
+    Footer,
+    ArtisanCard,
+    FormsModule,
+    CommonModule
+  ],
+  templateUrl: './homepage.html',
 })
 export class Homepage {
   currentFilters: ProductFilters = {};
+  craftsmen: Craftsman[] = [];
+
+  constructor(private craftsmanService: CraftsmanService) {}
+
+  ngOnInit() {
+    this.craftsmanService.getAllCraftsmen().subscribe((response) => {
+      this.craftsmen = response.items;
+    });
+  }
 
   onFiltersChange(filters: ProductFilters) {
     this.currentFilters = filters;

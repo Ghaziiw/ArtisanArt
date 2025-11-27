@@ -29,6 +29,12 @@ p, span, h3{
     margin: 0 0 16px;
 }
 
+.image-container img {
+    height: 100%;
+    width:  100%;
+    object-fit: cover;
+}
+
 #pfp{
     height: 89px;
     width:  89px;
