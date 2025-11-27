@@ -150,3 +150,15 @@ div{
 button {
     cursor: pointer;
 }
+
+#prod-artis{
+    cursor: pointer;
+    transition: all 150ms;
+}
+
+#prod-artis:focus {
+    outline: none;
+    border: 1px solid black;
+    box-shadow: 0 0 0 3px var(--login-btn-border);
+    transition: all 150ms;
+}

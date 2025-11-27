@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Craftsman } from '../models';
+import { Craftsman, CraftsmenResponse } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -30,8 +30,8 @@ export class CraftsmanService {
   /** 
    * Fetches all craftsmen
    */
-  getAllCraftsmen(): Observable<Craftsman[]> {
-    return this.http.get<Craftsman[]>(this.apiUrl);
+  getAllCraftsmen(): Observable<CraftsmenResponse> {
+    return this.http.get<CraftsmenResponse>(this.apiUrl);
   }
 
     /**
