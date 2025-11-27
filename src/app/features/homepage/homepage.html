@@ -1,6 +1,6 @@
 <app-header></app-header>
 
-<div class="horizontal-div">
+<div class="horizontal-div" *ngIf="viewType === 'products'">
   <app-search-filters-bar (filtersChange)="onFiltersChange($event)"></app-search-filters-bar>
   <app-search-results-tab [filters]="currentFilters"></app-search-results-tab>
 </div>
@@ -15,9 +15,11 @@
     max-width: 1250px;
     margin: auto;
   "
+  *ngIf="viewType === 'artisans'"
 >
   <div *ngFor="let artisan of craftsmen">
     <app-artisan-card [craftsman]="artisan"></app-artisan-card>
   </div>
 </div>
+
 <app-footer></app-footer>

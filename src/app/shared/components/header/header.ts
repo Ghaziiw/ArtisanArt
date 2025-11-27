@@ -3,6 +3,7 @@ import { Router, RouterLink, RouterModule } from '@angular/router';
 import { AsyncPipe, CommonModule, NgIf } from '@angular/common';
 import { AuthService } from '../../../core/services/auth.service';
 import { Observable, map } from 'rxjs';
+import { FilterService } from '../../../core/services/filter.service';
 
 @Component({
   selector: 'app-header',
@@ -17,7 +18,7 @@ export class Header {
   // Observable to check if user is an admin
   isAdmin$: Observable<boolean>;
 
-  constructor(public authService: AuthService, private router: Router) {
+  constructor(public authService: AuthService, private router: Router, private filterService: FilterService) {
     this.isAdmin$ = this.authService.user$.pipe(
       map(user => user ? user.role?.toLowerCase() === 'admin' : false)
     );
@@ -30,5 +31,10 @@ export class Header {
   async logout() {
     await this.authService.logout();
     this.router.navigate(['/']);
+  }
+
+  onSelectChange(event: any) {
+    const value = event.target.value;
+    this.filterService.setViewType(value);
   }
 }
