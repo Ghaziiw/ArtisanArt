@@ -9,6 +9,7 @@ import { MyStore } from './features/artisan-dashboard/my-store';
 import { ProductPage } from './features/product-page/product-page';
 import { AboutPage } from './features/about-page/about-page';
 import { HowItWorks } from './features/how-it-works/how-it-works';
+import { Faq } from './features/faq/faq';
 
 export const routes: Routes = [
   {
@@ -54,6 +55,10 @@ export const routes: Routes = [
   {
     path: 'how-it-works',
     component: HowItWorks,
+  },
+  {
+    path: 'faq',
+    component: Faq,
   },
   {
     path: '**',
