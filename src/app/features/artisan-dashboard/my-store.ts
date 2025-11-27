@@ -15,6 +15,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { OrderStatusRequest } from '../../core/services/store.service';
 import { Category, CategoryService } from '../../core/services/category.service';
 import { filter, switchMap } from 'rxjs';
+import { Footer } from "../../shared/components/footer/footer";
 
 interface DisplayOrderItem {
   productName: string;
@@ -52,7 +53,7 @@ interface Stats {
 @Component({
   selector: 'app-my-store',
   standalone: true,
-  imports: [CommonModule, FormsModule, Header],
+  imports: [CommonModule, FormsModule, Header, Footer],
   templateUrl: './my-store.html',
   styleUrls: ['./my-store.css'],
 })

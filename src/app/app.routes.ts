@@ -6,7 +6,7 @@ import { ArtisanProfile } from './features/artisan-profile/artisan-profile';
 import { Cart } from './features/cart/cart';
 import { AdminCtrlPage } from './features/admin-ctrl-page/admin-ctrl-page';
 import { MyStore } from './features/artisan-dashboard/my-store';
-import { Productpage } from './features/productpage/components/productpage/productpage';
+import { ProductPage } from './features/product-page/product-page';
 
 export const routes: Routes = [
   {

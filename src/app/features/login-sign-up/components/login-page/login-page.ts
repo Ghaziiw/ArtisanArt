@@ -5,11 +5,12 @@ import { AuthService } from '../../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { Header } from '../../../../shared/components/header/header';
 import { set } from 'better-auth';
+import { Footer } from "../../../../shared/components/footer/footer";
 
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [Header,FormsModule, CommonModule],
+  imports: [Header, FormsModule, CommonModule, Footer],
   templateUrl: './login-page.html',
   styleUrls: ['./login-page.css'],
 })
