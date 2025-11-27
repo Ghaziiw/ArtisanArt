@@ -132,4 +132,16 @@
       </div>
     </div>
   </div>
-</div>
+
+  <div class="card delete-profile">
+    <p class="alert">Danger Zone</p>
+    <p class="deletion-is-permanent">
+      Deletion is permanent, all your data will be permanently deleted if you choose to proceed
+    </p>
+    <button class="save-btn" id="trigger-btn" *ngIf="allowDeletion === false" (click)="allowDeletion=true">Delete your profile</button>
+    <div class="real-delete-btn">
+      <p class="alert2">Are you sure you want to delete your account? it will be lost forever !!</p>
+      <button class="save-btn" id="trigger-btn">Delete</button>
+      <button class="save-btn" (click)="allowDeletion=false">Cancel</button>
+    </div>
+  </div>

@@ -11,6 +11,7 @@ import { ProfileService, UpdateProfileDto } from '../../../core/services/profile
   styleUrls: ['./personal-info.css'],
 })
 export class PersonalInfo implements OnChanges {
+  allowDeletion=false;
   @Input() user!: User;
   @ViewChild('infoForm') infoForm!: NgForm;
 
