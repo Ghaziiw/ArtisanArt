@@ -6,11 +6,12 @@ import { CraftsmanInfo } from '../craftsman-info/craftsman-info';
 import { SpecificProductService, SpecificProduct } from '../../../../core/services/specific-product.service';
 import { CommonModule } from '@angular/common';
 import { Offer, OfferService } from '../../../../core/services/offer.service';
-import { CraftsmanService, Craftsman  } from '../../../../core/services/craftsman.service';
+import { CraftsmanService } from '../../../../core/services/craftsman.service';
 import { CommentService } from '../../../../core/services/comment.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { ShoppingCartService } from '../../../../core/services/shopping-cart.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Craftsman } from '../../../../core/models';
 @Component({
   selector: 'app-productpage',
   imports: [ProductInfo, ProductPhotos, ReviewsContainer, CraftsmanInfo, CommonModule],

@@ -1,7 +1,7 @@
 import { Component, Input, SimpleChange } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Craftsman } from '../../../../core/services/craftsman.service';
 import { Router } from '@angular/router';
+import { Craftsman } from '../../../../core/models';
 @Component({
   selector: 'app-craftsman-info',
   imports: [CommonModule],
