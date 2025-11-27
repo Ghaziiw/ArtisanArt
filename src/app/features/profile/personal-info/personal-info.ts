@@ -111,4 +111,20 @@ export class PersonalInfo implements OnChanges {
         },
       });
   }
+
+  deleteProfile(): void {
+    const confirmed = confirm('Are you sure you want to delete your profile? This action cannot be undone.');
+    if (!confirmed) return;
+
+    this.userService.deleteMyProfile().subscribe({
+      next: () => {
+        alert('Profile deleted successfully.');
+        window.location.href = '/';
+      },
+      error: (err) => {
+        console.error('Failed to delete profile:', err);
+        alert('Failed to delete profile. Please try again.');
+      },
+    });
+  }
 }

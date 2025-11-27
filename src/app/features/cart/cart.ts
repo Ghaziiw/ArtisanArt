@@ -5,13 +5,13 @@ import { Header } from "../../shared/components/header/header";
 import { CartProductCard } from './cart-product-card/cart-product-card';
 import { ShoppingCartService } from '../../core/services/shopping-cart.service';
 import { AuthService } from '../../core/services/auth.service';
-import { first } from 'rxjs';
 import { OrderService } from '../../core/services/order.service';
 import { GroupedCartResponse, TunisianState, User } from '../../core/models';
+import { Footer } from '../../shared/components/footer/footer';
 
 @Component({
   selector: 'app-cart',
-  imports: [Header, RouterLink, CartProductCard, CommonModule],
+  imports: [Header, RouterLink, CartProductCard, CommonModule, Footer],
   templateUrl: './cart.html',
   styleUrl: './cart.css',
 })
