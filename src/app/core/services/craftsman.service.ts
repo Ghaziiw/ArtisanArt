@@ -1,22 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface Craftsman {
-  userId: string;
-  businessName: string;
-  bio: string;
-  specialty: string;
-  phone: string;
-  workshopAddress: string;
-  instagram?: string;
-  facebook?: string;
-  expirationDate: string;
-  deliveryPrice: string;
-  profileImage: string | null;
-  avgRating: number;
-  totalComments: number;
-}
+import { Craftsman } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -40,5 +25,23 @@ export class CraftsmanService {
     return this.http.get<Craftsman>(`${this.apiUrl}/profile/me`, {
       withCredentials: true,
     });
+  }
+
+  /** 
+   * Fetches all craftsmen
+   */
+  getAllCraftsmen(): Observable<Craftsman[]> {
+    return this.http.get<Craftsman[]>(this.apiUrl);
+  }
+
+    /**
+   * Updates the expiration date of a craftsman
+   */
+  updateExpirationDate(craftsmanId: string, newExpDate: string | null): Observable<any> {
+    return this.http.patch(
+      `${this.apiUrl}/${craftsmanId}/exp`,
+      { newExpDate },
+      { withCredentials: true }
+    );
   }
 }

@@ -1,14 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Order, TunisianState } from './store.service';
-
-export interface CreateOrderDto {
-  cin: string;
-  location: string;
-  state: TunisianState;
-  phone: string;
-}
+import { CreateOrderDto, Order, OrdersResponse, OrderStatusRequest } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -85,6 +78,37 @@ export class OrderService {
     return this.http.patch<Order>(
       `${this.apiUrl}/${orderId}/status`,
       { status: 'CANCELLED' },
+      { withCredentials: true }
+    );
+  }
+
+    /**
+   * Get all orders for the authenticated craftsman
+   */
+  getCraftsmanOrders(
+    page: number = 1,
+    limit: number = 100
+  ): Observable<OrdersResponse> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+
+    return this.http.get<OrdersResponse>(
+      `${this.apiUrl}/craftsman`,
+      { 
+        params,
+        withCredentials: true 
+      }
+    );
+  }
+
+    /**
+   * Update order status
+   */
+  updateOrderStatus(orderId: string, status: OrderStatusRequest): Observable<Order> {
+    return this.http.patch<Order>(
+      `${this.apiUrl}/${orderId}/status`,
+      { status: status },
       { withCredentials: true }
     );
   }

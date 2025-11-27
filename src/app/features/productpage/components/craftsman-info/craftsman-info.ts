@@ -31,6 +31,4 @@ export class CraftsmanInfo {
       console.log("clicked")
       this.router.navigate(['/artisan-profile', this.craftsman.userId]);
     }
-
-
 }

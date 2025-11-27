@@ -1,26 +1,14 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ChangePasswordDto, CreateAdminDto, ProfileUpdateResponse, UpdateProfileDto, UserFilterDto, UserResponse } from '../models';
 import { Observable, tap } from 'rxjs';
-import { AuthService, User } from './auth.service';
-
-export interface UpdateProfileDto {
-  name?: string;
-  email?: string;
-  location?: string;
-}
-
-export interface ChangePasswordDto {
-  currentPassword: string;
-  newPassword: string;
-}
-
-export type ProfileUpdateResponse = User;
+import { AuthService } from './auth.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-export class ProfileService {
-  private apiUrl = 'http://localhost:3000/users/profile';
+export class UserService {
+  private apiUrl = 'http://localhost:3000/users';
 
   constructor(
     private http: HttpClient,
@@ -28,11 +16,36 @@ export class ProfileService {
   ) {}
 
   /**
+   * Fetches a paginated list of users with optional filtering
+   */
+  getAllUsers(filter?: UserFilterDto, page: number = 1, limit: number = 100) {
+    let params = new HttpParams().set('page', page.toString()).set('limit', limit.toString());
+
+    if (filter) {
+      Object.keys(filter).forEach((key) => {
+        const value = (filter as any)[key];
+        if (value !== undefined && value !== null) {
+          params = params.set(key, value.toString());
+        }
+      });
+    }
+
+    return this.http.get<UserResponse>(this.apiUrl, { params, withCredentials: true });
+  }
+
+  /**
+   * Deletes a user by ID
+   */
+  deleteUser(userId: string) {
+    return this.http.delete<any>(this.apiUrl + `/${userId}`, { withCredentials: true });
+  }
+
+    /**
    * Updates user profile information (name, email, location, image URL)
    */
   updateProfile(data: UpdateProfileDto): Observable<ProfileUpdateResponse> {
     return this.http.patch<ProfileUpdateResponse>(
-      `${this.apiUrl}/me`,
+      `${this.apiUrl}/profile/me`,
       data,
       { withCredentials: true }
     ).pipe(
@@ -53,7 +66,7 @@ export class ProfileService {
     formData.append('profileImage', imageFile);
 
     return this.http.patch<ProfileUpdateResponse>(
-      `${this.apiUrl}/me/image`,
+      `${this.apiUrl}/profile/me/image`,
       formData,
       { withCredentials: true }
     ).pipe(
@@ -71,7 +84,7 @@ export class ProfileService {
    */
   changePassword(data: ChangePasswordDto): Observable<{ message: string }> {
     return this.http.patch<{ message: string }>(
-      `${this.apiUrl}/password`,
+      `${this.apiUrl}/profile/password`,
       data,
       { withCredentials: true }
     );
@@ -82,7 +95,7 @@ export class ProfileService {
    */
   deleteProfileImage(): Observable<ProfileUpdateResponse> {
     return this.http.delete<ProfileUpdateResponse>(
-      `${this.apiUrl}/me/image`,
+      `${this.apiUrl}/profile/me/image`,
       { withCredentials: true }
     ).pipe(
       tap(response => {
@@ -91,6 +104,17 @@ export class ProfileService {
           this.authService['userSubject'].next(response);
         }
       })
+    );
+  }
+
+  /**
+   * Creates a new admin user
+   */
+  addAdminUser(data: CreateAdminDto): Observable<any> {
+    return this.http.post<any>(
+      `${this.apiUrl}/admin`,
+      data,
+      { withCredentials: true }
     );
   }
 }

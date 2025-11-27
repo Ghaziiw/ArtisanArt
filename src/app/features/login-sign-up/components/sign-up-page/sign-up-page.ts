@@ -3,13 +3,9 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Header } from '../../../../shared/components/header/header';
-import {
-  SignupService,
-  ClientSignUpDto,
-  CraftsmanSignUpDto,
-} from '../../../../core/services/signup.service';
 import { AuthService } from '../../../../core/services/auth.service';
 import { set } from 'better-auth';
+import { ClientSignUpDto, CraftsmanSignUpDto } from '../../../../core/models';
 import { Footer } from "../../../../shared/components/footer/footer";
 
 @Component({
@@ -63,9 +59,8 @@ export class SignUpPage implements AfterViewInit {
   isSubmitting: boolean = false;
 
   constructor(
-    private signupService: SignupService,
-    private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngAfterViewInit() {}
@@ -198,7 +193,7 @@ export class SignUpPage implements AfterViewInit {
       location: this.credentials.location || undefined,
     };
 
-    this.signupService.signUpClient(clientData).subscribe({
+    this.authService.signUpClient(clientData).subscribe({
       next: (response) => {
         console.log('Client sign up successful:', response);
 
@@ -262,7 +257,7 @@ export class SignUpPage implements AfterViewInit {
       profileImage: this.professionalInfo.profilePhotoFile || undefined,
     };
 
-    this.signupService.signUpCraftsman(craftsmanData).subscribe({
+    this.authService.signUpCraftsman(craftsmanData).subscribe({
       next: (response) => {
         console.log('Craftsman sign up successful:', response);
 

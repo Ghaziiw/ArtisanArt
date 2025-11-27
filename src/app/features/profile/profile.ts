@@ -3,7 +3,8 @@ import { Header } from '../../shared/components/header/header';
 import { ProfilePic } from './profile-pic/profile-pic';
 import { PersonalInfo } from './personal-info/personal-info';
 import { CommonModule } from '@angular/common';
-import { AuthService, User } from '../../core/services/auth.service';
+import { AuthService } from '../../core/services/auth.service';
+import { User } from '../../core/models';
 import { Footer } from "../../shared/components/footer/footer";
 
 @Component({

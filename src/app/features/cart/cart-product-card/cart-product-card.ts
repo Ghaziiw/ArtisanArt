@@ -1,9 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ShoppingCartService, CraftsmanGroup, ShoppingCartItem} from '../../../core/services/shopping-cart.service';
-import { AuthService } from '../../../core/services/auth.service';
+import { ShoppingCartService } from '../../../core/services/shopping-cart.service';
 import { OrderService } from '../../../core/services/order.service';
-import { TunisianState } from '../../../core/services/store.service';
+import { CraftsmanGroup, ShoppingCartItem, TunisianState } from '../../../core/models';
 
 @Component({
   selector: 'app-cart-product-card',

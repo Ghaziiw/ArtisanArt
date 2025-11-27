@@ -1,8 +1,8 @@
 import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { NgForm, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { User } from '../../../core/services/auth.service';
-import { ProfileService, UpdateProfileDto } from '../../../core/services/profile.service';
+import { UpdateProfileDto, User } from '../../../core/models';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-personal-info',
@@ -21,7 +21,7 @@ export class PersonalInfo implements OnChanges {
   isSaving = false;
   saveError = '';
 
-  constructor(private profileService: ProfileService) {}
+  constructor(private userService: UserService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['user'] && this.user) {
@@ -61,7 +61,7 @@ export class PersonalInfo implements OnChanges {
       location: this.localUser.location,
     };
 
-    this.profileService.updateProfile(data).subscribe({
+    this.userService.updateProfile(data).subscribe({
       next: (updatedUser) => {
         this.localUser = { ...updatedUser }; // update local copy
         this.isSaving = false;
@@ -93,8 +93,8 @@ export class PersonalInfo implements OnChanges {
       return;
     }
 
-    // Appel API
-    this.profileService
+    // API Call to change password
+    this.userService
       .changePassword({
         currentPassword: this.password.current,
         newPassword: this.password.new,

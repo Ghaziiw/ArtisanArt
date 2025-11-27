@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { Product } from '../../../core/services/product.service';
+import { Product } from '../../../core/models';
 
 @Component({
   selector: 'app-product-card',
