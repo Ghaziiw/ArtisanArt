@@ -6,11 +6,12 @@ import { Header } from '../../../../shared/components/header/header';
 import { AuthService } from '../../../../core/services/auth.service';
 import { set } from 'better-auth';
 import { ClientSignUpDto, CraftsmanSignUpDto } from '../../../../core/models';
+import { Footer } from "../../../../shared/components/footer/footer";
 
 @Component({
   selector: 'app-sign-up-page',
   standalone: true,
-  imports: [Header, FormsModule, CommonModule],
+  imports: [Header, FormsModule, CommonModule, Footer],
   templateUrl: './sign-up-page.html',
   styleUrls: ['./sign-up-page.css'],
 })

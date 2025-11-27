@@ -26,10 +26,12 @@
   border: 1px solid var(--login-btn-border);
   background-color: var(--login-btn-background);
   cursor: pointer;
+  transition: all 0.3ms;
 }
 
 .return-btn:hover {
   background-color: var(--login-btn-background-on-hover);
+  transition: all 0.3s;
 }
 
 .logo-background {

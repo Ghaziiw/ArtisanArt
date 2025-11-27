@@ -6,11 +6,12 @@ import { CommonModule } from '@angular/common';
 import { CraftsmanService } from '../../core/services/craftsman.service';
 import { ProductService } from '../../core/services/product.service';
 import { Craftsman, Product } from '../../core/models';
+import { Footer } from "../../shared/components/footer/footer";
 
 @Component({
   selector: 'app-artisan-profile',
   standalone: true,
-  imports: [Header, ProductCard, CommonModule, RouterLink],
+  imports: [Header, ProductCard, CommonModule, RouterLink, Footer],
   templateUrl: './artisan-profile.html',
   styleUrl: './artisan-profile.css',
 })

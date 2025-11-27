@@ -9,18 +9,19 @@ import { FormsModule } from '@angular/forms';
 })
 export class ReviewForm {
   stars = [1, 2, 3, 4, 5];
-  rating : number = 0 ;
-  comment : string  = '' ;
-  @Output() feedback = new EventEmitter<{rating: number, comment: string}>();
+  mark : number = 0 ;
+  content : string  = '' ;
+  @Output() feedback = new EventEmitter<{mark: number, content: string}>();
   
   setRating( star: number ) {
-    this.rating = star ;
+    this.mark = star ;
   }
 
   submit() {
-    this.feedback.emit({ rating : this.rating, comment : this.comment });
-    this.rating = 0 ;
-    this.comment = '' ;
+    this.feedback.emit({ mark : this.mark, content : this.content });
+    console.log('Envoi du feedback:', this.mark, this.content);
+    this.mark = 0 ;
+    this.content = '' ;
   }
 
 }

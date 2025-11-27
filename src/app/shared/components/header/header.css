@@ -19,6 +19,40 @@ div{
     margin-right: 10%;*/
 }
 
+
+.search-container{
+    gap:5px;
+}
+
+#prod-artis{
+     appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background: none;
+    border-radius: var(--general-border-radius);
+    border: none;
+    font-family: 'Outfit';
+    font-weight: 500    ;
+    font-size: 14px;
+    color: var(--login-btn-text);
+    height: 32px;
+    width: 130px;
+    padding-right: 10px;
+    text-align: center;
+}
+
+ #prod-artis option{
+    height: 50px;
+    background-color: var(--header-background);
+    border: 1px solid var(--login-btn-border);
+    padding: 10px;
+ }
+
+ #prod-artis option:focus, #prod-artis option:hover{
+    background-color: var(--login-btn-background-on-hover);
+ }
+
 #search-bar{
     padding-left: 0px;
     color:#888888;

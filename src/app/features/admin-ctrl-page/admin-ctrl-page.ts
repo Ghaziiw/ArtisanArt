@@ -9,6 +9,7 @@ import { Craftsman, CreateAdminDto, User } from '../../core/models';
 import { UserService } from '../../core/services/user.service';
 import { FormsModule } from '@angular/forms';
 import { set } from 'better-auth';
+import { Footer } from "../../shared/components/footer/footer";
 
 interface CombinedUser extends User {
   craftsmanInfo?: Craftsman;
@@ -16,7 +17,7 @@ interface CombinedUser extends User {
 
 @Component({
   selector: 'app-admin-ctrl-page',
-  imports: [Header, CommonModule, RouterLink, FormsModule],
+  imports: [Header, CommonModule, RouterLink, FormsModule, Footer],
   templateUrl: './admin-ctrl-page.html',
   styleUrl: './admin-ctrl-page.css',
 })
