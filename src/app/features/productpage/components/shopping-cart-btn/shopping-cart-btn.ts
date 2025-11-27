@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-shopping-cart-btn',
@@ -7,5 +7,11 @@ import { Component } from '@angular/core';
   styleUrl: './shopping-cart-btn.css',
 })
 export class ShoppingCartBtn {
+  @Output() addToCart = new EventEmitter<void>();
+
+  onClick() {
+    this.addToCart.emit();
+  }
+
 
 }
