@@ -217,4 +217,23 @@ export class AdminCtrlPage implements OnInit {
       return nameMatch || emailMatch || businessNameMatch || specialtyMatch;
     });
   }
+
+  openDatePicker(dateInput: HTMLInputElement, user: CombinedUser) {
+    dateInput.showPicker(); // affiche le calendrier natif
+  }
+
+  onDateSelected(event: any, user: CombinedUser) {
+    const newExpDate = event.target.value;
+
+    this.craftsmanService.updateExpirationDate(user.id, newExpDate).subscribe({
+      next: () => {
+        if (user.craftsmanInfo) {
+          user.craftsmanInfo.expirationDate = newExpDate;
+        }
+        console.log("Expiration date updated:", newExpDate);
+      },
+      error: (err) => console.error(err)
+    });
+  }
+
 }

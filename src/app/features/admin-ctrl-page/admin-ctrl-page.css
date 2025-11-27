@@ -423,3 +423,11 @@
 .btn-activate:hover {
   background-color: var(--login-btn-text);
 }
+
+.hidden-date-picker {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+  pointer-events: none;
+}
