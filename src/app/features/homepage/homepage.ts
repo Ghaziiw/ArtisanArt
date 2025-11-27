@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Header } from '../../shared/components/header/header';
 import { SearchFiltersBar } from './components/search-filters-bar/search-filters-bar';
 import { SearchResultsTab } from './components/search-results-tab/search-results-tab';
@@ -25,10 +25,12 @@ import { ProductService } from '../../core/services/product.service';
   ],
   templateUrl: './homepage.html',
 })
-export class Homepage {
+export class Homepage implements OnInit {
   viewType: 'products' | 'artisans' = 'products';
   currentFilters: ProductFilters = {};
   craftsmen: Craftsman[] = [];
+  filteredCraftsmen: Craftsman[] = [];
+  searchQuery: string = '';
 
   constructor(
     private craftsmanService: CraftsmanService,
@@ -40,27 +42,48 @@ export class Homepage {
     // Subscribe to view type changes
     this.filterService.viewType$.subscribe(type => {
       this.viewType = type;
-
-      // if (type === 'artisans') {
-        this.loadCraftsmen();
-      // }
-      // } else {
-      //   this.loadProducts();
-      // }
+      this.loadCraftsmen();
     });
+
+    // Subscribe to search query changes
+    this.filterService.searchQuery$.subscribe(query => {
+      this.searchQuery = query;
+      this.applySearch();
+    });
+
+    // Initial load
+    this.loadCraftsmen();
   }
 
   loadCraftsmen() {
-    this.craftsmanService.getAllCraftsmen().subscribe((response) => {
-      this.craftsmen = response.items;
-    });
+    if (this.viewType === 'artisans') {
+      this.craftsmanService.getAllCraftsmen().subscribe((response) => {
+        this.craftsmen = response.items;
+        this.applySearch();
+      });
+    }
   }
 
-  // loadProducts() {
-  //   this.productService.getProducts(1, 5, this.currentFilters).subscribe();
-  // }
+  loadProducts() {
+    this.currentFilters = {
+      ...this.currentFilters,
+      productName: this.searchQuery.trim() || undefined,
+    };
+  }
 
-  onFiltersChange(filters: ProductFilters) {
-    this.currentFilters = filters;
+
+  applySearch() {
+    if (this.viewType === 'artisans') {
+      this.filteredCraftsmen = this.searchQuery.trim()
+        ? this.craftsmen.filter(craftsman =>
+            craftsman.businessName.toLowerCase().includes(this.searchQuery.toLowerCase())
+          )
+        : [...this.craftsmen];
+    } 
+
+    if (this.viewType === 'products') {
+      // Merge search query avec les filtres existants et crée un nouvel objet
+      this.currentFilters = { ...this.currentFilters, productName: this.searchQuery.trim() || undefined };
+    }
   }
 }
