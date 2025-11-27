@@ -22,6 +22,4 @@ export class CraftsmanInfo {
       const rounded = Math.round(this.rating); 
       return Array(rounded).fill(0);
     }
-
-
 }

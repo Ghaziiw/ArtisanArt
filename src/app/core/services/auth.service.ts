@@ -2,45 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, catchError, of } from 'rxjs';
 import { authClient } from '../../../lib/auth-client';
-import { get } from 'http';
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  emailVerified: boolean;
-  image: string | null;
-  createdAt: string;
-  updatedAt: string;
-  role: string;
-  location: string;
-}
-
-export interface Session {
-  expiresAt: string;
-  token: string;
-  createdAt: string;
-  updatedAt: string;
-  ipAddress: string;
-  userAgent: string;
-  userId: string;
-  id: string;
-}
-
-export interface SessionResponse {
-  session: Session;
-  user: User;
-}
-
-export interface LoginResponse {
-  token: string;
-  user: User;
-  redirect: boolean;
-}
+import { ClientSignUpDto, ClientSignUpResponse, CraftsmanSignUpDto, CraftsmanSignUpResponse, Session, SessionResponse, User } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api/auth';
+  private apiUrl = 'http://localhost:3000';
 
   // Observable for user and session state
   private userSubject = new BehaviorSubject<User | null>(null);
@@ -63,7 +29,7 @@ export class AuthService {
    */
   getSession(): Observable<SessionResponse | null> {
     return this.http
-      .get<SessionResponse>(`${this.apiUrl}/get-session`, {
+      .get<SessionResponse>(`${this.apiUrl}/api/auth/get-session`, {
         withCredentials: true, // <- envoie le cookie automatiquement
       })
       .pipe(
@@ -111,5 +77,46 @@ export class AuthService {
       this.getSession().subscribe();
     }
     return res.data || res.error; // renvoie soit Data soit Error
+  }
+
+  /**
+   * Sign up a client
+   */
+  signUpClient(data: ClientSignUpDto): Observable<ClientSignUpResponse> {
+    return this.http.post<ClientSignUpResponse>(`${this.apiUrl}/api/auth/sign-up/email`, data, {
+      withCredentials: true,
+    });
+  }
+
+  /**
+   * Sign up a craftsman
+   */
+  signUpCraftsman(data: CraftsmanSignUpDto): Observable<CraftsmanSignUpResponse> {
+    const formData = new FormData();
+
+    // Required fields
+    formData.append('email', data.email);
+    formData.append('password', data.password);
+    formData.append('name', data.name);
+    formData.append('businessName', data.businessName);
+    formData.append('phone', data.phone);
+    formData.append('workshopAddress', data.workshopAddress);
+    formData.append('deliveryPrice', data.deliveryPrice.toString());
+
+    // Optional fields
+    if (data.location) formData.append('location', data.location);
+    if (data.bio) formData.append('bio', data.bio);
+    if (data.specialty) formData.append('specialty', data.specialty);
+    if (data.instagram) formData.append('instagram', data.instagram);
+    if (data.facebook) formData.append('facebook', data.facebook);
+
+    // Profile image file
+    if (data.profileImage) {
+      formData.append('profileImage', data.profileImage);
+    }
+
+    return this.http.post<CraftsmanSignUpResponse>(`${this.apiUrl}/craftsmen`, formData, {
+      withCredentials: true,
+    });
   }
 }

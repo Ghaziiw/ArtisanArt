@@ -1,20 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Header } from '../../shared/components/header/header';
-import { MyStoreService, OrdersResponse } from '../../core/services/store.service';
-import { CraftsmanService, Craftsman } from '../../core/services/craftsman.service';
-import {
-  ProductService,
-  Product,
-  CreateProductDto,
-  UpdateProductDto,
-} from '../../core/services/product.service';
+import { CraftsmanService } from '../../core/services/craftsman.service';
+import { ProductService } from '../../core/services/product.service';
 import { AuthService } from '../../core/services/auth.service';
-import { OrderStatusRequest } from '../../core/services/store.service';
-import { Category, CategoryService } from '../../core/services/category.service';
+import { OrderService } from '../../core/services/order.service';
+import { CategoryService } from '../../core/services/category.service';
 import { filter, switchMap } from 'rxjs';
+import { Craftsman, CreateProductDto, Order, OrdersResponse, OrderStatusRequest, Product, UpdateProductDto } from '../../core/models';
+import { Category } from '../../core/models';
 
 interface DisplayOrderItem {
   productName: string;
@@ -96,10 +92,10 @@ export class MyStore implements OnInit {
   constructor(
     private productService: ProductService,
     private authService: AuthService,
-    private myStoreService: MyStoreService,
     private router: Router,
     private categoryService: CategoryService,
-    private craftsmanService: CraftsmanService
+    private craftsmanService: CraftsmanService,
+    private orderService: OrderService
   ) {}
 
   ngOnInit() {
@@ -158,10 +154,10 @@ export class MyStore implements OnInit {
 
   loadCraftsmanOrders() {
     this.isLoading = true;
-    this.myStoreService.getCraftsmanOrders(1, 100).subscribe({
+    this.orderService.getCraftsmanOrders(1, 100).subscribe({
       next: (response: OrdersResponse) => {
         console.log('Orders loaded:', response.items);
-        this.orders = response.items.map((order) => this.transformOrder(order));
+        this.orders = response.items.map((order: Order) => this.transformOrder(order));
         this.updateStats();
         this.isLoading = false;
       },
@@ -462,7 +458,7 @@ export class MyStore implements OnInit {
 
     this.isLoading = true;
 
-    this.myStoreService.updateOrderStatus(orderId, newStatus).subscribe({
+    this.orderService.updateOrderStatus(orderId, newStatus).subscribe({
       next: () => {
         // Update local order status
         const order = this.orders.find((o) => o.id === orderId);

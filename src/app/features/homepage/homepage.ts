@@ -1,4 +1,3 @@
-// src/app/features/homepage/homepage.ts
 import { Component } from '@angular/core';
 import { Header } from '../../shared/components/header/header';
 import { SearchFiltersBar } from './components/search-filters-bar/search-filters-bar';

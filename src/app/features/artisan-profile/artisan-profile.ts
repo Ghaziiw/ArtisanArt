@@ -3,8 +3,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Header } from '../../shared/components/header/header';
 import { ProductCard } from "./product-card/product-card";
 import { CommonModule } from '@angular/common';
-import { CraftsmanService, Craftsman } from '../../core/services/craftsman.service';
-import { ProductService, Product } from '../../core/services/product.service';
+import { CraftsmanService } from '../../core/services/craftsman.service';
+import { ProductService } from '../../core/services/product.service';
+import { Craftsman, Product } from '../../core/models';
 
 @Component({
   selector: 'app-artisan-profile',

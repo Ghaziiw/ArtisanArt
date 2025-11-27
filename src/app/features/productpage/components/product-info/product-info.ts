@@ -30,5 +30,4 @@ export class ProductInfo {
   onQuantityChanged(newquantity: number) {
     this.quantity = newquantity;
   }
-
 }

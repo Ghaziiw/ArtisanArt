@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Header } from "../../shared/components/header/header";
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { AdminPanelService } from '../../core/services/admin-panel.service';
-import { AuthService, User } from '../../core/services/auth.service';
-import { Craftsman, CraftsmanService } from '../../core/services/craftsman.service';
+import { AuthService } from '../../core/services/auth.service';
+import { CraftsmanService } from '../../core/services/craftsman.service';
 import { RouterLink } from '@angular/router';
+import { Craftsman, User } from '../../core/models';
+import { UserService } from '../../core/services/user.service';
 
 interface CombinedUser extends User {
   craftsmanInfo?: Craftsman;
@@ -31,9 +32,9 @@ export class AdminCtrlPage implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private adminPanelService: AdminPanelService,
     private authService: AuthService,
-    private craftsmanService: CraftsmanService
+    private craftsmanService: CraftsmanService,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
@@ -57,7 +58,7 @@ export class AdminCtrlPage implements OnInit {
   async loadUsers() {
     try {
       // Load all users via the service
-      this.adminPanelService.getAllUsers(undefined, 1, 100).subscribe({
+      this.userService.getAllUsers(undefined, 1, 100).subscribe({
         next: async (usersResponse) => {
           // Load all craftsmen
           const craftsmenResponse: any = await this.http.get('http://localhost:3000/craftsmen?page=1&limit=100').toPromise();
@@ -173,7 +174,7 @@ export class AdminCtrlPage implements OnInit {
   onDeleteUser(user: CombinedUser) {
     if (!confirm(`Delete user "${user.name}" ?`)) return;
 
-    this.adminPanelService.deleteUser(user.id).subscribe({
+    this.userService.deleteUser(user.id).subscribe({
       next: () => {
         // Remove from local list
         this.users = this.users.filter(u => u.id !== user.id);

@@ -1,22 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-export interface Category {
-  id: string;
-  name: string;
-}
-
-export interface CategoriesResponse {
-  items: Category[];
-  meta: {
-    totalItems: number;
-    itemCount: number;
-    itemsPerPage: number;
-    totalPages: number;
-    currentPage: number;
-  }
-}
+import { CategoriesResponse } from '../models';
 
 @Injectable({
   providedIn: 'root',
