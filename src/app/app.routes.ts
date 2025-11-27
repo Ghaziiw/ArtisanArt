@@ -43,7 +43,7 @@ export const routes: Routes = [
   },
   {
     path: 'product-page/:id',
-    component: Productpage,
+    component: ProductPage,
   },
   {
     path: '**',
