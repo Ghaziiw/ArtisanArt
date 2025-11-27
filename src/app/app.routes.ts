@@ -7,6 +7,7 @@ import { Cart } from './features/cart/cart';
 import { AdminCtrlPage } from './features/admin-ctrl-page/admin-ctrl-page';
 import { MyStore } from './features/artisan-dashboard/my-store';
 import { ProductPage } from './features/product-page/product-page';
+import { AboutPage } from './features/about-page/about-page';
 
 export const routes: Routes = [
   {
@@ -44,6 +45,10 @@ export const routes: Routes = [
   {
     path: 'product-page/:id',
     component: ProductPage,
+  },
+  {
+    path: 'about',
+    component: AboutPage,
   },
   {
     path: '**',
