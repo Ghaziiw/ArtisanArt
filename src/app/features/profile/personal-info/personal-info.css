@@ -107,7 +107,7 @@
   opacity: 0.6;
 }
 
-.password-hint {
+.password-hint, .danger-text {
   color: #777;
   font-size: 14px;
   line-height: 1.5;
@@ -251,4 +251,38 @@
   color: #d9534f;
   font-size: 13px;
   text-align: center;
+}
+
+.danger-zone {
+  border: 1px solid #D4183D;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 40px;
+}
+
+.danger-zone h3 {
+  color: #D4183D;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.delete-btn {
+  background-color: #D4183D;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.delete-btn:hover {
+  background-color: #b70f2a;
 }

@@ -40,6 +40,13 @@ export class UserService {
     return this.http.delete<any>(this.apiUrl + `/${userId}`, { withCredentials: true });
   }
 
+  /**
+   * Deletes the authenticated user's profile
+   */
+  deleteMyProfile() {
+    return this.http.delete<any>(this.apiUrl + '/me', { withCredentials: true });
+  }
+
     /**
    * Updates user profile information (name, email, location, image URL)
    */

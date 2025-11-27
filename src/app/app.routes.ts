@@ -7,6 +7,11 @@ import { Cart } from './features/cart/cart';
 import { AdminCtrlPage } from './features/admin-ctrl-page/admin-ctrl-page';
 import { MyStore } from './features/artisan-dashboard/my-store';
 import { ProductPage } from './features/product-page/product-page';
+import { AboutPage } from './features/about-page/about-page';
+import { HowItWorks } from './features/how-it-works/how-it-works';
+import { Faq } from './features/faq/faq';
+import { TermsOfUse } from './features/terms-of-use/terms-of-use';
+import { PrivacyPolicy } from './features/privacy-policy/privacy-policy';
 
 export const routes: Routes = [
   {
@@ -44,6 +49,26 @@ export const routes: Routes = [
   {
     path: 'product-page/:id',
     component: ProductPage,
+  },
+  {
+    path: 'about',
+    component: AboutPage,
+  },
+  {
+    path: 'how-it-works',
+    component: HowItWorks,
+  },
+  {
+    path: 'faq',
+    component: Faq,
+  },
+  {
+    path: 'terms-of-use',
+    component: TermsOfUse,
+  },
+  {
+    path: 'privacy-policy',
+    component: PrivacyPolicy,
   },
   {
     path: '**',

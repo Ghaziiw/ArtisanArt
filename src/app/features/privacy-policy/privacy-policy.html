@@ -1,0 +1,12 @@
+<app-header></app-header>
+
+<div class="privacy-container">
+  <h1>{{ title }}</h1>
+
+  <div class="privacy-section" *ngFor="let section of sections">
+    <h2>{{ section.heading }}</h2>
+    <p>{{ section.content }}</p>
+  </div>
+</div>
+
+<app-footer></app-footer>

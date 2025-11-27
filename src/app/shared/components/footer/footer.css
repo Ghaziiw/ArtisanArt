@@ -1,12 +1,13 @@
 .footerr{
-    background-color: var(--body-background);
-    padding: 60px 0 30px;
-    border-top: 1px solid var(--login-btn-border);
+  background-color: var(--body-background);
+  padding: 60px 0 30px;
+  border-top: 1px solid var(--login-btn-border);
+  margin-top: 10px;
 }
 .footer-container {
-    margin: 0 auto;
-    padding: 0 20px;
-    max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  max-width: 1200px;
 }
 
 .footer-grid {
@@ -100,5 +101,20 @@
 }
 
 ul{
-    padding: 0;
+  padding: 0;
+}
+
+.social-media {
+  display: flex;
+  gap: 10px;
+}
+
+.social-btn {
+  background-color: var(--sign-up-btn);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

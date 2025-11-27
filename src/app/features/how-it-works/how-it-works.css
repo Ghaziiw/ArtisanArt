@@ -1,0 +1,72 @@
+.how-it-works-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.how-it-works-container h1 {
+  font-size: 2.8rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.intro {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 40px;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  background-color: #d9aea17c;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.step-number {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: #925653;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  border-radius: 50%;
+}
+
+.step-content h2 {
+  margin: 0 0 10px 0;
+  font-size: 1.5rem;
+  color: #333;
+  text-align: left;
+}
+
+.step-content p {
+  margin: 0;
+  color: #555;
+  font-size: 1rem;
+}
+
+.back-home {
+  margin-top: 40px;
+  padding: 12px 25px;
+  font-size: 1rem;
+  background-color: #925653;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.back-home:hover {
+  background-color: #7a4540;
+}
