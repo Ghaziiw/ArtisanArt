@@ -11,7 +11,7 @@ export interface Craftsman {
   workshopAddress: string;
   instagram?: string;
   facebook?: string;
-  expirationDate: string;
+  expirationDate: string | null;
   deliveryPrice: string;
   profileImage: string | null;
   avgRating: number;
@@ -47,5 +47,16 @@ export class CraftsmanService {
    */
   getAllCraftsmen(): Observable<Craftsman[]> {
     return this.http.get<Craftsman[]>(this.apiUrl);
+  }
+
+    /**
+   * Updates the expiration date of a craftsman
+   */
+  updateExpirationDate(craftsmanId: string, newExpDate: string | null): Observable<any> {
+    return this.http.patch(
+      `${this.apiUrl}/${craftsmanId}/exp`,
+      { newExpDate },
+      { withCredentials: true }
+    );
   }
 }

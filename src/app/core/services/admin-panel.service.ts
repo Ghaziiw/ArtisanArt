@@ -43,4 +43,8 @@ export class AdminPanelService {
 
     return this.http.get<UserResponse>(this.apiUrl, { params, withCredentials: true });
   }
+
+  deleteUser(userId: string) {
+    return this.http.delete<any>(this.apiUrl + `/${userId}`, { withCredentials: true });
+  }
 }

@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AdminPanelService } from '../../core/services/admin-panel.service';
 import { AuthService, User } from '../../core/services/auth.service';
-import { Craftsman } from '../../core/services/craftsman.service';
+import { Craftsman, CraftsmanService } from '../../core/services/craftsman.service';
 import { RouterLink } from '@angular/router';
 
 interface CombinedUser extends User {
@@ -32,7 +32,8 @@ export class AdminCtrlPage implements OnInit {
   constructor(
     private http: HttpClient,
     private adminPanelService: AdminPanelService,
-    private authService: AuthService
+    private authService: AuthService,
+    private craftsmanService: CraftsmanService
   ) {}
 
   ngOnInit() {
@@ -149,32 +150,47 @@ export class AdminCtrlPage implements OnInit {
     return date.toLocaleDateString('fr-FR', options);
   }
 
-  // Check if the user is admin to hide actions
-  isAdmin(user: CombinedUser): boolean {
-    return user.role === 'admin';
-  }
-
-  // MMethods to be implemented later
   onModifySubscription(user: CombinedUser) {
     console.log('Modify expiration date for:', user.name);
     // TODO: Implement logic
   }
 
   onSuspendUser(user: CombinedUser) {
-    console.log('Suspend user:', user.name);
-    // TODO: Implement logic
+    if (!confirm(`Suspend ${user.name}?`)) return;
+
+    this.craftsmanService.updateExpirationDate(user.id, null).subscribe({
+      next: () => {
+        // Mise à jour locale (expirationDate = null)
+        user.craftsmanInfo!.expirationDate = null;
+      },
+      error: (err: any) => {
+        console.error("Error suspending user:", err);
+      }
+    });
   }
 
-  onDeleteUser(user: CombinedUser){
 
+  onDeleteUser(user: CombinedUser) {
+    if (!confirm(`Delete user "${user.name}" ?`)) return;
+
+    this.adminPanelService.deleteUser(user.id).subscribe({
+      next: () => {
+        // Remove from local list
+        this.users = this.users.filter(u => u.id !== user.id);
+
+        // Recompute stats
+        this.calculateStats();
+
+        // Re-apply tab filter
+        this.filterUsers();
+      },
+      error: (err) => {
+        console.error("Failed to delete user:", err);
+      }
+    });
   }
 
-  onActivateUser(user: CombinedUser) {
-    console.log('Activate user:', user.name);
-    // TODO: Implement logic
-  }
-
-  // MMethod for search (to be implemented later)
+  // MMethod for search
   onSearch(event: Event) {
     const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
     
