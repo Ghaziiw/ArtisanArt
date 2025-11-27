@@ -210,6 +210,13 @@ curl -X DELETE "http://localhost:3000/users/id_expl" \
 -b cookies.txt
 ```
 
+### Supprimer mon profile
+
+```bash
+curl -X DELETE "http://localhost:3000/users/me" \
+-b cookies.txt
+```
+
 ---
 
 ## 3. Craftsmen {#craftsmen}

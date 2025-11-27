@@ -85,11 +85,17 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
+  // DELETE /users/me → delete current user's profile
+  @Delete('me')
+  async deleteMyProfile(@CurrentUser() user: AuthUser) {
+    return this.userService.deleteUser(user.id);
+  }
+
   // DELETE /users/:id → delete a user by ID (admin only)
   @Delete(':id')
   @RequirePermissions(Permission.USERS_DELETE)
   deleteUser(@Param('id') id: string): Promise<DeleteResult> {
-    return this.userService.deleteUserAdmin(id);
+    return this.userService.deleteUser(id);
   }
 
   // PATCH /users/:id → update a user's profile (admin only)
@@ -121,6 +127,7 @@ export class UserController {
     return this.userService.updateProfileImage(user.id, imageUrl);
   }
 
+  // DELETE /users/profile/me/image → delete current user's profile image
   @Delete('/profile/me/image')
   async deleteMyProfileImage(@CurrentUser() user: AuthUser): Promise<User> {
     return this.userService.deleteProfileImage(user.id);

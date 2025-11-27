@@ -36,6 +36,9 @@ export const auth = betterAuth({
         defaultValue: null,
       },
     },
+    deleteUser: {
+      enabled: true,
+    },
   },
   // Session configuration
   session: {
