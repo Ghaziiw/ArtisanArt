@@ -431,3 +431,143 @@
   position: absolute;
   pointer-events: none;
 }
+
+.user-form-card {
+  background: var(--header-backgrounnd);
+  border: 1px solid var(--login-btn-border);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  width: 96%;
+}
+
+.btn-add-user {
+  background-color: var(--login-btn-background);
+  color: var(--login-btn-text);
+  border: 1px solid var(--login-btn-border);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 300ms;
+  margin-bottom: 16px;
+}
+
+.btn-add-user:hover {
+  background-color: var(--login-btn-background-on-hover);
+  transition: all 300ms;
+}
+
+.add-user-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.btn-cancel {
+  background-color: var(--sign-up-btn);
+  color: white;
+  transition: all 300ms;
+}
+
+.btn-cancel:hover {
+  background-color: var(--sign-up-btn-on-hover);
+  transition: all 300ms;
+}
+
+.btn-submit {
+  background-color: var(--login-btn-background);
+  color: var(--login-btn-text);
+  border: 1px solid var(--login-btn-border);
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 300ms;
+  margin-top: 16px;
+  width: 15%;
+}
+
+.btn-submit:hover {
+  background-color: var(--login-btn-background-on-hover);
+  transition: all 300ms;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  align-items: center;
+}
+
+.user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.input > label {
+  font-size: 14px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--login-btn-text);
+}
+
+.input > input {
+  padding: 8px 12px;
+  border: 1px solid var(--login-btn-border);
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--login-btn-text);
+  background-color: var(--input-background);
+  transition: all 150ms;
+}
+
+.input > input:focus {
+  outline: none;
+  border-color: var(--login-btn-text);
+  box-shadow: 0 0 0 3px var(--login-btn-border);
+  transition: all 150ms;
+}
+
+.error-message {
+  margin-top: 12px;
+  padding: 10px;
+  background-color: #ffe6e6;
+  border: 1px solid #ffcccc;
+  border-radius: 8px;
+  color: #d9534f;
+  font-size: 13px;
+  text-align: center;
+  margin-right: 10px;
+  width: 83%;
+  height: 15px;
+}
+
+.user-form-card h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-family: 'Outfit';
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--login-btn-text);
+}

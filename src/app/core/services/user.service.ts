@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ChangePasswordDto, ProfileUpdateResponse, UpdateProfileDto, UserFilterDto, UserResponse } from '../models';
+import { ChangePasswordDto, CreateAdminDto, ProfileUpdateResponse, UpdateProfileDto, UserFilterDto, UserResponse } from '../models';
 import { Observable, tap } from 'rxjs';
 import { AuthService } from './auth.service';
 
@@ -104,6 +104,17 @@ export class UserService {
           this.authService['userSubject'].next(response);
         }
       })
+    );
+  }
+
+  /**
+   * Creates a new admin user
+   */
+  addAdminUser(data: CreateAdminDto): Observable<any> {
+    return this.http.post<any>(
+      `${this.apiUrl}/admin`,
+      data,
+      { withCredentials: true }
     );
   }
 }

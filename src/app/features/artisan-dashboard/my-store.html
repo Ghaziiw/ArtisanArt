@@ -85,7 +85,7 @@
 
     <!-- Product Form -->
     <div *ngIf="showAddProduct" class="product-form-card">
-      <h3>{{ editingProduct ? 'Modifier le produit' : 'Nouveau produit' }}</h3>
+      <h3>{{ editingProduct ? 'Update Product' : 'New Product' }}</h3>
       <form (submit)="handleSubmitProduct($event)" class="product-form">
         <div class="input-section">
           <div class="input">

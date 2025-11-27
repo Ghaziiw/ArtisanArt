@@ -5,8 +5,10 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../core/services/auth.service';
 import { CraftsmanService } from '../../core/services/craftsman.service';
 import { RouterLink } from '@angular/router';
-import { Craftsman, User } from '../../core/models';
+import { Craftsman, CreateAdminDto, User } from '../../core/models';
 import { UserService } from '../../core/services/user.service';
+import { FormsModule } from '@angular/forms';
+import { set } from 'better-auth';
 
 interface CombinedUser extends User {
   craftsmanInfo?: Craftsman;
@@ -14,7 +16,7 @@ interface CombinedUser extends User {
 
 @Component({
   selector: 'app-admin-ctrl-page',
-  imports: [Header, CommonModule, RouterLink],
+  imports: [Header, CommonModule, RouterLink, FormsModule],
   templateUrl: './admin-ctrl-page.html',
   styleUrl: './admin-ctrl-page.css',
 })
@@ -237,4 +239,91 @@ export class AdminCtrlPage implements OnInit {
     });
   }
 
+  //----------- Add Admin User Form -----------
+  showAddAdminForm = false;
+  isSubmitting = false;
+  adminFormError = '';
+
+  adminForm: CreateAdminDto = {
+    name: '',
+    email: '',
+    password: '',
+    location: ''
+  };
+
+  toggleAddAdminForm() {
+    this.showAddAdminForm = !this.showAddAdminForm;
+    if (!this.showAddAdminForm) {
+      this.resetAdminForm();
+    }
+  }
+
+  resetAdminForm() {
+    this.adminForm = {
+      name: '',
+      email: '',
+      password: '',
+      location: ''
+    };
+    this.adminFormError = '';
+    this.isSubmitting = false;
+  }
+
+  handleSubmitAdmin(event: Event) {
+    event.preventDefault();
+    
+    // Validation
+    if (!this.adminForm.name || !this.adminForm.email || !this.adminForm.password) {
+      this.adminFormError = 'Please fill in all required fields';
+      setTimeout(() => {
+        this.adminFormError = '';
+      }, 5000);
+      return;
+    }
+
+    if (this.adminForm.password.length < 8) {
+      this.adminFormError = 'Password must be at least 8 characters';
+      setTimeout(() => {
+        this.adminFormError = '';
+      }, 5000);
+      return;
+    }
+
+    // Validation email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.adminForm.email)) {
+      this.adminFormError = 'Please enter a valid email address';
+      setTimeout(() => {
+        this.adminFormError = '';
+      }, 5000);
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.adminFormError = '';
+
+    const adminData = {
+      name: this.adminForm.name,
+      email: this.adminForm.email,
+      password: this.adminForm.password,
+      location: this.adminForm.location || undefined
+    };
+
+    this.userService.addAdminUser(adminData).subscribe({
+      next: () => {
+        console.log('Admin created successfully');
+        this.loadUsers();
+        this.toggleAddAdminForm();
+        alert('Admin user created successfully!');
+      },
+      error: (error) => {
+        this.adminFormError = error.error?.message || 'Error creating admin user. Please try again.';
+        this.isSubmitting = false;
+
+        setTimeout(() => {
+          this.adminFormError = '';
+        }, 5000);
+      }
+    });
+  }
 }

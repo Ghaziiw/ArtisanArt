@@ -81,3 +81,5 @@ export interface CraftsmanSignUpResponse {
     updatedAt: string;
   };
 }
+
+export interface CreateAdminDto extends ClientSignUpDto {}
