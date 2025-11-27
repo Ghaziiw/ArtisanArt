@@ -42,8 +42,8 @@ export const routes: Routes = [
     component: AdminCtrlPage,
   },
   {
-    path: 'product-page',
-    component: ProductPage,
+    path: 'product-page/:id',
+    component: Productpage,
   },
   {
     path: '**',

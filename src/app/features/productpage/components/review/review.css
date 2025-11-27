@@ -5,7 +5,8 @@
   border: 2px solid var(--border);
   border-radius: 12px;
   position: relative;  
-  background: var(--card);       
+  background: var(--card);
+  margin-bottom: 10px;       
 }
 
 .avatar {
