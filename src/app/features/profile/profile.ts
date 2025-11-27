@@ -4,10 +4,11 @@ import { ProfilePic } from './profile-pic/profile-pic';
 import { PersonalInfo } from './personal-info/personal-info';
 import { CommonModule } from '@angular/common';
 import { AuthService, User } from '../../core/services/auth.service';
+import { Footer } from "../../shared/components/footer/footer";
 
 @Component({
   selector: 'app-profile',
-  imports: [Header, ProfilePic, PersonalInfo, CommonModule],
+  imports: [Header, ProfilePic, PersonalInfo, CommonModule, Footer],
   templateUrl: './profile.html',
   styleUrls: ['./profile.css'],
 })
