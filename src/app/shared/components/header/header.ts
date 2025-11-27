@@ -88,4 +88,11 @@ export class Header implements OnInit {
       this.onSearchSubmit();
     }
   }
+
+  goToHomepage() {
+    this.searchQuery = '';
+    this.filterService.setSearchQuery('');
+    this.filterService.setViewType('products');
+    this.router.navigate(['/']);
+  }
 }
