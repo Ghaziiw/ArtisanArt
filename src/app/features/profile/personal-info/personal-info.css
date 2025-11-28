@@ -107,7 +107,7 @@
   opacity: 0.6;
 }
 
-.password-hint {
+.password-hint, .danger-text {
   color: #777;
   font-size: 14px;
   line-height: 1.5;

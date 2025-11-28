@@ -1,51 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Product } from './product.service';
-
-export interface AddToCartDto {
-  productId: string;
-  quantity?: number;
-}
-
-export interface ShoppingCartResponse {
-  userId: string;
-  quentity: number;
-  createdAt: string;
-  product: Product;
-}
-
-export interface ShoppingCartItem {
-  userId: string;
-  productId: string;
-  quantity: number;
-  createdAt: string;
-  product: Product;
-}
-
-export interface CraftsmanGroup {
-  craftsman: {
-    id: string;
-    businessName: string;
-    deliveryPrice: number;
-    phone: string;
-    workshopAddress: string;
-  };
-  items: ShoppingCartItem[];
-  subtotal: number;
-  deliveryPrice: number;
-  total: number;
-}
-
-export interface GroupedCartResponse {
-  craftsmanGroups: CraftsmanGroup[];
-  grandTotal: number;
-  totalItems: number;
-}
-
-export interface UpdateCartDto {
-  quantity: number;
-}
+import { AddToCartDto, GroupedCartResponse, ShoppingCartItem, ShoppingCartResponse } from '../models';
 
 @Injectable({
   providedIn: 'root',

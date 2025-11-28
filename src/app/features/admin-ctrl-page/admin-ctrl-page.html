@@ -1,282 +1,252 @@
 <app-header></app-header>
 <div class="full-width-container">
-    <div class="container">
-        <button class="return-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#935653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-            Return
-        </button>
-        <div class="horizontal-div">
-            <div class="logo-background">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-cog-icon lucide-user-cog"><path d="M10 15H6a4 4 0 0 0-4 4v2"/><path d="m14.305 16.53.923-.382"/><path d="m15.228 13.852-.923-.383"/><path d="m16.852 12.228-.383-.923"/><path d="m16.852 17.772-.383.924"/><path d="m19.148 12.228.383-.923"/><path d="m19.53 18.696-.382-.924"/><path d="m20.772 13.852.924-.383"/><path d="m20.772 16.148.924.383"/><circle cx="18" cy="15" r="3"/><circle cx="9" cy="7" r="4"/></svg>
-            </div>
-            <div>
-                <h1 class="title">Admin Panel</h1>
-                <p>Manage subscriptions and user accounts</p>
-            </div>
-        </div>
-
-        
+  <div class="container">
+    <button class="return-btn" routerLink="/">
+      <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="#935653"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"><path d="m15 18-6-6 6-6" /></svg>
+      Return
+    </button>
+    <div class="horizontal-div">
+      <div class="logo-background">
+        <svg xmlns="http://www.w3.org/2000/svg"width="24"height="24"viewBox="0 0 24 24"fill="none"stroke="#ffffff"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"class="lucide lucide-user-cog-icon lucide-user-cog"><path d="M10 15H6a4 4 0 0 0-4 4v2" /><path d="m14.305 16.53.923-.382" /><path d="m15.228 13.852-.923-.383" /><path d="m16.852 12.228-.383-.923" /><path d="m16.852 17.772-.383.924" /><path d="m19.148 12.228.383-.923" /><path d="m19.53 18.696-.382-.924" /><path d="m20.772 13.852.924-.383" /><path d="m20.772 16.148.924.383" /><circle cx="18" cy="15" r="3" /><circle cx="9" cy="7" r="4" /></svg>
+      </div>
+      <div>
+        <h1 class="title">Admin Panel</h1>
+        <p>Manage subscriptions and user accounts</p>
+      </div>
     </div>
+  </div>
 </div>
+
 <div class="main-body">
-    <div class="stats">
-        <div class="stat-card" id="total-users">
-            <p>Total Users</p>
-            <h1>8</h1>
-        </div>
-        <div class="stat-card" id="artisans">
-            <p>Artisans</p>
-            <h1>4</h1>
-        </div>
-        <div class="stat-card" id="clients">
-            <p>Clients</p>
-            <h1>4</h1>
-        </div>
-        <div class="stat-card" id="renewables">
-            <p>Need renewal</p>
-            <h1>4</h1>
-        </div>
+  <div class="stats">
+    <div class="stat-card" id="total-users">
+      <p>Total Users</p>
+      <h1>{{ totalUsers }}</h1>
     </div>
-    
+    <div class="stat-card" id="artisans">
+      <p>Artisans</p>
+      <h1>{{ totalArtisans }}</h1>
+    </div>
+    <div class="stat-card" id="clients">
+      <p>Clients</p>
+      <h1>{{ totalClients }}</h1>
+    </div>
+    <div class="stat-card" id="renewables">
+      <p>Need renewal</p>
+      <h1>{{ needRenewal }}</h1>
+    </div>
+  </div>
 
-    <div class="search-bar">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#925653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
-        <input type="text" name="search-account" id="search-account" placeholder="search by name, company, specialty or email...">
+  <div class="search-bar">
+    <svg xmlns="http://www.w3.org/2000/svg"width="24"height="24"viewBox="0 0 24 24"fill="none"stroke="#925653"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg>
+    <input
+      type="text"
+      name="search-account"
+      id="search-account"
+      placeholder="search by name, company, specialty or email..."
+      (input)="onSearch($event)"
+    />
+  </div>
+
+  <div class="add-user-container">
+    <button class="btn-add-user" (click)="toggleAddAdminForm()" [ngClass]="{'btn-cancel': showAddAdminForm}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/>
+      </svg>
+      {{ showAddAdminForm ? 'Cancel' : 'Add Admin User' }}
+    </button>
+  </div>
+
+  <!-- Formulaire d'ajout d'admin -->
+  <div *ngIf="showAddAdminForm" class="user-form-card">
+    <h3>Add New Admin User</h3>
+    <form (submit)="handleSubmitAdmin($event)" class="user-form">
+      <div class="input-section">
+        <div class="input">
+          <label for="admin-name">Full Name *</label>
+          <input 
+            type="text" 
+            id="admin-name" 
+            [(ngModel)]="adminForm.name" 
+            name="name" 
+            placeholder="Enter full name"
+            required>
+        </div>
+
+        <div class="input">
+          <label for="admin-email">Email *</label>
+          <input 
+            type="email" 
+            id="admin-email" 
+            [(ngModel)]="adminForm.email" 
+            name="email" 
+            placeholder="admin@example.com"
+            required>
+        </div>
+      </div>
+
+      <div class="input-section">
+        <div class="input">
+          <label for="admin-password">Password *</label>
+          <input 
+            type="password" 
+            id="admin-password" 
+            [(ngModel)]="adminForm.password" 
+            name="password" 
+            placeholder="Minimum 8 characters"
+            required>
+        </div>
+
+        <div class="input">
+          <label for="admin-location">Location (optional)</label>
+          <input 
+            type="text" 
+            id="admin-location" 
+            [(ngModel)]="adminForm.location" 
+            name="location" 
+            placeholder="City, Country">
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <div class="error-message" *ngIf="adminFormError">
+          {{ adminFormError }}
+        </div>
+        <button type="submit" class="btn-submit" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Creating...' : 'Create Admin' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="liste-comptes">
+    <div class="tablist">
+      <div
+        class="tab"
+        id="all-tab"
+        (click)="changeTab('all')"
+        [ngClass]="{ activeTab: currentTab === 'all' }"
+      >
+        All ({{ totalUsers }})
+      </div>
+      <div
+        class="tab"
+        id="artisans-tab"
+        (click)="changeTab('artisans')"
+        [ngClass]="{ activeTab: currentTab === 'artisans' }"
+      >
+        Artisans ({{ totalArtisans }})
+      </div>
+      <div
+        class="tab"
+        id="clients-tab"
+        (click)="changeTab('clients')"
+        [ngClass]="{ activeTab: currentTab === 'clients' }"
+      >
+        Clients ({{ totalClients }})
+      </div>
+      <div
+        class="tab"
+        id="admin-tab"
+        (click)="changeTab('admin')"
+        [ngClass]="{ activeTab: currentTab === 'admin' }"
+      >
+        Admins ({{ totalAdmins }})
+      </div>
     </div>
 
-    <div class="liste-comptes">
-        <div class="tablist">
-            <div class="tab" id="all-tab" (click)="currentTab='all'" [ngClass]="{'activeTab': currentTab === 'all'}">
-                all (8)
-            </div>
-            <div class="tab" id="artisans-tab" (click)="currentTab='artisans'" [ngClass]="{'activeTab': currentTab === 'artisans'}">
-                Artisans(4)
-            </div>
-            <div class="tab" id="clients-tab" (click)="currentTab='clients'" [ngClass]="{'activeTab': currentTab === 'clients'}">
-                Clients(4)
-            </div>
-        </div>
-    
-        <div class="table-container">
-            <table class="user-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Company/Workshop</th>
-                        <th>Specialty</th>
-                        <th>Subscription</th>
-                        <th>Status</th>
-                        <th>Susbcription date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div class="user-info">
-                                <div class="avatar">
-                                    <img [src]="'/assets/images/seller1.jpg'">
-                                </div>
-                                <span>TechGear Store</span>
-                            </div>
-                        </td>
-                        <td>contact@techgear.com</td>
-                        <td>TechGear Audio Solutions</td>
-                        <td>Audio Equipment Specialist</td>
-                        <td>
-                            <div class="subscription">
-                                <span class="date">15 janv. 2025</span>
-                                <span class="badge badge-expired">Expiré</span>
-                            </div>
-                        </td>
-                        <td><span class="status-badge status-active">Actif</span></td>
-                        <td>15 janv. 2024</td>
-                        <td>
-                            <div class="actions">
-                                <button class="btn btn-modify"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#925653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-                                    Change
-                                </button>
-                                <button class="btn btn-suspend"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ban-icon lucide-ban"><path d="M4.929 4.929 19.07 19.071"/><circle cx="12" cy="12" r="10"/></svg>
-Suspend</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="user-info">
-                                <div class="avatar">
-    <img [src]="'/assets/images/seller1.jpg'">
-</div>
-                                <span>Fashion Boutique</span>
-                            </div>
-                        </td>
-                        <td>hello@fashionboutique.com</td>
-                        <td>Chic Fashion House</td>
-                        <td>Women's Fashion</td>
-                        <td>
-                            <div class="subscription">
-                                <span class="date">20 déc. 2024</span>
-                                <span class="badge badge-expired">Expiré</span>
-                            </div>
-                        </td>
-                        <td><span class="status-badge status-active">Actif</span></td>
-                        <td>20 févr. 2024</td>
-                        <td>
-                            <div class="actions">
-                                <button class="btn btn-modify"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#925653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-                                    Change
-                                </button>
-                                <button class="btn btn-suspend"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ban-icon lucide-ban"><path d="M4.929 4.929 19.07 19.071"/><circle cx="12" cy="12" r="10"/></svg>
-Suspend</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="user-info">
-                                <div class="avatar">
-    <img [src]="'/assets/images/seller1.jpg'">
-</div>
-                                <span>Home Essentials</span>
-                            </div>
-                        </td>
-                        <td>info@homeessentials.com</td>
-                        <td>Atelier Céramique</td>
-                        <td>Handmade Ceramics</td>
-                        <td>
-                            <div class="subscription">
-                                <span class="date">10 mars 2025</span>
-                                <span class="badge badge-expired">Expiré</span>
-                            </div>
-                        </td>
-                        <td><span class="status-badge status-active">Actif</span></td>
-                        <td>10 mars 2024</td>
-                        <td>
-                            <div class="actions">
-                                <button class="btn btn-modify"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#925653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-Change</button>
-                                <button class="btn btn-suspend"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ban-icon lucide-ban"><path d="M4.929 4.929 19.07 19.071"/><circle cx="12" cy="12" r="10"/></svg>
-Suspend</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="user-info">
-                                <div class="avatar">
-    <img [src]="'/assets/images/seller1.jpg'">
-</div>
-                                <span>Beauty Naturals</span>
-                            </div>
-                        </td>
-                        <td>contact@beautynaturals.com</td>
-                        <td>Natural Beauty Co.</td>
-                        <td>Natural Beauty Products</td>
-                        <td>
-                            <div class="subscription">
-                                <span class="date">05 nov. 2024</span>
-                                <span class="badge badge-expired">Expiré</span>
-                            </div>
-                        </td>
-                        <td><span class="status-badge status-suspended">Suspendu</span></td>
-                        <td>05 avr. 2024</td>
-                        <td>
-                            <div class="actions">
-                                <button class="btn btn-modify"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#925653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-Change</button>
-                                <button class="btn btn-activate"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-icon lucide-check"><path d="M20 6 9 17l-5-5"/></svg>
-Activate</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="user-info">
-                                <span>Alice Martin</span>
-                            </div>
-                        </td>
-                        <td>alice.martin@email.com</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td></td>
-                        <td><span class="status-badge status-active">Actif</span></td>
-                        <td>12 juin 2024</td>
-                        <td>
-                            <div class="actions">
-                                <button class="btn btn-modify"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#925653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-Change</button>
-                                <button class="btn btn-suspend"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ban-icon lucide-ban"><path d="M4.929 4.929 19.07 19.071"/><circle cx="12" cy="12" r="10"/></svg>
-Suspend</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="user-info">
-                                <span>Bob Johnson</span>
-                            </div>
-                        </td>
-                        <td>bob.j@email.com</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td></td>
-                        <td><span class="status-badge status-active">Actif</span></td>
-                        <td>22 juil. 2024</td>
-                        <td>
-                            <div class="actions">
-                                <button class="btn btn-modify"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#925653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-Change</button>
-                                <button class="btn btn-suspend"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ban-icon lucide-ban"><path d="M4.929 4.929 19.07 19.071"/><circle cx="12" cy="12" r="10"/></svg>
-Suspend</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="user-info">
-                                <span>Claire Dubois</span>
-                            </div>
-                        </td>
-                        <td>claire.d@email.com</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td></td>
-                        <td><span class="status-badge status-active">Actif</span></td>
-                        <td>15 août 2024</td>
-                        <td>
-                            <div class="actions">
-                                <button class="btn btn-modify"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#925653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-Change</button>
-                                <button class="btn btn-suspend"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ban-icon lucide-ban"><path d="M4.929 4.929 19.07 19.071"/><circle cx="12" cy="12" r="10"/></svg>
-Suspend</button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <div class="user-info">
-                                <span>David Chen</span>
-                            </div>
-                        </td>
-                        <td>david.c@email.com</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td></td>
-                        <td><span class="status-badge status-suspended">Suspendu</span></td>
-                        <td>03 sept. 2024</td>
-                        <td>
-                            <div class="actions">
-                                <button class="btn btn-modify"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#925653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-Change</button>
-                                <button class="btn btn-activate"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-icon lucide-check"><path d="M20 6 9 17l-5-5"/></svg>
-Activate</button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    <div class="table-container">
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Company/Workshop</th>
+            <th>Specialty</th>
+            <th>Expiration Date</th>
+            <th>Status</th>
+            <th>Creation Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of filteredUsers">
+            <td>
+              <div class="user-info">
+                <div class="avatar" *ngIf="user.craftsmanInfo?.profileImage || user.image">
+                  <img [src]="user.craftsmanInfo?.profileImage || user.image || '/assets/images/default-avatar.jpg'" alt="User avatar" />
+                </div>
+                <span>{{ user.craftsmanInfo?.businessName || user.name }}</span>
+              </div>
+            </td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.craftsmanInfo?.businessName || '-' }}</td>
+            <td>{{ user.craftsmanInfo?.specialty || '-' }}</td>
+            <td>
+              <div class="subscription" *ngIf="user.craftsmanInfo?.expirationDate; else noExpiration">
+                <span class="date">{{ formatDate(user.craftsmanInfo ? user.craftsmanInfo.expirationDate : null) }}</span>
+                <span 
+                  class="badge" 
+                  [ngClass]="{
+                    'badge-expired': getExpirationStatus(user.craftsmanInfo ? user.craftsmanInfo.expirationDate : null) === 'expired',
+                    'badge-active': getExpirationStatus(user.craftsmanInfo ? user.craftsmanInfo.expirationDate : null) === 'active'
+                  }"
+                >
+                  {{ isExpired(user.craftsmanInfo ? user.craftsmanInfo.expirationDate : null) ? 'Expired' : 'Active' }}
+                </span>
+              </div>
+              <ng-template #noExpiration>
+                <span>-</span>
+              </ng-template>
+            </td>
+            <td>
+              <span 
+                class="status-badge" 
+                [ngClass]="{
+                  'status-active': user.role === 'artisan',
+                  'status-suspended': user.role !== 'artisan',
+                }"
+              >
+                {{ user.role !== 'artisan' ? user.role : isExpired(user.craftsmanInfo ? user.craftsmanInfo.expirationDate : null) ? 'Expired' : 'Active'}}
+              </span>
+            </td>
+            <td>{{ formatDate(user.createdAt) }}</td>
+            <td>
+              <div class="actions">
+                <button 
+                  class="btn btn-modify" 
+                  (click)="openDatePicker(datePicker, user)" 
+                  *ngIf="user.role === 'artisan'"
+                  title="Modify Subscription Date"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#925653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4" /><path d="M16 2v4" /><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /></svg>
+                  Change
+                  <input 
+                    #datePicker
+                    type="date" 
+                    class="hidden-date-picker"
+                    (change)="onDateSelected($event, user)"
+                  />
+                </button>
+                
+                <button 
+                  class="btn btn-suspend" 
+                  (click)="user.role === 'artisan' ? onSuspendUser(user) : onDeleteUser(user)"
+                  title="Suspendre l'utilisateur"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ban-icon lucide-ban"><path d="M4.929 4.929 19.07 19.071" /><circle cx="12" cy="12" r="10" /></svg>
+                  {{ user.role === 'artisan' ? 'Suspend' : 'Delete' }}
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="filteredUsers.length === 0">
+            <td colspan="8" style="text-align: center; padding: 2rem; color: #666;">
+              No users found matching your criteria.
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 </div>
 

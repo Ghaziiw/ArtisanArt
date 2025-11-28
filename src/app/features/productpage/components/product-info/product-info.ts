@@ -72,5 +72,4 @@ export class ProductInfo {
   notifyAddToCart() {
     this.addProductToCart.emit();
   }
-
 }

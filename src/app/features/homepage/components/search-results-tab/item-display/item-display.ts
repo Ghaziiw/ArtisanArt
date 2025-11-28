@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { Product } from '../../../../../core/services/product.service';
 import { CommonModule } from '@angular/common';
 import { ShoppingCartService } from '../../../../../core/services/shopping-cart.service';
 import { AuthService } from '../../../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { Product } from '../../../../../core/models';
 
 @Component({
   selector: 'app-item-display',

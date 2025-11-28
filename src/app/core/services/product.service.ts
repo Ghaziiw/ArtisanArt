@@ -2,57 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ProductFilters } from '../../features/homepage/components/search-filters-bar/product-filters.interface';
-
-export interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  category: { id: string; name: string } | null;
-  images: string[] | null;
-  craftsman: {
-    userId: string;
-    businessName: string;
-    workshopAddress: string;
-    profileImage: string | null;
-    avgRating: number;
-    totalComments: number;
-  };
-  offer: { percentage: number } | null;
-  avgRating: number;
-  totalComments: number;
-}
-
-export interface ProductsResponse {
-  items: Product[];
-  meta: {
-    totalItems: number;
-    itemCount: number;
-    itemsPerPage: number;
-    totalPages: number;
-    currentPage: number;
-  };
-}
-
-export interface CreateProductDto {
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  categoryId?: string;
-  images?: File[];
-}
-
-export interface UpdateProductDto {
-  name?: string;
-  description?: string;
-  price?: number;
-  stock?: number;
-  categoryId?: string | null;
-  images?: File[];
-  imagesToKeep?: string[];
-}
+import { CreateProductDto, Product, ProductsResponse, UpdateProductDto } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
@@ -160,6 +110,28 @@ export class ProductService {
 
     return this.http.post<Product>(`${this.apiUrl}`, formData, {
       withCredentials: true,
+    });
+  }
+
+  /**
+   * Get all products for the authenticated craftsman
+   */
+  getCraftsmanProducts(
+    page: number = 1,
+    limit: number = 100,
+    craftsmanId?: string
+  ): Observable<ProductsResponse> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+
+    if (craftsmanId) {
+      params = params.set('craftsmanId', craftsmanId);
+    }
+
+    return this.http.get<ProductsResponse>(`${this.apiUrl}`, { 
+      params,
+      withCredentials: true 
     });
   }
 }

@@ -28,7 +28,7 @@
 }
 
 .section-title { 
-  font-weight: 600;
+  font-weight: 500;
   font-size: 12px;
   margin: 0 0 12px 0;
   color: var(--login-btn-text);
@@ -83,7 +83,7 @@ select:focus, input[type="text"]:focus {
   gap: 10px;
   cursor: pointer;
   color: var(--login-btn-text);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 14px;
 }
 

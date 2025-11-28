@@ -1,0 +1,31 @@
+<app-header></app-header>
+
+<div class="horizontal-div" *ngIf="viewType === 'products'">
+  <app-search-filters-bar (filtersChange)="applySearch()"></app-search-filters-bar>
+  <app-search-results-tab [filters]="currentFilters"></app-search-results-tab>
+</div>
+
+<div
+  class="artisan-search"
+  style="
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    max-width: 1250px;
+    margin: auto;
+  "
+  *ngIf="viewType === 'artisans'"
+>
+  <!-- Display message if no artisans found -->
+  <div *ngIf="filteredCraftsmen.length === 0" style="width: 100%; text-align: center; padding: 40px; font-family: 'Outfit'; color: var(--login-btn-text);">
+    <p>No artisans found matching "{{ searchQuery }}"</p>
+  </div>
+
+  <!-- Display filtered artisans -->
+  <div *ngFor="let artisan of filteredCraftsmen">
+    <app-artisan-card [craftsman]="artisan"></app-artisan-card>
+  </div>
+</div>
+
+<app-footer></app-footer>

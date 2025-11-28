@@ -1,7 +1,7 @@
 import { Component, Input, ElementRef, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { User } from '../../../core/services/auth.service';
-import { ProfileService } from '../../../core/services/profile.service';
+import { User } from '../../../core/models';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-profile-pic',
@@ -19,7 +19,7 @@ export class ProfilePic implements OnChanges {
   uploadError = '';
   currentImage = '';
 
-  constructor(private profileService: ProfileService) {}
+  constructor(private userService: UserService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     this.currentImage = this.user?.image || '/assets/images/seller1.jpg';
@@ -79,7 +79,7 @@ export class ProfilePic implements OnChanges {
     this.isUploading = true;
     this.uploadError = '';
 
-    this.profileService.updateProfileImage(file).subscribe({
+    this.userService.updateProfileImage(file).subscribe({
       next: (response) => {
         console.log('Profile image uploaded successfully:', response);
 
@@ -116,7 +116,7 @@ export class ProfilePic implements OnChanges {
     this.isDeleting = true;
     this.uploadError = '';
 
-    this.profileService.deleteProfileImage().subscribe({
+    this.userService.deleteProfileImage().subscribe({
       next: (response) => {
         console.log('Profile image deleted successfully:', response);
         this.isDeleting = false;

@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Category, CategoryService } from '../../../../core/services/category.service';
+import { CategoryService } from '../../../../core/services/category.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductFilters } from './product-filters.interface';
+import { Category } from '../../../../core/models';
 
 @Component({
   selector: 'app-search-filters-bar',

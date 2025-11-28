@@ -1,9 +1,10 @@
 import { Component, Input, signal, SimpleChanges } from '@angular/core';
 import { ItemDisplay } from './item-display/item-display';
 import { CommonModule } from '@angular/common';
-import { Product, ProductService } from '../../../../core/services/product.service';
+import { ProductService } from '../../../../core/services/product.service';
 import { HttpClientModule } from '@angular/common/http';
 import { ProductFilters } from '../search-filters-bar/product-filters.interface';
+import { Product } from '../../../../core/models';
 
 @Component({
   selector: 'app-search-results-tab',
