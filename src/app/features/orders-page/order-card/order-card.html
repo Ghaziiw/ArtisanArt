@@ -1,71 +1,87 @@
 <div class="card" (click)="displayAllInfo = !displayAllInfo">
-    <div class="card-main" [ngClass]="{ 'unextended-card': !displayAllInfo, 'extended-card': displayAllInfo }">
+  <div
+    class="card-main"
+    [ngClass]="{ 'unextended-card': !displayAllInfo, 'extended-card': displayAllInfo }"
+  >
+    <div class="info-container">
+      <div class="top-titles">
+        <h3 class="order-id">Order #{{ orderDetails.order.id }}</h3>
 
-        <div class="info-container">
-            <div class="top-titles">
-                <h3 class="order-id">Order #{{ orderDetails.order.id }}</h3>
+        <!-- PENDING -->
+        <span class="order-status pending" *ngIf="orderDetails.order.status === 'PENDING'">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" fill="none" /><path d="M12 7v6l4 2" stroke="currentColor"stroke-width="1.6"stroke-linecap="round"stroke-linejoin="round"fill="none"/></svg>
+          Pending
+        </span>
 
-                <span class="order-status already-delivered" *ngIf="finishedOrder">
-                    ✔ delivered
-                </span>
+        <!-- CONFIRMED -->
+        <span class="order-status confirmed" *ngIf="orderDetails.order.status === 'CONFIRMED'">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 6L9 17l-5-5"stroke="currentColor"stroke-width="1.8"stroke-linecap="round"stroke-linejoin="round"fill="none"/></svg>
+          Confirmed
+        </span>
 
-                <!-- <span class="order-status already-delivered" *ngIf="finishedOrder">
-                    ✔ Pending
-                </span>
+        <!-- SHIPPED -->
+        <span class="order-status shipped" *ngIf="orderDetails.order.status === 'SHIPPED'">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M3 7h13l4 4v6"stroke="currentColor"stroke-width="1.6"stroke-linecap="round"stroke-linejoin="round"fill="none"/><circle cx="7" cy="19" r="1.5" fill="currentColor" /><circle cx="17" cy="19" r="1.5" fill="currentColor" /></svg>
+          Shipped
+        </span>
 
-                <span class="order-status already-delivered" *ngIf="finishedOrder">
-                    ✔ Confirmed
-                </span> -->
+        <!-- DELIVERED -->
+        <span class="order-status delivered" *ngIf="orderDetails.order.status === 'DELIVERED'">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.4" fill="none" /><path d="M9 12l2 2 4-4"stroke="currentColor"stroke-width="1.8"stroke-linecap="round"stroke-linejoin="round"fill="none"/></svg>
+          Delivered
+        </span>
 
-                <span class="order-status still-delivering" *ngIf="!finishedOrder">
-                    🚚 still delivering
-                </span>
-            </div>
+        <!-- CANCELLED -->
+        <span class="order-status cancelled" *ngIf="orderDetails.order.status === 'CANCELLED'">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.4" fill="none" /><path d="M15 9l-6 6M9 9l6 6"stroke="currentColor"stroke-width="1.6"stroke-linecap="round"stroke-linejoin="round"fill="none"/></svg>
+          Cancelled
+        </span>
+      </div>
 
-            <div class="additional-info">
-                <span class="order-date">📅 {{ orderDetails.order.createdAt | date:'longDate' }}</span>
-                <span class="items-number">📦 {{ orderDetails.order.items.length }} items</span>
-                <span class="store-name">🏪 {{ orderDetails.craftsman.businessName }}</span>
-            </div>
-        </div>
-
-        <div class="price">
-            <div>
-                <p>Total</p>
-                <p class="price-text">$ {{ totalPrice }}</p>
-            </div>
-
-            <span>
-                <svg *ngIf="!displayAllInfo" width="16" height="16">
-                    <path d="m6 9 6 6 6-6" stroke="#925653"></path>
-                </svg>
-                <svg *ngIf="displayAllInfo" width="16" height="16">
-                    <path d="m18 15-6-6-6 6" stroke="#925653"></path>
-                </svg>
-            </span>
-        </div>
+      <div class="additional-info">
+        <span class="order-date">📅 {{ orderDetails.order.createdAt | date : 'longDate' }}</span>
+        <span class="items-number">📦 {{ orderDetails.order.items.length }} items</span>
+        <span class="store-name">🏪 {{ orderDetails.craftsman.businessName }}</span>
+      </div>
     </div>
 
-    <div class="card-extension" *ngIf="displayAllInfo">
-        <p class="mini-title">Order details</p>
+    <div class="price">
+      <div>
+        <p>Total</p>
+        <p class="price-text">$ {{ totalPrice }}</p>
+      </div>
 
-        <div *ngFor="let item of orderDetails.order.items">
-            <app-order-card-product [item]="item"></app-order-card-product>
-        </div>
-
-        <div class="total-prices">
-            <div class="sub-total ttl-price-line">
-                <p class="price-label">Sub-total</p>
-                <p class="price-value">$ {{ subTotalPrice }}</p>
-            </div>
-            <div class="delivery-price ttl-price-line">
-                <p class="price-label">Delivery fee</p>
-                <p class="price-value">$ {{ orderDetails.order.deliveryPrice }}</p>
-            </div>
-            <div class="ttl-price-line big-total">
-                <p class="price-label">Total</p>
-                <p class="price-value">$ {{ totalPrice }}</p>
-            </div>
-        </div>
+      <span>
+        <svg *ngIf="!displayAllInfo" width="16" height="16">
+          <path d="m6 9 6 6 6-6" stroke="#925653"></path>
+        </svg>
+        <svg *ngIf="displayAllInfo" width="16" height="16">
+          <path d="m18 15-6-6-6 6" stroke="#925653"></path>
+        </svg>
+      </span>
     </div>
+  </div>
+
+  <div class="card-extension" *ngIf="displayAllInfo">
+    <p class="mini-title">Order details</p>
+
+    <div *ngFor="let item of orderDetails.order.items">
+      <app-order-card-product [item]="item"></app-order-card-product>
+    </div>
+
+    <div class="total-prices">
+      <div class="sub-total ttl-price-line">
+        <p class="price-label">Sub-total</p>
+        <p class="price-value">$ {{ subTotalPrice }}</p>
+      </div>
+      <div class="delivery-price ttl-price-line">
+        <p class="price-label">Delivery fee</p>
+        <p class="price-value">$ {{ orderDetails.order.deliveryPrice }}</p>
+      </div>
+      <div class="ttl-price-line big-total">
+        <p class="price-label">Total</p>
+        <p class="price-value">$ {{ totalPrice }}</p>
+      </div>
+    </div>
+  </div>
 </div>

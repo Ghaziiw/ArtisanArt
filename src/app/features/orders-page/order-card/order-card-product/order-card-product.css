@@ -1,11 +1,11 @@
 .container{
-    background-color: #f7eae4;
+    background-color: #b17e653a;
     margin: 0 0 12px;
     padding: 12px;
     border-radius: 5px;
-    width: 100%;
+    width: 98%;
     display: flex;
-    gap: 20px;
+    gap: 15px;
     justify-content: space-between ;
 }
 
@@ -23,7 +23,7 @@
 }
 
 .product-name-info{
-    width: 100%;
+    width: 84%;
     padding-left: 10px;
     align-items: center;
     justify-content: flex-start;
