@@ -3,8 +3,7 @@ import { ItemDisplay } from './item-display/item-display';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../../../core/services/product.service';
 import { HttpClientModule } from '@angular/common/http';
-import { ProductFilters } from '../search-filters-bar/product-filters.interface';
-import { Product } from '../../../../core/models';
+import { Product, ProductFilters } from '../../../../core/models';
 
 @Component({
   selector: 'app-search-results-tab',
