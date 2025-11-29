@@ -8,10 +8,11 @@ import { AuthService } from '../../core/services/auth.service';
 import { OrderService } from '../../core/services/order.service';
 import { GroupedCartResponse, TunisianState, User } from '../../core/models';
 import { Footer } from '../../shared/components/footer/footer';
+import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-cart',
-  imports: [Header, RouterLink, CartProductCard, CommonModule, Footer],
+  imports: [Header, RouterLink, CartProductCard, CommonModule, Footer, FormsModule],
   templateUrl: './cart.html',
   styleUrl: './cart.css',
 })
@@ -21,12 +22,32 @@ export class Cart implements OnInit {
   cartError = '';
   user: User | null = null;
 
+  public tunisianStates: string[] = Object.values(TunisianState);
+  deliveryInfo = {
+    cin: '',
+    location: '',
+    city: '',
+    phone: ''
+  };
+
+
   constructor(
     private cartService: ShoppingCartService,
     private router: Router,
     private authService: AuthService,
     private orderService: OrderService
   ) {}
+
+
+  onSubmit(form: NgForm): void {
+    if (form.invalid) {
+      return;
+    }
+
+    console.log('Form Data:', this.deliveryInfo);
+    // Handle form submission here
+  }
+
 
   ngOnInit(): void {
     this.authService.user$.subscribe(user => {
