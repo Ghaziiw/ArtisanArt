@@ -7,6 +7,7 @@ import { Cart } from './features/cart/cart';
 import { AdminCtrlPage } from './features/admin-ctrl-page/admin-ctrl-page';
 import { MyStore } from './features/artisan-dashboard/my-store';
 import { ProductPage } from './features/product-page/product-page';
+import { OrdersPage } from './features/orders-page/orders-page';
 import { AboutPage } from './features/about-page/about-page';
 import { HowItWorks } from './features/how-it-works/how-it-works';
 import { Faq } from './features/faq/faq';
@@ -45,6 +46,10 @@ export const routes: Routes = [
   {
     path: 'admin-panel',
     component: AdminCtrlPage,
+  },
+  {
+    path: 'orders',
+    component: OrdersPage,
   },
   {
     path: 'product-page/:id',
