@@ -1,3 +1,4 @@
+import { Craftsman } from "./craftsman.model";
 import { Product } from "./product.model";
 
 export interface CreateOrderDto {
@@ -13,6 +14,21 @@ export interface OrderItem {
   quantity: number;
   priceAtOrder: string;
   product: Product;
+}
+
+
+export interface MyOrdersResponse {
+  items: {
+    order: Order;
+    craftsman: Craftsman;
+  }[];
+  meta: {
+    totalItems: number;
+    itemCount: number;
+    itemsPerPage: number;
+    totalPages: number;
+    currentPage: number;
+  };
 }
 
 export interface Order {
