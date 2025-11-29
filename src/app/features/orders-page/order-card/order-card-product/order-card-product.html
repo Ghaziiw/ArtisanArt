@@ -1,14 +1,14 @@
 <div class="container">
     <div class="img-container">
-        <img [src]="'/assets/images/seller1.jpg'" alt="">
+        <img [src]="item.product.images?.[0] ?? '/assets/images/chachya.webp'" alt="">
     </div>
     <div class="product-name-info">
-        <p class="product-name">Modern Home Decor Vase</p>
-        <p class="product-quantity">Quantity: {{quantity}}</p>
+        <p class="product-name">{{ item.product.name }}</p>
+        <p class="product-quantity">Quantity: {{ item.quantity }}</p>
     </div>
 
     <div class="price-div">
-        <p class="total-price">$91.00</p>
-        <p class="unit-price">$45.50/unit</p>
+        <p class="total-price">${{ totalPrice.toFixed(2) }}</p>
+        <p class="unit-price">${{ priceAtOrder.toFixed(2) }}/unit</p>
     </div>
 </div>

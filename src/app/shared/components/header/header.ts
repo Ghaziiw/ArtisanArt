@@ -18,6 +18,8 @@ export class Header implements OnInit {
   isArtisan$: Observable<boolean>;
   // Observable to check if user is an admin
   isAdmin$: Observable<boolean>;
+  // Observable to check if user is a client
+  isClient$: Observable<boolean>;
   
   // Search properties
   searchQuery: string = '';
@@ -33,6 +35,9 @@ export class Header implements OnInit {
     );
     this.isArtisan$ = this.authService.user$.pipe(
       map(user => user ? user.role?.toLowerCase() === 'artisan' : false)
+    );
+    this.isClient$ = this.authService.user$.pipe(
+      map(user => user ? user.role?.toLowerCase() === 'client' : false)
     );
   }
 

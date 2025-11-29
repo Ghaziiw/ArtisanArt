@@ -1,11 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { OrderItem } from '../../../../core/models';
 
 @Component({
   selector: 'app-order-card-product',
-  imports: [],
   templateUrl: './order-card-product.html',
-  styleUrl: './order-card-product.css',
+  styleUrls: ['./order-card-product.css'],
 })
 export class OrderCardProduct {
-  quantity=2;
+  @Input() item!: OrderItem;
+
+  get totalPrice() {
+    return this.item.quantity * parseFloat(this.item.priceAtOrder);
+  }
+
+  get priceAtOrder() {
+    return parseFloat(this.item.priceAtOrder);
+  }
 }
