@@ -11,6 +11,7 @@ import { UserService } from '../../../core/services/user.service';
   styleUrls: ['./personal-info.css'],
 })
 export class PersonalInfo implements OnChanges {
+  allowDeletion=false;
   @Input() user!: User;
   @ViewChild('infoForm') infoForm!: NgForm;
 
