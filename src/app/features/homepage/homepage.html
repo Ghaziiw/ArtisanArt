@@ -1,7 +1,7 @@
 <app-header></app-header>
 
 <div class="horizontal-div" *ngIf="viewType === 'products'">
-  <app-search-filters-bar (filtersChange)="applySearch()"></app-search-filters-bar>
+  <app-search-filters-bar (filtersChange)="onFiltersChange($event)" ></app-search-filters-bar>
   <app-search-results-tab [filters]="currentFilters"></app-search-results-tab>
 </div>
 

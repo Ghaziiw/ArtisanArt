@@ -64,13 +64,15 @@ export class Homepage implements OnInit {
     }
   }
 
-  loadProducts() {
+  onFiltersChange(filters: ProductFilters) {
+    // Combine filters from sidebar with searchQuery from header
+    const productNameFilter = filters.productName || this.searchQuery.trim() || undefined;
+    
     this.currentFilters = {
-      ...this.currentFilters,
-      productName: this.searchQuery.trim() || undefined,
+      ...filters,
+      productName: productNameFilter
     };
   }
-
 
   applySearch() {
     if (this.viewType === 'artisans') {
@@ -82,8 +84,11 @@ export class Homepage implements OnInit {
     } 
 
     if (this.viewType === 'products') {
-      // Merge search query avec les filtres existants et crée un nouvel objet
-      this.currentFilters = { ...this.currentFilters, productName: this.searchQuery.trim() || undefined };
+      // Update only the productName if searching from the header
+      this.currentFilters = { 
+        ...this.currentFilters, 
+        productName: this.searchQuery.trim() || undefined 
+      };
     }
   }
 }

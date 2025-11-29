@@ -19,7 +19,7 @@
           class="text-input"
           placeholder="Search product..."
           [(ngModel)]="productName"
-          (input)="onFilterChange()"
+          (keyup.enter)="onFilterChange()"
         />
       </div>
 
@@ -71,7 +71,7 @@
           class="text-input"
           placeholder="Search craftsman..."
           [(ngModel)]="craftsmanName"
-          (input)="onFilterChange()"
+          (keyup.enter)="onFilterChange()"
         />
       </div>
 
