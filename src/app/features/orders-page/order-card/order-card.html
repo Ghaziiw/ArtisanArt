@@ -1,55 +1,70 @@
-<div class="card" (click)='displayAllInfo=!displayAllInfo' >
-    <div class="card-main" [ngClass]="{'unextended-card': !displayAllInfo, 'extended-card': displayAllInfo}">
+<div class="card" (click)="displayAllInfo = !displayAllInfo">
+    <div class="card-main" [ngClass]="{ 'unextended-card': !displayAllInfo, 'extended-card': displayAllInfo }">
 
         <div class="info-container">
             <div class="top-titles">
-                <h3 class="order-id">Order ORD-2024-101</h3>
-                <span class="order-status already-delivered" *ngIf='finishedOrder'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#12602d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-check-icon lucide-circle-check"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-                    delivered
+                <h3 class="order-id">Order #{{ orderDetails.order.id }}</h3>
+
+                <span class="order-status already-delivered" *ngIf="finishedOrder">
+                    ✔ delivered
                 </span>
-                <span class="order-status still-delivering" *ngIf='!finishedOrder'>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#700fb4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-truck-icon lucide-truck"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>
-                    still delivering
+
+                <!-- <span class="order-status already-delivered" *ngIf="finishedOrder">
+                    ✔ Pending
+                </span>
+
+                <span class="order-status already-delivered" *ngIf="finishedOrder">
+                    ✔ Confirmed
+                </span> -->
+
+                <span class="order-status still-delivering" *ngIf="!finishedOrder">
+                    🚚 still delivering
                 </span>
             </div>
-            
+
             <div class="additional-info">
-                <span class="order-date">📅 22 novembre 2024</span>
-                <span class="items-number">📦 1 article</span>
-                <span class="store-name">🏪 TechGear Audio Solutions</span>
+                <span class="order-date">📅 {{ orderDetails.order.createdAt | date:'longDate' }}</span>
+                <span class="items-number">📦 {{ orderDetails.order.items.length }} items</span>
+                <span class="store-name">🏪 {{ orderDetails.craftsman.businessName }}</span>
             </div>
         </div>
+
         <div class="price">
             <div>
                 <p>Total</p>
-                <p class="price-text">$ 306.9</p>
+                <p class="price-text">$ {{ totalPrice }}</p>
             </div>
-            
+
             <span>
-                <svg *ngIf='!displayAllInfo'xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#925653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
-                <svg *ngIf='displayAllInfo' xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#925653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-up-icon lucide-chevron-up"><path d="m18 15-6-6-6 6"/></svg>
+                <svg *ngIf="!displayAllInfo" width="16" height="16">
+                    <path d="m6 9 6 6 6-6" stroke="#925653"></path>
+                </svg>
+                <svg *ngIf="displayAllInfo" width="16" height="16">
+                    <path d="m18 15-6-6-6 6" stroke="#925653"></path>
+                </svg>
             </span>
-        </div>  
-    </div>   
+        </div>
+    </div>
 
     <div class="card-extension" *ngIf="displayAllInfo">
         <p class="mini-title">Order details</p>
-        <app-order-card-product></app-order-card-product>
-        <app-order-card-product></app-order-card-product>
-        <app-order-card-product></app-order-card-product>
+
+        <div *ngFor="let item of orderDetails.order.items">
+            <app-order-card-product [item]="item"></app-order-card-product>
+        </div>
+
         <div class="total-prices">
             <div class="sub-total ttl-price-line">
                 <p class="price-label">Sub-total</p>
-                <p class="price-value">$250.09</p>
+                <p class="price-value">$ {{ subTotalPrice }}</p>
             </div>
             <div class="delivery-price ttl-price-line">
                 <p class="price-label">Delivery fee</p>
-                <p class="price-value">$5.00</p>
+                <p class="price-value">$ {{ orderDetails.order.deliveryPrice }}</p>
             </div>
             <div class="ttl-price-line big-total">
                 <p class="price-label">Total</p>
-                <p class="price-value">$255.09</p>
+                <p class="price-value">$ {{ totalPrice }}</p>
             </div>
         </div>
     </div>

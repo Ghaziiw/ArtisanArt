@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CreateOrderDto, Order, OrdersResponse, OrderStatusRequest } from '../models';
+import { CreateOrderDto, MyOrdersResponse, Order, OrdersResponse, OrderStatusRequest } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -47,17 +47,8 @@ export class OrderService {
   getMyOrders(
     page: number = 1,
     limit: number = 10
-  ): Observable<{
-    items: Order[];
-    meta: {
-      totalItems: number;
-      itemCount: number;
-      itemsPerPage: number;
-      totalPages: number;
-      currentPage: number;
-    };
-  }> {
-    return this.http.get<any>(`${this.apiUrl}/my-orders?page=${page}&limit=${limit}`, {
+  ): Observable<MyOrdersResponse> {
+    return this.http.get<MyOrdersResponse>(`${this.apiUrl}?page=${page}&limit=${limit}`, {
       withCredentials: true,
     });
   }
