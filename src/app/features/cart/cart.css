@@ -417,16 +417,14 @@
   margin-top: 15px;
 }
 
-
-
 @media (max-width: 1024px) {
-    .container {
-        flex-direction: column;
-    }
-    .summary-card {
-        position: static;
-        width: 100%;
-    }
+  .container {
+    flex-direction: column;
+  }
+  .summary-card {
+    position: static;
+    width: 100%;
+  }
 }
 
 .error-message {
@@ -438,9 +436,6 @@
   color: #d9534f;
   font-size: 13px;
   text-align: center;
-  margin-right: 10px;
-  margin-left: 10px;
-  margin-bottom: 12px;
 }
 
 .user-info-section {

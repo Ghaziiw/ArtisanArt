@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ShoppingCartService } from '../../../core/services/shopping-cart.service';
 import { OrderService } from '../../../core/services/order.service';
-import { CraftsmanGroup, ShoppingCartItem, TunisianState } from '../../../core/models';
+import { CraftsmanGroup, CreateOrderDto, ShoppingCartItem, TunisianState } from '../../../core/models';
 
 @Component({
   selector: 'app-cart-product-card',
@@ -134,6 +134,8 @@ export class CartProductCard {
 
   orderError = "";
 
+  @Input() orderData! : CreateOrderDto;
+
   orderFromCraftsman(craftsmanId: string) {
     const craftsmanGroup = this.craftsmanGroup;
 
@@ -147,14 +149,7 @@ export class CartProductCard {
 
     this.isUpdating = true;
 
-    const orderData = {
-      cin: "12345678",
-      location: "sfax gremda",
-      state: TunisianState.SFAX,
-      phone: "12345678",
-    };
-
-    this.orderService.checkoutSingleCraftsman(craftsmanId, orderData).subscribe({
+    this.orderService.checkoutSingleCraftsman(craftsmanId, this.orderData).subscribe({
       next: () => {
         // Remove this craftsman group completely
         this.craftsmanGroup.items = [];

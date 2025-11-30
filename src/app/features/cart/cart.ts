@@ -6,7 +6,7 @@ import { CartProductCard } from './cart-product-card/cart-product-card';
 import { ShoppingCartService } from '../../core/services/shopping-cart.service';
 import { AuthService } from '../../core/services/auth.service';
 import { OrderService } from '../../core/services/order.service';
-import { GroupedCartResponse, TunisianState, User } from '../../core/models';
+import { GroupedCartResponse, TunisianState, User, CreateOrderDto } from '../../core/models';
 import { Footer } from '../../shared/components/footer/footer';
 import { FormsModule } from '@angular/forms';
 
@@ -22,14 +22,12 @@ export class Cart implements OnInit {
   cartError = '';
   user: User | null = null;
 
-
   constructor(
     private cartService: ShoppingCartService,
     private router: Router,
     private authService: AuthService,
     private orderService: OrderService
   ) {}
-
 
   ngOnInit(): void {
     this.authService.user$.subscribe(user => {
@@ -120,10 +118,12 @@ export class Cart implements OnInit {
     );
   }
 
-  cin: string = "";
-  location: string = "";
-  state: TunisianState | null = null;
-  phone: string = "";
+  orderData : CreateOrderDto = {
+    cin: '',
+    location: '',
+    state: null,
+    phone: '',
+  };
 
   orderError: string = "";
 
@@ -147,7 +147,7 @@ export class Cart implements OnInit {
     this.isLoading = true;
     this.cartError = "";
 
-    if (!this.cin || !this.location || !this.phone || !this.state) {
+    if (!this.orderData.cin || !this.orderData.location || !this.orderData.phone || !this.orderData.state) {
       this.orderError = "All shipping information fields are required.";
       this.isLoading = false;
       setTimeout(() => {
@@ -156,14 +156,7 @@ export class Cart implements OnInit {
       return;
     }
 
-    const orderData = {
-      cin: this.cin,
-      location: this.location,
-      state: this.state,
-      phone: this.phone,
-    };
-
-    this.orderService.checkoutAllCraftsmen(orderData).subscribe({
+    this.orderService.checkoutAllCraftsmen(this.orderData).subscribe({
       next: (response) => {
         this.isLoading = false;
 
