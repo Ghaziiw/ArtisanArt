@@ -22,14 +22,6 @@ export class Cart implements OnInit {
   cartError = '';
   user: User | null = null;
 
-  public tunisianStates: string[] = Object.values(TunisianState);
-  deliveryInfo = {
-    cin: '',
-    location: '',
-    city: '',
-    phone: ''
-  };
-
 
   constructor(
     private cartService: ShoppingCartService,
@@ -37,16 +29,6 @@ export class Cart implements OnInit {
     private authService: AuthService,
     private orderService: OrderService
   ) {}
-
-
-  onSubmit(form: NgForm): void {
-    if (form.invalid) {
-      return;
-    }
-
-    console.log('Form Data:', this.deliveryInfo);
-    // Handle form submission here
-  }
 
 
   ngOnInit(): void {
