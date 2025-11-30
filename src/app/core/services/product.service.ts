@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ProductFilters } from '../../features/homepage/components/search-filters-bar/product-filters.interface';
-import { CreateProductDto, Product, ProductsResponse, UpdateProductDto } from '../models';
+import { CreateProductDto, Product, ProductFilters, ProductsResponse, UpdateProductDto } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {

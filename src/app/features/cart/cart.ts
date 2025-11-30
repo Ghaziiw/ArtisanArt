@@ -8,11 +8,11 @@ import { AuthService } from '../../core/services/auth.service';
 import { OrderService } from '../../core/services/order.service';
 import { GroupedCartResponse, TunisianState, User } from '../../core/models';
 import { Footer } from '../../shared/components/footer/footer';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-cart',
-  imports: [Header, RouterLink, CartProductCard, CommonModule, Footer, FormsModule],
+  imports: [Header, RouterLink, CartProductCard, CommonModule, Footer, CommonModule, FormsModule],
   templateUrl: './cart.html',
   styleUrl: './cart.css',
 })
@@ -120,13 +120,18 @@ export class Cart implements OnInit {
     );
   }
 
-  cin = "12345678";
-  location = "sfax gremda";
-  state = TunisianState.SFAX;
-  phone = "12345678";
+  cin: string = "";
+  location: string = "";
+  state: TunisianState | null = null;
+  phone: string = "";
 
   orderError: string = "";
 
+  statesArray = Object.values(TunisianState);
+
+  /**
+   * Place order for all items in the cart
+   */
   orderAll() {
     if (!this.cartData || this.cartData.craftsmanGroups.length === 0) {
       this.orderError = "Your cart is empty!";
@@ -141,6 +146,15 @@ export class Cart implements OnInit {
 
     this.isLoading = true;
     this.cartError = "";
+
+    if (!this.cin || !this.location || !this.phone || !this.state) {
+      this.orderError = "All shipping information fields are required.";
+      this.isLoading = false;
+      setTimeout(() => {
+        this.orderError = "";
+      }, 5000);
+      return;
+    }
 
     const orderData = {
       cin: this.cin,

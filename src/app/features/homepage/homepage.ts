@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Header } from '../../shared/components/header/header';
 import { SearchFiltersBar } from './components/search-filters-bar/search-filters-bar';
 import { SearchResultsTab } from './components/search-results-tab/search-results-tab';
-import { ProductFilters } from './components/search-filters-bar/product-filters.interface';
 import { Footer } from "../../shared/components/footer/footer";
 import { ArtisanCard } from "./components/artisan-card/artisan-card";
 import { CraftsmanService } from '../../core/services/craftsman.service';
-import { Craftsman } from '../../core/models';
+import { Craftsman, ProductFilters } from '../../core/models';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FilterService } from '../../core/services/filter.service';
@@ -64,13 +63,15 @@ export class Homepage implements OnInit {
     }
   }
 
-  loadProducts() {
+  onFiltersChange(filters: ProductFilters) {
+    // Combine filters from sidebar with searchQuery from header
+    const productNameFilter = filters.productName || this.searchQuery.trim() || undefined;
+    
     this.currentFilters = {
-      ...this.currentFilters,
-      productName: this.searchQuery.trim() || undefined,
+      ...filters,
+      productName: productNameFilter
     };
   }
-
 
   applySearch() {
     if (this.viewType === 'artisans') {
@@ -82,8 +83,11 @@ export class Homepage implements OnInit {
     } 
 
     if (this.viewType === 'products') {
-      // Merge search query avec les filtres existants et crée un nouvel objet
-      this.currentFilters = { ...this.currentFilters, productName: this.searchQuery.trim() || undefined };
+      // Update only the productName if searching from the header
+      this.currentFilters = { 
+        ...this.currentFilters, 
+        productName: this.searchQuery.trim() || undefined 
+      };
     }
   }
 }
