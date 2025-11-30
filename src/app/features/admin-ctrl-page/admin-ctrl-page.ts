@@ -22,7 +22,7 @@ interface CombinedUser extends User {
   styleUrl: './admin-ctrl-page.css',
 })
 export class AdminCtrlPage implements OnInit {
-  currentTab: 'all' | 'clients' | 'artisans' | 'admin' = 'all';
+  currentTab: 'all' | 'clients' | 'artisans' | 'admin' | 'category' = 'all';
   users: CombinedUser[] = [];
   filteredUsers: CombinedUser[] = [];
   currentUserId: string | null = null;
@@ -31,7 +31,10 @@ export class AdminCtrlPage implements OnInit {
   totalArtisans = 0;
   totalClients = 0;
   totalAdmins = 0;
+  totalCategories = 0;
   needRenewal = 0;
+
+  addCategory=false;
 
   constructor(
     private http: HttpClient,
@@ -128,7 +131,7 @@ export class AdminCtrlPage implements OnInit {
     }
   }
 
-  changeTab(tab: 'all' | 'clients' | 'artisans' | 'admin') {
+  changeTab(tab: 'all' | 'clients' | 'artisans' | 'admin' | 'category') {
     this.currentTab = tab;
     this.filterUsers();
   }

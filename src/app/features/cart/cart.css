@@ -417,14 +417,16 @@
   margin-top: 15px;
 }
 
+
+
 @media (max-width: 1024px) {
-  .container {
-    flex-direction: column;
-  }
-  .summary-card {
-    position: static;
-    width: 100%;
-  }
+    .container {
+        flex-direction: column;
+    }
+    .summary-card {
+        position: static;
+        width: 100%;
+    }
 }
 
 .error-message {
