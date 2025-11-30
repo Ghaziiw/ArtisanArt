@@ -623,8 +623,9 @@
 .category-list-container{
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-wrap: wrap;
+  gap: 20px;
 }
 
 .card {
@@ -647,14 +648,15 @@
   font-size: 16px;
 }
 
-.category-card>div>svg{
+.category-card button{
   border-radius: var(--general-border-radius);
   padding: 10px;
   background-color: var(--login-btn-background);  
   margin-right: 10px;
+  cursor: pointer;
 }
 
-.category-card>svg{
+.category-card button{
   stroke: var(--price-red);
   padding: 10px;
   border-radius: var(--general-border-radius);
@@ -662,7 +664,7 @@
 }
 
 
-.category-card>svg:hover{
+.category-card button:hover{
   background-color: #ffcccc;
   transition: 0.2s;
 }
@@ -689,4 +691,61 @@
 
 .add-category>div>button{
   width: 100%;
+}
+
+.btn-add-category, #cancel-btn{
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 20px;
+}
+
+#cancel-btn{
+  background-color: var(--login-btn-background);
+  color: var(--login-btn-text);
+  border: 1px solid var(--login-btn-border);
+  border-radius: var(--general-border-radius);
+  transition: background-color 0.2s;
+}
+
+#cancel-btn:hover {
+  background-color: var(--login-btn-background-on-hover);
+  transition: background-color 0.2s;
+}
+
+.add-category input{
+  border: 1px solid var(--login-btn-border);
+  border-radius: var(--general-border-radius);
+  font-size: 15px;
+  color: var(--login-btn-text);
+  background-color: var(--input-background);
+  transition: all 150ms;
+  width: 99%;
+}
+
+.add-category input:focus{
+  outline: 1px solid rgba(102, 55, 16, 0.644);
+  border-color: var(--login-btn-text);
+  box-shadow: 0 0 0 3px var(--login-btn-border);
+  transition: all 150ms;
+  border: 1px solid var(--login-btn-border);
+  border-radius: var(--general-border-radius);
+}
+
+.no-categories {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+  background: white;
+  border-radius: 8px;
+  border: 2px dashed var(--login-btn-border);
+  width: 100%;
+}
+
+.category-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
