@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { Header } from "../../shared/components/header/header";
+import { Header } from '../../shared/components/header/header';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../core/services/auth.service';
 import { CraftsmanService } from '../../core/services/craftsman.service';
 import { RouterLink } from '@angular/router';
-import { Craftsman, CreateAdminDto, User } from '../../core/models';
+import { Category, Craftsman, CreateAdminDto, User } from '../../core/models';
 import { UserService } from '../../core/services/user.service';
 import { FormsModule } from '@angular/forms';
 import { set } from 'better-auth';
-import { Footer } from "../../shared/components/footer/footer";
+import { Footer } from '../../shared/components/footer/footer';
+import { CategoryService } from '../../core/services/category.service';
 
 interface CombinedUser extends User {
   craftsmanInfo?: Craftsman;
@@ -26,7 +27,7 @@ export class AdminCtrlPage implements OnInit {
   users: CombinedUser[] = [];
   filteredUsers: CombinedUser[] = [];
   currentUserId: string | null = null;
-  
+
   totalUsers = 0;
   totalArtisans = 0;
   totalClients = 0;
@@ -34,23 +35,107 @@ export class AdminCtrlPage implements OnInit {
   totalCategories = 0;
   needRenewal = 0;
 
-  addCategory=false;
+  addCategory = false;
+  categories: Category[] = [];
+  isLoadingCategories = false;
+  categoryError = '';
+  isSubmittingCategory = false;
+  newCategoryName = '';
 
   constructor(
     private http: HttpClient,
     private authService: AuthService,
     private craftsmanService: CraftsmanService,
-    private userService: UserService
+    private userService: UserService,
+    private categoryService: CategoryService
   ) {}
 
   ngOnInit() {
-    this.authService.user$.subscribe(user => {
+    this.authService.user$.subscribe((user) => {
       if (user) {
         this.currentUserId = user.id;
       }
     });
 
     this.loadUsers();
+    this.loadCategories();
+  }
+
+  // ============ CATEGORY MANAGEMENT ============
+
+  loadCategories() {
+    this.isLoadingCategories = true;
+    this.categoryError = '';
+
+    this.categoryService.getCategories(1, 100).subscribe({
+      next: (response) => {
+        this.categories = response.items;
+        this.totalCategories = response.meta.totalItems;
+        this.isLoadingCategories = false;
+      },
+      error: (error) => {
+        console.error('Error loading categories:', error);
+        this.categoryError = 'Failed to load categories';
+        this.isLoadingCategories = false;
+      },
+    });
+  }
+
+  handleAddCategory() {
+    if (!this.newCategoryName.trim()) {
+      this.categoryError = 'Please enter a category name';
+      setTimeout(() => (this.categoryError = ''), 3000);
+      return;
+    }
+
+    this.isSubmittingCategory = true;
+    this.categoryError = '';
+
+    // Use the CategoryService to create category
+    this.categoryService.createCategory(this.newCategoryName.trim()).subscribe({
+      next: (response) => {
+        console.log('Category created successfully:', response);
+        this.newCategoryName = '';
+        this.addCategory = false;
+        this.isSubmittingCategory = false;
+        this.loadCategories(); // Reload the list
+      },
+      error: (error) => {
+        console.error('Error creating category:', error);
+        this.categoryError = error.error?.message || 'Error creating category. Please try again.';
+        this.isSubmittingCategory = false;
+        setTimeout(() => (this.categoryError = ''), 5000);
+      },
+    });
+  }
+
+  handleDeleteCategory(categoryId: string, categoryName: string) {
+    if (
+      !confirm(
+        `Are you sure you want to delete the category "${categoryName}"?\n\nThis action cannot be undone.`
+      )
+    ) {
+      return;
+    }
+
+    // Use the CategoryService to delete category
+    this.categoryService.deleteCategory(categoryId).subscribe({
+      next: () => {
+        console.log('Category deleted successfully');
+        this.loadCategories(); // Reload the list
+      },
+      error: (error) => {
+        console.error('Error deleting category:', error);
+        this.categoryError = error.error?.message || 'Error deleting category. Please try again.';
+        setTimeout(() => (this.categoryError = ''), 5000);
+      },
+    });
+  }
+
+  cancelAddCategory() {
+    this.addCategory = false;
+    this.newCategoryName = '';
+    this.categoryError = '';
   }
 
   loadCurrentUser() {
@@ -67,7 +152,9 @@ export class AdminCtrlPage implements OnInit {
       this.userService.getAllUsers(undefined, 1, 100).subscribe({
         next: async (usersResponse) => {
           // Load all craftsmen
-          const craftsmenResponse: any = await this.http.get('http://localhost:3000/craftsmen?page=1&limit=100').toPromise();
+          const craftsmenResponse: any = await this.http
+            .get('http://localhost:3000/craftsmen?page=1&limit=100')
+            .toPromise();
 
           // Create a map of craftsmen by userId
           const craftsmenMap = new Map<string, Craftsman>();
@@ -85,14 +172,14 @@ export class AdminCtrlPage implements OnInit {
           });
 
           // Exclude the current admin user from the list
-          this.users = this.users.filter(user => user.id !== this.currentUserId);
+          this.users = this.users.filter((user) => user.id !== this.currentUserId);
 
           this.calculateStats();
           this.filterUsers();
         },
         error: (error) => {
           console.error('Erreur lors du chargement des utilisateurs:', error);
-        }
+        },
       });
     } catch (error) {
       console.error('Erreur lors du chargement des utilisateurs:', error);
@@ -101,12 +188,14 @@ export class AdminCtrlPage implements OnInit {
 
   calculateStats() {
     this.totalUsers = this.users.length;
-    this.totalArtisans = this.users.filter(u => u.role === 'artisan').length;
-    this.totalClients = this.users.filter(u => u.role === 'client').length;
-    this.totalAdmins = this.users.filter(u => u.role === 'admin' && u.id !== this.currentUserId).length;
+    this.totalArtisans = this.users.filter((u) => u.role === 'artisan').length;
+    this.totalClients = this.users.filter((u) => u.role === 'client').length;
+    this.totalAdmins = this.users.filter(
+      (u) => u.role === 'admin' && u.id !== this.currentUserId
+    ).length;
 
     const now = new Date();
-    this.needRenewal = this.users.filter(u => {
+    this.needRenewal = this.users.filter((u) => {
       if (u.role === 'artisan' && u.craftsmanInfo?.expirationDate) {
         const expirationDate = new Date(u.craftsmanInfo.expirationDate);
         return expirationDate < now;
@@ -118,13 +207,13 @@ export class AdminCtrlPage implements OnInit {
   filterUsers() {
     switch (this.currentTab) {
       case 'artisans':
-        this.filteredUsers = this.users.filter(u => u.role === 'artisan');
+        this.filteredUsers = this.users.filter((u) => u.role === 'artisan');
         break;
       case 'clients':
-        this.filteredUsers = this.users.filter(u => u.role === 'client');
+        this.filteredUsers = this.users.filter((u) => u.role === 'client');
         break;
       case 'admin':
-        this.filteredUsers = this.users.filter(u => u.role === 'admin');
+        this.filteredUsers = this.users.filter((u) => u.role === 'admin');
         break;
       default:
         this.filteredUsers = [...this.users];
@@ -149,10 +238,10 @@ export class AdminCtrlPage implements OnInit {
   formatDate(dateString: string | null): string {
     if (!dateString) return '-';
     const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = { 
-      day: '2-digit', 
-      month: 'short', 
-      year: 'numeric' 
+    const options: Intl.DateTimeFormatOptions = {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
     };
     return date.toLocaleDateString('fr-FR', options);
   }
@@ -167,11 +256,10 @@ export class AdminCtrlPage implements OnInit {
         this.calculateStats();
       },
       error: (err: any) => {
-        console.error("Error suspending user:", err);
-      }
+        console.error('Error suspending user:', err);
+      },
     });
   }
-
 
   onDeleteUser(user: CombinedUser) {
     if (!confirm(`Delete user "${user.name}" ?`)) return;
@@ -179,7 +267,7 @@ export class AdminCtrlPage implements OnInit {
     this.userService.deleteUser(user.id).subscribe({
       next: () => {
         // Remove from local list
-        this.users = this.users.filter(u => u.id !== user.id);
+        this.users = this.users.filter((u) => u.id !== user.id);
 
         // Recompute stats
         this.calculateStats();
@@ -188,35 +276,37 @@ export class AdminCtrlPage implements OnInit {
         this.filterUsers();
       },
       error: (err) => {
-        console.error("Failed to delete user:", err);
-      }
+        console.error('Failed to delete user:', err);
+      },
     });
   }
 
   // MMethod for search
   onSearch(event: Event) {
     const searchTerm = (event.target as HTMLInputElement).value.toLowerCase();
-    
+
     if (!searchTerm) {
       // If the search is empty, display all users filtered by tab
       this.filterUsers();
       return;
     }
-    
+
     // Filter locally on name, email, businessName and specialty
-    this.filteredUsers = this.users.filter(user => {
-      const matchesTab = 
+    this.filteredUsers = this.users.filter((user) => {
+      const matchesTab =
         this.currentTab === 'all' ||
         (this.currentTab === 'artisans' && user.role === 'artisan') ||
         (this.currentTab === 'clients' && user.role === 'client');
-      
+
       if (!matchesTab) return false;
-      
+
       const nameMatch = user.name.toLowerCase().includes(searchTerm);
       const emailMatch = user.email.toLowerCase().includes(searchTerm);
-      const businessNameMatch = user.craftsmanInfo?.businessName?.toLowerCase().includes(searchTerm);
+      const businessNameMatch = user.craftsmanInfo?.businessName
+        ?.toLowerCase()
+        .includes(searchTerm);
       const specialtyMatch = user.craftsmanInfo?.specialty?.toLowerCase().includes(searchTerm);
-      
+
       return nameMatch || emailMatch || businessNameMatch || specialtyMatch;
     });
   }
@@ -235,7 +325,7 @@ export class AdminCtrlPage implements OnInit {
           this.calculateStats();
         }
       },
-      error: (err) => console.error(err)
+      error: (err) => console.error(err),
     });
   }
 
@@ -248,7 +338,7 @@ export class AdminCtrlPage implements OnInit {
     name: '',
     email: '',
     password: '',
-    location: ''
+    location: '',
   };
 
   toggleAddAdminForm() {
@@ -263,7 +353,7 @@ export class AdminCtrlPage implements OnInit {
       name: '',
       email: '',
       password: '',
-      location: ''
+      location: '',
     };
     this.adminFormError = '';
     this.isSubmitting = false;
@@ -271,7 +361,7 @@ export class AdminCtrlPage implements OnInit {
 
   handleSubmitAdmin(event: Event) {
     event.preventDefault();
-    
+
     // Validation
     if (!this.adminForm.name || !this.adminForm.email || !this.adminForm.password) {
       this.adminFormError = 'Please fill in all required fields';
@@ -306,7 +396,7 @@ export class AdminCtrlPage implements OnInit {
       name: this.adminForm.name,
       email: this.adminForm.email,
       password: this.adminForm.password,
-      location: this.adminForm.location || undefined
+      location: this.adminForm.location || undefined,
     };
 
     this.userService.addAdminUser(adminData).subscribe({
@@ -317,13 +407,14 @@ export class AdminCtrlPage implements OnInit {
         alert('Admin user created successfully!');
       },
       error: (error) => {
-        this.adminFormError = error.error?.message || 'Error creating admin user. Please try again.';
+        this.adminFormError =
+          error.error?.message || 'Error creating admin user. Please try again.';
         this.isSubmitting = false;
 
         setTimeout(() => {
           this.adminFormError = '';
         }, 5000);
-      }
+      },
     });
   }
 }

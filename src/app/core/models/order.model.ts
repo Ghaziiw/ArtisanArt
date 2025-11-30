@@ -4,7 +4,7 @@ import { Product } from "./product.model";
 export interface CreateOrderDto {
   cin: string;
   location: string;
-  state: TunisianState;
+  state: TunisianState | null;
   phone: string;
 }
 
