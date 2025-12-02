@@ -4,4 +4,5 @@ export * from './order.model';
 export * from './user.model';
 export * from './craftsman.model';
 export * from './product.model';
-export * from './shopping-cart.model'
+export * from './shopping-cart.model';
+export * from './comment.model';

@@ -1,3 +1,5 @@
+import { ProductComment } from "./comment.model";
+
 export interface Product {
   id: string;
   name: string;
@@ -17,6 +19,7 @@ export interface Product {
   offer: { percentage: number } | null;
   avgRating: number;
   totalComments: number;
+  comments: ProductComment[] | null;
 }
 
 export interface ProductsResponse {
