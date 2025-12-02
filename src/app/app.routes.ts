@@ -6,13 +6,13 @@ import { ArtisanProfile } from './features/artisan-profile/artisan-profile';
 import { Cart } from './features/cart/cart';
 import { AdminCtrlPage } from './features/admin-ctrl-page/admin-ctrl-page';
 import { MyStore } from './features/artisan-dashboard/my-store';
-import { ProductPage } from './features/product-page/product-page';
 import { OrdersPage } from './features/orders-page/orders-page';
 import { AboutPage } from './features/about-page/about-page';
 import { HowItWorks } from './features/how-it-works/how-it-works';
 import { Faq } from './features/faq/faq';
 import { TermsOfUse } from './features/terms-of-use/terms-of-use';
 import { PrivacyPolicy } from './features/privacy-policy/privacy-policy';
+import { Productpage } from './features/productpage/components/productpage/productpage';
 
 export const routes: Routes = [
   {
@@ -53,7 +53,7 @@ export const routes: Routes = [
   },
   {
     path: 'product-page/:id',
-    component: ProductPage,
+    component: Productpage,
   },
   {
     path: 'orders-page',
