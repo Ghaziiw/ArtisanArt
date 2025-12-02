@@ -7,11 +7,12 @@
 .main-image-container {
   position: relative;
   width: 100%;
+  height: calc(width);
 }
 
 .main-image {
   width: 100%;
-  height:80vh;
+  height:100%;
   border-radius: 12px;
   object-fit: cover;
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
@@ -30,17 +31,20 @@
 }
 
 .offer {
-  background: var(--destructive);
+  background: var(--price-red);
   color: #fff;
-  padding: 6px 10px;
-  border-radius: 8px;
-  font-size: 30px;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
   font-weight: 600;
+  font-family: 'Outfit';
+  font-size: 18px;
 }
 
 .other-images {
   display: flex;
   gap: 10px;
+  width: 100%;
+  height: calc(width);
 }
 
 .others {
