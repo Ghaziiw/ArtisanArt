@@ -38,6 +38,14 @@ export class ProductService {
     return this.http.get<ProductsResponse>(`${this.apiUrl}`, { params });
   }
 
+    /**
+   * Get a product by ID (Public)
+   * @param productId - ID of the product to fetch
+   */
+  getProductById(productId: string): Observable<Product> {
+    return this.http.get<Product>(`${this.apiUrl}/${productId}`);
+  }
+
   /**
    * Deletes a product by ID (Artisan/Admin)
    * @param productId - ID of the product to delete
