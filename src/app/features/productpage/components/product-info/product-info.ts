@@ -1,18 +1,16 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Quantity } from '../quantity/quantity';
-import { ShoppingCartBtn } from '../shopping-cart-btn/shopping-cart-btn';
-import { SpecificProduct } from '../../../../core/services/specific-product.service';
+import { Product } from '../../../../core/models';
 import { Offer } from '../../../../core/services/offer.service';
 
 @Component({
   selector: 'app-product-info',
-  imports: [CommonModule, Quantity, ShoppingCartBtn],
+  imports: [CommonModule],
   templateUrl: './product-info.html',
   styleUrl: './product-info.css',
 })
 export class ProductInfo {
- @Input() product!: SpecificProduct;
+ @Input() product!: Product;
  @Input() offer!: Offer;
  @Output() quantitySelected = new EventEmitter<number>();
  @Output() addProductToCart = new EventEmitter<void>();
@@ -25,16 +23,14 @@ export class ProductInfo {
   quantity : number = 1;
 
   ngOnChanges(changes: SimpleChanges): void {
-    //console.log("received product:", this.product);
-    //console.log("received offer:", this.offer);
     if (this.product) {
-      this.computePrices();
-      this.computeRating();
+      this.computePrices(); //to calculate discount, and the price with the discount dynamically
+      this.computeRating(); //to have an adequate format for the rating
     }
   }
 
   private computePrices() {
-    this.beforeOffer = parseFloat(this.product.price);
+    this.beforeOffer = this.product.price;
     if (this.offer && this.offer.percentage) {
       const discount = (this.beforeOffer * this.offer.percentage) / 100;
       this.withOffer = this.beforeOffer - discount;
@@ -46,7 +42,7 @@ export class ProductInfo {
   }
 
   private computeRating() {
-    if (this.product.comments.length > 0) {
+    if (this.product.comments) {
       const total = this.product.comments.reduce((sum, c) => sum + c.mark, 0);
       this.rating = total / this.product.comments.length;
       this.rating = Number(this.rating.toFixed(2));
@@ -59,17 +55,28 @@ export class ProductInfo {
     }
   }
 
+  //for stars 
    getStarsArray(rating: number): number[] {
     const rounded = Math.round(rating);
     return Array(rounded).fill(0);
   }
 
-  onQuantityChanged(newquantity: number) {
-    this.quantity = newquantity;
-    this.quantitySelected.emit(this.quantity);
+  //increment and decrement quantity
+  increment() {
+  this.quantity++;
+  this.quantitySelected.emit(this.quantity);
   }
 
-  notifyAddToCart() {
+
+  decrement() {
+    if (this.quantity > 1) {
+    this.quantity--;
+    this.quantitySelected.emit(this.quantity);
+    }
+  }
+
+  onClick() {
+    console.log("clicked");
     this.addProductToCart.emit();
   }
 }

@@ -3,14 +3,134 @@
   flex-direction: column;
   gap: 25px;
   margin-top: 7px;
-  background: var(--card);
+  background: var(--header-backgrounnd);
   border: 2px solid var(--border);
   border-radius: 12px;
   padding:12px;
   font-family: 'Outfit, sans-serif';
 }
 
-h3{
-  color: var(--description-color);
-  font-family: 'Outfit, sans-serif';
+/*review form*/
+.review-form-container {
+  padding: 20px;
+  border-radius: 12px;
+  background-color: var(--secondary);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border: 2px solid var(--border);
 }
+
+.review-form-container h3 {
+  margin-bottom: 15px;
+  font-family: 'Outfit, sans-serif';
+
+}
+
+
+.comment {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+.publish-btn {
+  width: 200px;
+  margin-top: 15px;
+  padding: 7px;
+  font-size: 16px;
+  border: none;
+  background: var(--sign-up-btn);
+  color: white;
+  border-radius:var(--general-border-radius);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.publish-btn:hover {
+  background: var(--sign-up-btn-on-hover);
+}
+
+h3, p{
+  font-family: 'Outfit';    
+  color: var(--login-btn-text);
+
+}
+
+textarea {
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;  
+  font-family: 'Outfit';
+  background: var(--input-background);
+  border: 1px solid var(--border);
+}
+
+.stars svg {
+  fill: none; /* par défaut, vide */
+  cursor: pointer;
+  transition: fill 0.2s;
+}
+
+.stars svg.filled {
+  fill: var(--primary); 
+}
+
+.stars svg.empty {
+  fill: none; 
+}
+/*product reviews*/
+.review {
+  display: flex;              
+  gap: 15px;
+  padding: 15px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  position: relative;  
+  background: var(--card);
+  margin-bottom: 10px;       
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.review-header {
+  display: flex;
+  flex-direction: column;   
+  flex: 1;
+  position: relative;          
+}
+
+.client-name {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--secondary-foreground);
+}
+
+.date {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 13px;
+  color: var(--muted-foreground);
+}
+
+.rating {
+  margin-top: 5px;
+}
+
+.svg-star {
+  width: 20px;
+  height: 20px;
+}
+
+.content{
+  color: var(--secondary-foreground);
+}
+
