@@ -1,59 +1,189 @@
-# ArtisanArt
+<p align="center">
+    <picture>
+        <img src="./docs/images/logo.svg" width=450px>
+    </picture>
+</p>
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.5.
+<p align="center">
+    <img src="https://img.shields.io/badge/Made_with-Angular-red.svg">
+    <img src="https://img.shields.io/badge/API-REST-blue.svg">
+    <img src="https://img.shields.io/badge/License-MIT-green.svg">
+    <img src="https://img.shields.io/badge/Groupe-IGL3-yellow.svg">
+</p>
 
-## Development server
+## Screenshot
 
-To start a local development server, run:
+<p>
+    <img src="https://github.com/MohamedAffes0/ArtisanArt-frontend
+/blob/Mohamed/docs/images/screenshot1.png">
+</p>
+
+<p>
+    <img src="https://github.com/MohamedAffes0/ArtisanArt-frontend
+/blob/Mohamed/docs/images/screenshot2.png">
+</p>
+
+<p>
+    <img src="https://github.com/MohamedAffes0/ArtisanArt-frontend
+/blob/Mohamed/docs/images/screenshot3.png">
+</p>
+
+<p>
+    <img src="https://github.com/MohamedAffes0/ArtisanArt-frontend
+/blob/Mohamed/docs/images/screenshot4.png">
+</p>
+
+## Vue d'ensemble
+
+**ArtisanArt** est une plateforme e-commerce moderne dédiée à la mise en valeur des artisans locaux et de leurs produits artisanaux. Elle permet aux artisans de créer leurs boutiques en ligne et aux clients de découvrir et acheter des produits uniques faits main.
+
+### Objectifs principaux
+- Connecter les artisans locaux avec des acheteurs
+- Faciliter la vente de produits artisanaux
+- Offrir une expérience utilisateur moderne et intuitive
+- Gérer efficacement les commandes et les boutiques
+
+## Technologies utilisées
+
+### Frontend
+- **Framework**: Angular 19.1.5
+- **Langage**: TypeScript 5.7.2
+- **Styling**: CSS personnalisé avec variables CSS
+- **Rendu**: Server-Side Rendering (SSR) avec Angular Universal
+
+### Backend & Services
+- **API Backend**: Node.js/Express (http://localhost:3000)
+- **Authentification**: Better Auth 1.0.14
+- **HTTP Client**: Angular HttpClient
+- **State Management**: RxJS avec BehaviorSubjects
+
+### Build & Outils
+- **Build Tool**: Angular CLI avec esbuild
+- **Package Manager**: npm
+- **Node Version**: >=18.19.1
+
+## Documentation
+
+La documentation complète est organisée en plusieurs sections :
+
+1. [Installation et Configuration](./docs/01-INSTALLATION.md)
+2. [Architecture du Projet](./docs/02-ARCHITECTURE.md)
+3. [Services et API](./docs/03-SERVICES.md)
+4. [Modèles de Données](./docs/04-MODELS.md)
+5. [Authentification](./docs/05-AUTHENTICATION.md)
+6. [Routing et Navigation](./docs/06-ROUTING.md)
+7. [Styles et Thème](./docs/07-STYLES.md)
+8. [Guide de Développement](./docs/08-DEVELOPMENT.md)
+9. [Déploiement](./docs/09-DEPLOYMENT.md)
+
+## Démarrage rapide
 
 ```bash
-ng serve
+# Cloner le projet
+git clone [url-du-repo]
+cd artisanart
+
+# Installer les dépendances
+npm install
+
+# Configurer l'URL du backend
+# Modifier src/lib/auth-client.ts si nécessaire
+
+# Lancer l'application en développement
+npm start
+
+# Accéder à l'application
+# http://localhost:4200
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Structure du projet
 
-## Code scaffolding
+```
+src/
+├── app/
+│   ├── core/              # Services et modèles essentiels
+│   ├── features/          # Modules fonctionnels
+│   ├── shared/            # Composants partagés
+│   └── app.routes.ts      # Configuration routing
+├── assets/                # Ressources statiques
+├── lib/                   # Bibliothèques externes
+└── styles.css             # Styles globaux
+```
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Pour plus de détails, voir [Architecture du Projet](./docs/02-ARCHITECTURE.md).
+
+## Types d'utilisateurs
+
+### Client
+- Parcourir et acheter des produits
+- Gérer son panier et ses commandes
+- Laisser des avis sur les produits
+
+### Artisan
+- Créer et gérer sa boutique
+- Ajouter/modifier/supprimer des produits
+- Gérer les commandes reçues
+- Voir les statistiques de vente
+
+### Administrateur
+- Gérer tous les utilisateurs
+- Gérer les catégories
+- Renouveler les abonnements artisans
+- Accéder aux statistiques globales
+
+## Fonctionnalités principales
+
+### Pour les Clients
+- Recherche avancée avec filtres
+- Système de panier groupé par artisan
+- Suivi des commandes
+- Système d'avis et notes
+- Gestion du profil
+
+### Pour les Artisans
+- Dashboard avec statistiques
+- Gestion complète des produits
+- Upload d'images multiples
+- Gestion des commandes
+- Profil public personnalisable
+
+### Pour les Administrateurs
+- Panel d'administration complet
+- Gestion des utilisateurs
+- Gestion des catégories
+- Statistiques globales
+
+## Scripts disponibles
 
 ```bash
-ng generate component component-name
+# Développement
+npm start              # Lance le serveur de dev
+npm run watch          # Mode watch
+
+# Build
+npm run build          # Build pour production
+npm run build:ssr      # Build avec SSR
+
+# Tests
+npm test               # Lance les tests unitaires
+npm run test:watch     # Tests en mode watch
+
+# Production
+npm run serve:ssr:ArtisanArt  # Lance le serveur SSR
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Contribution
 
-```bash
-ng generate --help
-```
+Les contributions sont les bienvenues ! Veuillez consulter le [Guide de Développement](./docs/08-DEVELOPMENT.md) pour les instructions détaillées.
 
-## Building
+### Processus de contribution
+1. Fork le projet
+2. Créer une branche feature (`git checkout -b feature/AmazingFeature`)
+3. Commit les changements (`git commit -m 'Add AmazingFeature'`)
+4. Push vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrir une Pull Request
 
-To build the project run:
 
-```bash
-ng build
-```
+## Licence
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Ce projet est sous licence MIT
