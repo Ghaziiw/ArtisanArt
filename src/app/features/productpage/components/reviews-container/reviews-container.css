@@ -1,10 +1,10 @@
 .reviews-container {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 8px;
   margin-top: 7px;
   background: var(--header-backgrounnd);
-  border: 2px solid var(--border);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding:12px;
   font-family: 'Outfit, sans-serif';
@@ -14,15 +14,14 @@
 .review-form-container {
   padding: 20px;
   border-radius: 12px;
-  background-color: var(--secondary);
+  background-color: var(--background);
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  border: 2px solid var(--border);
+  border: 1px solid var(--border);
 }
 
 .review-form-container h3 {
   margin-bottom: 15px;
   font-family: 'Outfit, sans-serif';
-
 }
 
 
@@ -64,7 +63,13 @@ textarea {
   box-sizing: border-box;  
   font-family: 'Outfit';
   background: var(--input-background);
-  border: 1px solid var(--border);
+  transition: border 0.3s ease;
+}
+
+textarea:focus {
+  outline: none;
+  border: 1px solid var(--accent);
+  transition: border 0.3s ease;
 }
 
 .stars svg {
@@ -85,11 +90,10 @@ textarea {
   display: flex;              
   gap: 15px;
   padding: 15px;
-  border: 2px solid var(--border);
+  border: 1px solid var(--border);
   border-radius: 12px;
   position: relative;  
-  background: var(--card);
-  margin-bottom: 10px;       
+  background: var(--card);    
 }
 
 .avatar {
@@ -132,5 +136,9 @@ textarea {
 
 .content{
   color: var(--secondary-foreground);
+}
+
+.content p{
+  margin: 10px 0 0 0;
 }
 

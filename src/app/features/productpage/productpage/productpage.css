@@ -1,8 +1,6 @@
 .product-page {
   min-height: 100vh;
-  max-width: 1200px;
-  margin: 0 auto;     
-  padding: 0 20px; 
+  width: 100%;   
 }
 
 /* Pour éviter que l'image prenne toute la largeur */
@@ -15,7 +13,6 @@ app-product-info {
 }
 
 .product-page-bottom {
-  margin-top: 40px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -82,4 +79,8 @@ h1, h2, h3, h4 {
   border: 1px solid var(--login-btn-border);
   background-color: var(--login-btn-background);
   cursor: pointer;
+}
+
+.return-btn:hover{
+  background-color: var(--login-btn-background-on-hover);
 }

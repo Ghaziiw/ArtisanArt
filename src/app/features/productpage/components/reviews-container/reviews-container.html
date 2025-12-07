@@ -1,9 +1,9 @@
 <div class="reviews-container">
     <!--review form-->
     <div class="review-form-container">
-        <h3 class="review-intro"> Laisser un avis </h3>
+        <h3 class="review-intro"> Leave a Review </h3>
         <form (ngSubmit)="submit()">
-            <p>Votre Note</p>
+            <p>Your Rating</p>
 
             <div class="stars">
                 <span *ngFor="let s of stars"  (click)="setRating(s)">
@@ -12,13 +12,13 @@
             </div>
 
             <div>
-                <textarea placeholder="partagez votre expérience avec ce produit" 
+                <textarea placeholder="Write your review here..." 
                 [(ngModel)]="content" name="content" class="comment"></textarea>
             </div>
 
             <div>
                 <button type="submit" class="publish-btn">
-                    <span>Publier l'avis</span> 
+                    <span>Publish Review</span> 
                 </button>
             </div>
         
