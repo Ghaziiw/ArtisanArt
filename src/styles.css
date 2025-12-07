@@ -1,134 +1,209 @@
 @font-face {
-    font-family: 'Source Sans Pro';
-    src: url(/assets/fonts/SourceSansPro/SourceSansPro-Light.ttf);
-    font-weight: 100;
+  font-family: 'Source Sans Pro';
+  src: url(/assets/fonts/SourceSansPro/SourceSansPro-Light.ttf);
+  font-weight: 100;
 }
 @font-face {
-    font-family: 'Source Sans Pro';
-    src: url(/assets/fonts/SouceSansPro/SourceSansPro-Regular.ttf);
-    font-weight: 300;
+  font-family: 'Source Sans Pro';
+  src: url(/assets/fonts/SouceSansPro/SourceSansPro-Regular.ttf);
+  font-weight: 300;
 }
 @font-face {
-    font-family: 'Source Sans Pro';
-    src: url(/assets/fonts/SouceSansPro/SourceSansPro-Black.ttf);
-    font-weight: 500;
+  font-family: 'Source Sans Pro';
+  src: url(/assets/fonts/SouceSansPro/SourceSansPro-Black.ttf);
+  font-weight: 500;
 }
 @font-face {
-    font-family: 'Source Sans Pro';
-    src: url(/assets/fonts/SouceSansPro/SourceSansPro-Bold.ttf);
-    font-weight: 700;
-}
-
-@font-face {
-    font-family: 'Alt Burberry';
-    src: url("/assets/fonts/Alternative Burberry.ttf");
+  font-family: 'Source Sans Pro';
+  src: url(/assets/fonts/SouceSansPro/SourceSansPro-Bold.ttf);
+  font-weight: 700;
 }
 
 @font-face {
-    font-family: 'inter';
-    src: url("/assets/fonts/Inter_24pt-Regular.ttf");
-    font-weight: 400;
+  font-family: 'Alt Burberry';
+  src: url('/assets/fonts/Alternative Burberry.ttf');
 }
 
 @font-face {
-    font-family: 'Parisienne';
-    src: url("/assets/fonts/Parisienne-Regular.ttf");
-    font-weight: 400;
+  font-family: 'inter';
+  src: url('/assets/fonts/Inter_24pt-Regular.ttf');
+  font-weight: 400;
 }
 
 @font-face {
-    font-family: 'Outfit';
-    src: url("/assets/fonts/Outfit-VariableFont_wght.ttf");
+  font-family: 'Parisienne';
+  src: url('/assets/fonts/Parisienne-Regular.ttf');
+  font-weight: 400;
 }
 
-:root{
-    --color-palette1: #9a2b1b;
-    --color-palette2: #a54335;
-    --color-palette3: #b15b4e;
-    --color-palette4: #bc7667;
-    --color-palette5:#C78A81;
-    --color-palette6:#d2a19a;
-    --color-palette7:#ddb9b3;
-    --color-palette8:#e9d0cc;
-    --color-palette9:#f4e8e6;
-    --header-backgrounnd: #fff8f5;
-    --body-background:#f5e6e1;
-    --border-color: #d4afa7;
-    --login-btn-text:#5a4237;
-    --login-btn-background:#f5e6df;
-    --login-btn-border: #d3ada4;
-    --login-btn-background-on-hover: #d9ada0;
-    --sign-up-btn: #a74f4e;
-    --sign-up-btn-on-hover: #ad5d5c;
-    --filters-border-color: #d7afa0;
-    --search-bar-gray: #888;
-    --general-border-radius: 10px;
-    --selected-option-background:#f6e7e4;
-    --description-color:rgb(131, 73, 73);
-
-    --background: #F5E6E0;
-    --border:#D9AEA1;
-    --card:#FFF8F5;
-    --accent:#D9AEA1;
-    --primary:#A64D4D;
-    --destructive:#d4183d;
-    --secondary:#EDD4CC;
-    --secondary-foreground: #5C3A3A;
-    --foreground: #5C3A3A;
-    --muted-foreground: #8D6B6B;
-    --input-background: #FFF8F5;
-    --secondary-text-color: #8D6B6B;
-    --price-red: #c91239;
+@font-face {
+  font-family: 'Outfit';
+  src: url('/assets/fonts/Outfit-VariableFont_wght.ttf');
 }
 
-body{
-    background-color: var(--body-background);
-    margin: 0;
-    padding: 0;
+:root {
+  --color-palette1: #9a2b1b;
+  --color-palette2: #a54335;
+  --color-palette3: #b15b4e;
+  --color-palette4: #bc7667;
+  --color-palette5: #c78a81;
+  --color-palette6: #d2a19a;
+  --color-palette7: #ddb9b3;
+  --color-palette8: #e9d0cc;
+  --color-palette9: #f4e8e6;
+  --header-backgrounnd: #fff8f5;
+  --body-background: #f5e6e1;
+  --border-color: #d4afa7;
+  --login-btn-text: #5a4237;
+  --login-btn-background: #f5e6df;
+  --login-btn-border: #d3ada4;
+  --login-btn-background-on-hover: #d9ada0;
+  --sign-up-btn: #a74f4e;
+  --sign-up-btn-on-hover: #ad5d5c;
+  --filters-border-color: #d7afa0;
+  --search-bar-gray: #888;
+  --general-border-radius: 10px;
+  --selected-option-background: #f6e7e4;
+  --description-color: rgb(131, 73, 73);
+
+  --background: #f5e6e0;
+  --border: #d9aea1;
+  --card: #fff8f5;
+  --accent: #d9aea1;
+  --primary: #a64d4d;
+  --destructive: #d4183d;
+  --secondary: #edd4cc;
+  --secondary-foreground: #5c3a3a;
+  --foreground: #5c3a3a;
+  --muted-foreground: #8d6b6b;
+  --input-background: #fff8f5;
+  --secondary-text-color: #8d6b6b;
+  --price-red: #c91239;
 }
 
-.header-button{
-    background-color: var(--login-btn-background);
-    color: var(--login-btn-text);
-    min-width: 90px;
-    height: 37px;
-    border-radius: 8px;
-    border: solid 1px var(--login-btn-border);
-    margin-left: 20px;
-    transition: 300ms;
-    font-family: 'inter';
-    font-weight: 700;
+body {
+  background-color: var(--body-background);
+  margin: 0;
+  padding: 0;
 }
 
-.header-button:hover{
-    background-color: var(--login-btn-background-on-hover);
-    transition: 300ms;
+.header-button {
+  background-color: var(--login-btn-background);
+  color: var(--login-btn-text);
+  min-width: 90px;
+  height: 37px;
+  border-radius: 8px;
+  border: solid 1px var(--login-btn-border);
+  margin-left: 20px;
+  transition: 300ms;
+  font-family: 'inter';
+  font-weight: 700;
 }
 
-
-.horizontal-div{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin: 20px 60px;
-    gap: 20px;
+.header-button:hover {
+  background-color: var(--login-btn-background-on-hover);
+  transition: 300ms;
 }
 
-
-.vertical-div{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 20px 60px;
-    gap: 20px;
+.horizontal-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 20px 60px;
+  gap: 20px;
 }
 
-.full-width-container{
-    width: 100vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.vertical-div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 60px;
+  gap: 20px;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.full-width-container {
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
+/* Spinner Animation */
+.global-message {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 16px 32px;
+  border-radius: 0 0 12px 12px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  z-index: 10000;
+  min-width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  animation: slideDown 0.5s ease-out;
+}
+
+/* Hiding Animation */
+.global-message.hiding {
+  animation: slideUp 0.5s ease-in forwards;
+}
+
+/* Success Message Styling */
+.success-message {
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  border-top: none;
+  color: #155724;
+}
+
+/* Error Message Styling */
+.error-message {
+  background-color: #ffe6e6;
+  border: 1px solid #ffcccc;
+  border-top: none;
+  color: #d9534f;
+}
+
+/* Slide Down Animation (Apparition) */
+@keyframes slideDown {
+  from {
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+/* Slide Up Animation (Disparition) */
+@keyframes slideUp {
+  from {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .global-message {
+    min-width: 90%;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+}

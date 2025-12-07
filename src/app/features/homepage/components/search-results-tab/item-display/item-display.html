@@ -1,10 +1,10 @@
 <div class="product-card">
-  <div class="product-image">
+  <div class="product-image" (click)="navigateToProduct($event)">
     <img [src]="product.images && product.images.length && product.images[0] ? product.images[0] : '/assets/images/chachya.webp'" alt="product-image">
     <p class="discount" [hidden]="!product.offer">-{{ product.offer ? product.offer.percentage : '' }}%</p>
   </div>
 
-  <div class="content">
+  <div class="content" (click)="navigateToProduct($event)">
     <div>
       <h2 class="title">{{ product.name }}</h2>
       <p class="description">{{ product.description }}</p>
