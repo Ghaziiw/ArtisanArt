@@ -36,6 +36,11 @@ export class ItemDisplay {
     this.router.navigate(['/artisan-profile', this.product.craftsman.userId]);
   }
 
+  navigateToProduct(event: Event): void {
+    event.stopPropagation();
+    this.router.navigate(['/product-page', this.product.id]);
+  }
+
   /**
    * Add product to cart
    */

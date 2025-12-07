@@ -19,12 +19,14 @@ export class ProductInfo {
   withOffer: number = 0;
   economy: number = 0;
   starsArray: number[] = [];
-  quantity : number = 1;
+  quantity: number = 1;
+  selectedImageIndex: number = 0; // Index de l'image sélectionnée
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.product) {
-      this.computePrices(); //to calculate discount, and the price with the discount dynamically
-      this.computeRating(); //to calculate average rating and stars array
+      this.computePrices();
+      this.computeRating();
+      this.selectedImageIndex = 0; // Réinitialiser à la première image
     }
   }
 
@@ -40,33 +42,59 @@ export class ProductInfo {
     }
   }
 
-  // compute average rating and stars array
   private computeRating() {
     this.starsArray = Math.round(this.product.avgRating) ? this.getStarsArray(this.product.avgRating) : [];
   }
 
-  //for stars 
   getStarsArray(rating: number): number[] {
     const rounded = Math.round(rating);
     return Array(rounded).fill(0);
   }
 
-  //increment and decrement quantity
   increment() {
-  this.quantity++;
-  this.quantitySelected.emit(this.quantity);
+    this.quantity++;
+    this.quantitySelected.emit(this.quantity);
   }
-
 
   decrement() {
     if (this.quantity > 1) {
-    this.quantity--;
-    this.quantitySelected.emit(this.quantity);
+      this.quantity--;
+      this.quantitySelected.emit(this.quantity);
     }
   }
 
   onClick() {
-    console.log("clicked");
     this.addProductToCart.emit();
+  }
+
+  // Méthode pour obtenir l'image actuellement sélectionnée
+  get currentImage(): string {
+    if (this.product?.images && this.product.images.length > 0) {
+      return this.product.images[this.selectedImageIndex];
+    }
+    return 'assets/images/chachya.webp';
+  }
+
+  // Méthode pour changer l'image sélectionnée
+  selectImage(index: number): void {
+    this.selectedImageIndex = index;
+  }
+
+  // Méthode pour obtenir toutes les images sauf celle sélectionnée
+  get otherImages(): string[] {
+    if (!this.product?.images || this.product.images.length <= 1) {
+      return [];
+    }
+    return this.product.images.filter((_, index) => index !== this.selectedImageIndex);
+  }
+
+  // Méthode pour obtenir l'index réel d'une image dans le tableau complet
+  getImageIndex(image: string): number {
+    return this.product.images?.indexOf(image) ?? 0;
+  }
+
+  // Méthode pour vérifier si une miniature est sélectionnée
+  isImageSelected(image: string): boolean {
+    return this.getImageIndex(image) === this.selectedImageIndex;
   }
 }
