@@ -12,7 +12,7 @@ import { HowItWorks } from './features/how-it-works/how-it-works';
 import { Faq } from './features/faq/faq';
 import { TermsOfUse } from './features/terms-of-use/terms-of-use';
 import { PrivacyPolicy } from './features/privacy-policy/privacy-policy';
-import { Productpage } from './features/productpage/components/productpage/productpage';
+import { Productpage } from './features/productpage/productpage/productpage';
 
 export const routes: Routes = [
   {

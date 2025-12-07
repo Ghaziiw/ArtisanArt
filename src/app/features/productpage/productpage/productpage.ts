@@ -1,25 +1,27 @@
 import { Component } from '@angular/core';
-import { ProductInfo } from '../product-info/product-info';
-import { ProductPhotos } from '../product-photos/product-photos';
-import { ReviewsContainer } from '../reviews-container/reviews-container';
-import { CraftsmanInfo } from '../craftsman-info/craftsman-info';
-import { SpecificProductService, SpecificProduct } from '../../../../core/services/specific-product.service';
+import { ProductInfo } from '../components/product-info/product-info';
+import { ReviewsContainer } from '../components/reviews-container/reviews-container';
+import { CraftsmanInfo } from '../components/craftsman-info/craftsman-info';
+import { Product } from '../../../core/models';
+import { ProductService } from '../../../core/services/product.service';
 import { CommonModule } from '@angular/common';
-import { Offer, OfferService } from '../../../../core/services/offer.service';
-import { CraftsmanService } from '../../../../core/services/craftsman.service';
-import { CommentService } from '../../../../core/services/comment.service';
-import { AuthService } from '../../../../core/services/auth.service';
-import { ShoppingCartService } from '../../../../core/services/shopping-cart.service';
+import { Offer, OfferService } from '../../../core/services/offer.service';
+import { CraftsmanService } from '../../../core/services/craftsman.service';
+import { CommentService } from '../../../core/services/comment.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { ShoppingCartService } from '../../../core/services/shopping-cart.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Craftsman } from '../../../../core/models';
+import { Craftsman } from '../../../core/models';
+import { Header } from '../../../shared/components/header/header';
+import { Footer } from '../../../shared/components/footer/footer';
 @Component({
   selector: 'app-productpage',
-  imports: [ProductInfo, ProductPhotos, ReviewsContainer, CraftsmanInfo, CommonModule],
+  imports: [ProductInfo, ReviewsContainer, CraftsmanInfo, CommonModule, Header, Footer],
   templateUrl: './productpage.html',
   styleUrl: './productpage.css',
 })
 export class Productpage {
-  product !: SpecificProduct;
+  product : Product | null = null;
   offer !: Offer;
   craftsman !: Craftsman;
   quantity: number = 1;
@@ -32,7 +34,7 @@ export class Productpage {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private specificProductService: SpecificProductService,
+    private specificProductService: ProductService,
     private offerService : OfferService,
     private craftsmanService: CraftsmanService,
     private commentService: CommentService,
@@ -63,9 +65,9 @@ export class Productpage {
       .subscribe((data) => {
         this.offer = data;
       });
-
+      if (!this.product) return;
       this.craftsmanService
-      .getCraftsmanById(this.product.craftsmanId) 
+      .getCraftsmanById(this.product.craftsman.userId) 
       .subscribe((data) => {
         this.craftsman = data;
       });
@@ -80,10 +82,12 @@ export class Productpage {
         mark: event.mark
         }).subscribe({
           next: () => {
+            if (!this.product) return;
             this.showStyledAlert('Commentaire publié avec succès !', 'success');
             this.specificProductService
             .getProductById(this.product.id)
             .subscribe((updatedProduct) => {
+            if (!this.product) return;
             this.product.comments = updatedProduct.comments;
             });
           },
