@@ -63,7 +63,7 @@
 La documentation complète est organisée en plusieurs sections :
 
 1. [Installation et Configuration](./docs/01-INSTALLATION.md)
-2. [Architecture du Projet](./docs/02-ARCHITECTURE.md)
+2. [Architecture du Projet](./docs/ARCHITECTURE.md)
 3. [Services et API](./docs/SERVICES.md)
 4. [Modèles de Données](./docs/04-MODELS.md)
 5. [Authentification](./docs/05-AUTHENTICATION.md)
