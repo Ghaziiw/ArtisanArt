@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CreateProductDto, Product, ProductFilters, ProductsResponse, UpdateProductDto } from '../models';
+import { BASE_URL } from '../../../lib/auth-client';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-  private apiUrl = 'http://localhost:3000/products';
+  private apiUrl = `${BASE_URL}/products`;
 
   constructor(private http: HttpClient) {}
 

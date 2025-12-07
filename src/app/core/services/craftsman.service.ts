@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Craftsman, CraftsmenResponse } from '../models';
+import { BASE_URL } from '../../../lib/auth-client';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CraftsmanService {
-  private apiUrl = 'http://localhost:3000/craftsmen';
+  private apiUrl = `${BASE_URL}/craftsmen`;
 
   constructor(private http: HttpClient) {}
 
