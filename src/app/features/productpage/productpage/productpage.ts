@@ -7,13 +7,13 @@ import { ProductService } from '../../../core/services/product.service';
 import { CommonModule } from '@angular/common';
 import { Offer, OfferService } from '../../../core/services/offer.service';
 import { CraftsmanService } from '../../../core/services/craftsman.service';
-import { CommentService } from '../../../core/services/comment.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { ShoppingCartService } from '../../../core/services/shopping-cart.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Craftsman } from '../../../core/models';
 import { Header } from '../../../shared/components/header/header';
 import { Footer } from '../../../shared/components/footer/footer';
+
 @Component({
   selector: 'app-productpage',
   imports: [ProductInfo, ReviewsContainer, CraftsmanInfo, CommonModule, Header, Footer],
@@ -21,118 +21,100 @@ import { Footer } from '../../../shared/components/footer/footer';
   styleUrl: './productpage.css',
 })
 export class Productpage {
-  product : Product | null = null;
-  offer !: Offer;
-  craftsman !: Craftsman;
+  product: Product | null = null;
+  offer!: Offer;
+  craftsman!: Craftsman;
   quantity: number = 1;
-  alertMessage: string='';
+  alertMessage: string = '';
   alertType: 'success' | 'error' = 'success';
   showAlert: boolean = false;
   productId: string = '';
-
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private specificProductService: ProductService,
-    private offerService : OfferService,
+    private offerService: OfferService,
     private craftsmanService: CraftsmanService,
-    private commentService: CommentService,
     private authService: AuthService,
     private shoppingCartService: ShoppingCartService
-  ){}
+  ) {}
 
-
-  ngOnInit() : void {
-    // Get product ID from route parameters
+  ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       this.productId = params.get('id') || '';
       if (this.productId) {
         this.loadProductData();
       }
-    });}
+    });
+  }
 
-
-    loadProductData(){
-      this.specificProductService
+  loadProductData() {
+    this.specificProductService
       .getProductById(this.productId) 
       .subscribe((data) => {
         this.product = data;
+        
+        // Charger les informations de l'artisan
+        if (this.product) {
+          this.craftsmanService
+            .getCraftsmanById(this.product.craftsman.userId) 
+            .subscribe((data) => {
+              this.craftsman = data;
+            });
+        }
       });
 
-      this.offerService
+    this.offerService
       .getOffer(this.productId) 
       .subscribe((data) => {
         this.offer = data;
       });
-      if (!this.product) return;
-      this.craftsmanService
-      .getCraftsmanById(this.product.craftsman.userId) 
-      .subscribe((data) => {
-        this.craftsman = data;
-      });
+  }
 
-    }
-
-  saveReview(event: {mark: number, content: string}) {
-        console.log("Données reçues du child :", event);
-        this.commentService.addComment({
-        productId: this.productId,
-        content: event.content,
-        mark: event.mark
-        }).subscribe({
-          next: () => {
-            if (!this.product) return;
-            this.showStyledAlert('Commentaire publié avec succès !', 'success');
-            this.specificProductService
-            .getProductById(this.product.id)
-            .subscribe((updatedProduct) => {
-            if (!this.product) return;
-            this.product.comments = updatedProduct.comments;
-            });
-          },
-          error: () => {
-            this.showStyledAlert('Erreur lors de l’envoi du commentaire.', 'error');
-          }
+  // Méthode appelée quand un nouveau commentaire est ajouté
+  onCommentAdded() {
+    // Recharger uniquement le produit pour avoir les commentaires à jour
+    this.specificProductService
+      .getProductById(this.productId)
+      .subscribe((updatedProduct) => {
+        if (this.product) {
+          this.product.comments = updatedProduct.comments;
+          this.product.avgRating = updatedProduct.avgRating;
+          this.product.totalComments = updatedProduct.totalComments;
         }
-      )
-    }
+      });
+  }
 
-    showStyledAlert(message: string, type: 'success' | 'error') {
-      this.alertMessage = message;
-      this.alertType = type;
-      this.showAlert = true;
+  showStyledAlert(message: string, type: 'success' | 'error') {
+    this.alertMessage = message;
+    this.alertType = type;
+    this.showAlert = true;
 
-      // Masquer l’alert après 3 secondes
-      setTimeout(() => {
-        this.showAlert = false;
-       }, 3000);
+    setTimeout(() => {
+      this.showAlert = false;
+    }, 3000);
+  }
+
+  onQuantitySelected(qty: number) {
+    this.quantity = qty;
+  }
+
+  addToCart() {
+    this.shoppingCartService.addToCart({
+      productId: this.productId,
+      quantity: this.quantity
+    }).subscribe({
+      next: (response) => { 
+        this.showStyledAlert('Product added to cart successfully!', 'success');
+      },
+      error: (err) => {
+        this.showStyledAlert('Error adding product to cart.', 'error');
       }
-
-      onQuantitySelected(qty: number) {
-        this.quantity = qty;
-      }
-
-addToCart() {
-  console.log("clicked!");
-
-  this.shoppingCartService.addToCart({
-    productId: this.productId,
-    quantity: this.quantity
-  }).subscribe({
-    next: (response) => { 
-      this.showStyledAlert('Produit ajouté au panier avec succès !', 'success');
-    },
-    error: (err) => {
-      this.showStyledAlert('Erreur lors de l’ajout au panier.', 'error');
-    }
-  });
-
-}
+    });
+  }
 
   goBack() {
     this.router.navigate(['/']);
   }
-
-
 }

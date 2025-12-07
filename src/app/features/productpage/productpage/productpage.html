@@ -1,43 +1,45 @@
 <!--section for alert messages when needed to notify users-->
 <div *ngIf="showAlert" [ngClass]="alertType" class="alert">
-      {{ alertMessage }}
+  {{ alertMessage }}
 </div>
+
 <app-header></app-header>
-  <div *ngIf="product">
-    <!--Return Button-->
-    <div class="main-body">
-      <button class="return-btn" (click)="goBack()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#935653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-        Return
-      </button>
 
-      <div class="product-page">
+<div *ngIf="product">
+  <!--Return Button-->
+  <div class="main-body">
+    <button class="return-btn" (click)="goBack()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#935653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m15 18-6-6 6-6"/>
+      </svg>
+      Return
+    </button>
 
-        <!--Product Infos Section-->
-        <app-product-info 
+    <div class="product-page">
+      <!--Product Infos Section-->
+      <app-product-info 
         [product]="product"
         [offer]="offer"
         (quantitySelected)="onQuantitySelected($event)"
         (addProductToCart)="addToCart()">
-        </app-product-info>
+      </app-product-info>
 
+      <!--Craftsman Infos Section-->
+      <div class="craftsman">
+        <app-craftsman-info [craftsman]="craftsman">
+        </app-craftsman-info>
+      </div>
 
-        <!--Craftsman Infos Section-->
-        <div class="craftsman">
-          <app-craftsman-info
-          [craftsman]="craftsman">
-          </app-craftsman-info>
-        </div>
-  
-        <div class="product-page-bottom">
-          <app-reviews-container
+      <div class="product-page-bottom">
+        <app-reviews-container
           *ngIf="product"
           [comments]="product.comments ?? []"
-          (feedback)="saveReview($event)">
-          </app-reviews-container>
-        </div>
-
+          [productId]="productId"
+          (commentAdded)="onCommentAdded()">
+        </app-reviews-container>
       </div>
     </div>
   </div>
+</div>
+
 <app-footer></app-footer>
