@@ -271,7 +271,7 @@ h3{
   margin-top: 15px;
 }
 
-/* Animation pour l'image principale */
+/* Animation for main image */
 @keyframes fadeIn {
   from {
     opacity: 0.7;

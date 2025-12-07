@@ -21,7 +21,7 @@ export class ProductInfo {
   economy: number = 0;
   starsArray: number[] = [];
   quantity: number = 1;
-  selectedImageIndex: number = 0; // Index de l'image sélectionnée
+  selectedImageIndex: number = 0; // Index of the currently selected image
 
   // Message properties
   showMessage: boolean = false;
@@ -34,7 +34,7 @@ export class ProductInfo {
     if (this.product) {
       this.computePrices();
       this.computeRating();
-      this.selectedImageIndex = 0; // Réinitialiser à la première image
+      this.selectedImageIndex = 0; // Reset to the first image
     }
   }
 
@@ -85,8 +85,8 @@ export class ProductInfo {
           this.isHiding = true;
           setTimeout(() => {
             this.showMessage = false;
-          }, 500); // Durée de l'animation de disparition
-        }, 5000); // Durée d'affichage du message
+          }, 500);
+        }, 5000);
       },
       error: (error) => {
         this.message = { type: 'error', text: error.error?.message || 'Failed to add to cart' };
@@ -97,13 +97,13 @@ export class ProductInfo {
           this.isHiding = true;
           setTimeout(() => {
             this.showMessage = false;
-          }, 500); // Durée de l'animation de disparition
-        }, 5000); // Durée d'affichage du message
+          }, 500);
+        }, 5000);
       },
     });
   }
 
-  // Méthode pour obtenir l'image actuellement sélectionnée
+  // MMethod to get the currently selected image
   get currentImage(): string {
     if (this.product?.images && this.product.images.length > 0) {
       return this.product.images[this.selectedImageIndex];
@@ -111,12 +111,12 @@ export class ProductInfo {
     return 'assets/images/chachya.webp';
   }
 
-  // Méthode pour changer l'image sélectionnée
+  // MMethod to change the selected image
   selectImage(index: number): void {
     this.selectedImageIndex = index;
   }
 
-  // Méthode pour obtenir toutes les images sauf celle sélectionnée
+  // MMethod to get all images except the selected one
   get otherImages(): string[] {
     if (!this.product?.images || this.product.images.length <= 1) {
       return [];
@@ -124,12 +124,12 @@ export class ProductInfo {
     return this.product.images.filter((_, index) => index !== this.selectedImageIndex);
   }
 
-  // Méthode pour obtenir l'index réel d'une image dans le tableau complet
+  // MMethod to get the actual index of an image in the full array
   getImageIndex(image: string): number {
     return this.product.images?.indexOf(image) ?? 0;
   }
 
-  // Méthode pour vérifier si une miniature est sélectionnée
+  // MMethod to check if a thumbnail is selected
   isImageSelected(image: string): boolean {
     return this.getImageIndex(image) === this.selectedImageIndex;
   }

@@ -73,7 +73,7 @@ textarea:focus {
 }
 
 .stars svg {
-  fill: none; /* par défaut, vide */
+  fill: none;
   cursor: pointer;
   transition: fill 0.8s;
 }

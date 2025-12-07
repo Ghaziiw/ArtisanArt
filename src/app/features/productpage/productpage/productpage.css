@@ -3,7 +3,6 @@
   width: 100%;   
 }
 
-/* Pour éviter que l'image prenne toute la largeur */
 app-product-photos {
   flex: 1.1;
 }

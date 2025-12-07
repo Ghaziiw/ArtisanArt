@@ -55,7 +55,7 @@ export class Productpage {
       .subscribe((data) => {
         this.product = data;
         
-        // Charger les informations de l'artisan
+        // Load craftsman information
         if (this.product) {
           this.craftsmanService
             .getCraftsmanById(this.product.craftsman.userId) 
@@ -72,9 +72,9 @@ export class Productpage {
       });
   }
 
-  // Méthode appelée quand un nouveau commentaire est ajouté
+  // After a comment is added
   onCommentAdded() {
-    // Recharger uniquement le produit pour avoir les commentaires à jour
+    // Reload only the product to get updated comments
     this.specificProductService
       .getProductById(this.productId)
       .subscribe((updatedProduct) => {

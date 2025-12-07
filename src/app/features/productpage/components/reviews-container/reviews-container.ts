@@ -14,14 +14,14 @@ import { CommentService } from '../../../../core/services/comment.service';
 export class ReviewsContainer {
   @Input() comments: ProductComment[] = [];
   @Input() productId!: string;
-  @Output() commentAdded = new EventEmitter<void>(); // Changement: émettre juste un signal de rafraîchissement
+  @Output() commentAdded = new EventEmitter<void>(); // Change: emit just a refresh signal
 
   constructor(private commentService: CommentService) {}
 
   stars = [1, 2, 3, 4, 5];
   mark: number = 0;
   content: string = '';
-  isSubmitting: boolean = false; // Pour éviter les doubles soumissions
+  isSubmitting: boolean = false;
 
   // Message properties
   showMessage: boolean = false;
@@ -32,12 +32,12 @@ export class ReviewsContainer {
     this.mark = star;
   }
 
-  // Validation du formulaire
+  // Form validation
   isFormValid(): boolean {
     return this.mark > 0 && this.content.trim().length > 0;
   }
 
-  // Afficher un message
+  // Display a message
   private displayMessage(type: 'success' | 'error', text: string) {
     this.showMessage = true;
     this.message = { type, text };
@@ -51,16 +51,11 @@ export class ReviewsContainer {
     }, 5000);
   }
 
-  // Après avoir cliqué sur "publier l'avis"
+  // After clicking "publish review"
   submit() {
     // Validation
     if (!this.isFormValid()) {
-      this.displayMessage('error', 'Please provide a rating and a comment.');
-      return;
-    }
-
-    // Empêcher les doubles soumissions
-    if (this.isSubmitting) {
+      this.displayMessage('error', 'Please provide a rating and comment content.');
       return;
     }
 
@@ -74,10 +69,10 @@ export class ReviewsContainer {
       next: (response) => {
         this.displayMessage('success', 'Comment submitted successfully!');
         
-        // Émettre un signal pour que le parent recharge les commentaires
+        // Emit a signal for the parent to reload comments
         this.commentAdded.emit();
         
-        // Réinitialiser le formulaire
+        // Reset form
         this.mark = 0;
         this.content = '';
         this.isSubmitting = false;
@@ -89,13 +84,13 @@ export class ReviewsContainer {
     });
   }
 
-  // Afficher les étoiles dynamiquement
+  // Display stars dynamically
   getStarsArray(rating: number): number[] {
     const rounded = Math.round(rating);
     return Array(rounded).fill(0);
   }
 
-  // Format de date correct
+  // Format date correctly
   dateOnly(date: string): string {
     return date.substring(0, 10);
   }
