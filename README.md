@@ -14,23 +14,19 @@
 ## Screenshot
 
 <p>
-    <img src="https://github.com/MohamedAffes0/ArtisanArt-frontend
-/blob/Mohamed/docs/images/screenshot1.png">
+    <img src="https://github.com/MohamedAffes0/ArtisanArt-frontend/blob/Mohamed/docs/images/screenshot1.png">
 </p>
 
 <p>
-    <img src="https://github.com/MohamedAffes0/ArtisanArt-frontend
-/blob/Mohamed/docs/images/screenshot2.png">
+    <img src="https://github.com/MohamedAffes0/ArtisanArt-frontend/blob/Mohamed/docs/images/screenshot2.png">
 </p>
 
 <p>
-    <img src="https://github.com/MohamedAffes0/ArtisanArt-frontend
-/blob/Mohamed/docs/images/screenshot3.png">
+    <img src="https://github.com/MohamedAffes0/ArtisanArt-frontend/blob/Mohamed/docs/images/screenshot3.png">
 </p>
 
 <p>
-    <img src="https://github.com/MohamedAffes0/ArtisanArt-frontend
-/blob/Mohamed/docs/images/screenshot4.png">
+    <img src="https://github.com/MohamedAffes0/ArtisanArt-frontend/blob/Mohamed/docs/images/screenshot4.png">
 </p>
 
 ## Vue d'ensemble
