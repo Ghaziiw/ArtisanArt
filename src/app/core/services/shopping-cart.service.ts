@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AddToCartDto, GroupedCartResponse, ShoppingCartItem, ShoppingCartResponse } from '../models';
+import { BASE_URL } from '../../../lib/auth-client';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ShoppingCartService {
-  private apiUrl = 'http://localhost:3000/shoppingcarts';
+  private apiUrl = `${BASE_URL}/shoppingcarts`;
 
   constructor(private http: HttpClient) {}
 

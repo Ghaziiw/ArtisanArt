@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, catchError, of } from 'rxjs';
-import { authClient } from '../../../lib/auth-client';
+import { BASE_URL, authClient } from '../../../lib/auth-client';
 import { ClientSignUpDto, ClientSignUpResponse, CraftsmanSignUpDto, CraftsmanSignUpResponse, Session, SessionResponse, User } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = `${BASE_URL}`;
 
   // Observable for user and session state
   private userSubject = new BehaviorSubject<User | null>(null);

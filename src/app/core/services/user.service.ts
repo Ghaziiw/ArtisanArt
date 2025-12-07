@@ -3,12 +3,13 @@ import { Injectable } from '@angular/core';
 import { ChangePasswordDto, CreateAdminDto, ProfileUpdateResponse, UpdateProfileDto, UserFilterDto, UserResponse } from '../models';
 import { Observable, tap } from 'rxjs';
 import { AuthService } from './auth.service';
+import { BASE_URL } from '../../../lib/auth-client';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'http://localhost:3000/users';
+  private apiUrl = `${BASE_URL}/users`;
 
   constructor(
     private http: HttpClient,

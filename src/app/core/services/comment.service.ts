@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ProductComment } from '../models';
+import { BASE_URL } from '../../../lib/auth-client';
 
 export interface createCommentDto{
   productId: string;
@@ -22,7 +23,7 @@ export interface CommentsResponse {
 
 @Injectable({providedIn: 'root'})
 export class CommentService{
-  private apiUrl = 'http://localhost:3000/comments';
+  private apiUrl = `${BASE_URL}/comments`;
 
   constructor(private http: HttpClient) {}
 
