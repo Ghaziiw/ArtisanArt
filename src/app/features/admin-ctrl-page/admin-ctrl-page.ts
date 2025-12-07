@@ -4,13 +4,12 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../core/services/auth.service';
 import { CraftsmanService } from '../../core/services/craftsman.service';
-import { RouterLink } from '@angular/router';
 import { Category, Craftsman, CreateAdminDto, User } from '../../core/models';
 import { UserService } from '../../core/services/user.service';
 import { FormsModule } from '@angular/forms';
-import { set } from 'better-auth';
 import { Footer } from '../../shared/components/footer/footer';
 import { CategoryService } from '../../core/services/category.service';
+import { Location } from '@angular/common';
 
 interface CombinedUser extends User {
   craftsmanInfo?: Craftsman;
@@ -18,7 +17,7 @@ interface CombinedUser extends User {
 
 @Component({
   selector: 'app-admin-ctrl-page',
-  imports: [Header, CommonModule, RouterLink, FormsModule, Footer],
+  imports: [Header, CommonModule, FormsModule, Footer],
   templateUrl: './admin-ctrl-page.html',
   styleUrl: './admin-ctrl-page.css',
 })
@@ -47,7 +46,8 @@ export class AdminCtrlPage implements OnInit {
     private authService: AuthService,
     private craftsmanService: CraftsmanService,
     private userService: UserService,
-    private categoryService: CategoryService
+    private categoryService: CategoryService,
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -416,5 +416,9 @@ export class AdminCtrlPage implements OnInit {
         }, 5000);
       },
     });
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }

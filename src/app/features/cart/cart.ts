@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
 import { Header } from "../../shared/components/header/header";
 import { CartProductCard } from './cart-product-card/cart-product-card';
 import { ShoppingCartService } from '../../core/services/shopping-cart.service';
@@ -9,10 +8,12 @@ import { OrderService } from '../../core/services/order.service';
 import { GroupedCartResponse, TunisianState, User, CreateOrderDto } from '../../core/models';
 import { Footer } from '../../shared/components/footer/footer';
 import { FormsModule } from '@angular/forms';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cart',
-  imports: [Header, RouterLink, CartProductCard, CommonModule, Footer, CommonModule, FormsModule],
+  imports: [Header, CartProductCard, CommonModule, Footer, CommonModule, FormsModule],
   templateUrl: './cart.html',
   styleUrl: './cart.css',
 })
@@ -24,9 +25,10 @@ export class Cart implements OnInit {
 
   constructor(
     private cartService: ShoppingCartService,
-    private router: Router,
     private authService: AuthService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private location: Location,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -91,7 +93,7 @@ export class Cart implements OnInit {
    * Navigate back to homepage
    */
   goBack(): void {
-    this.router.navigate(['/']);
+    this.location.back();
   }
 
   /**

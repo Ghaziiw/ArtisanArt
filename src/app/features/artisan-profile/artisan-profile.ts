@@ -7,11 +7,12 @@ import { CraftsmanService } from '../../core/services/craftsman.service';
 import { ProductService } from '../../core/services/product.service';
 import { Craftsman, Product } from '../../core/models';
 import { Footer } from "../../shared/components/footer/footer";
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-artisan-profile',
   standalone: true,
-  imports: [Header, ProductCard, CommonModule, RouterLink, Footer],
+  imports: [Header, ProductCard, CommonModule, Footer],
   templateUrl: './artisan-profile.html',
   styleUrl: './artisan-profile.css',
 })
@@ -24,9 +25,9 @@ export class ArtisanProfile implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private craftsmanService: CraftsmanService,
-    private productService: ProductService
+    private productService: ProductService,
+    private location: Location
   ) {}
 
   ngOnInit() {
@@ -74,6 +75,6 @@ export class ArtisanProfile implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/']);
+    this.location.back();
   }
 }

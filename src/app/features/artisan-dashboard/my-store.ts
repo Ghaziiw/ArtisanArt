@@ -12,6 +12,7 @@ import { filter, switchMap } from 'rxjs';
 import { Craftsman, CreateProductDto, Order, OrdersResponse, OrderStatusRequest, Product, UpdateProductDto } from '../../core/models';
 import { Category } from '../../core/models';
 import { Footer } from "../../shared/components/footer/footer";
+import { Location } from '@angular/common';
 
 interface DisplayOrderItem {
   productName: string;
@@ -93,10 +94,11 @@ export class MyStore implements OnInit {
   constructor(
     private productService: ProductService,
     private authService: AuthService,
-    private router: Router,
     private categoryService: CategoryService,
     private craftsmanService: CraftsmanService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private location: Location,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -447,7 +449,7 @@ export class MyStore implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/']);
+    this.location.back();
   }
 
   goToProfile(): void {

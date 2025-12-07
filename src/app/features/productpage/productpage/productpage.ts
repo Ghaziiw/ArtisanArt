@@ -13,6 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Craftsman } from '../../../core/models';
 import { Header } from '../../../shared/components/header/header';
 import { Footer } from '../../../shared/components/footer/footer';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-productpage',
@@ -32,12 +33,11 @@ export class Productpage {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private specificProductService: ProductService,
     private offerService: OfferService,
     private craftsmanService: CraftsmanService,
-    private authService: AuthService,
-    private shoppingCartService: ShoppingCartService
+    private shoppingCartService: ShoppingCartService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -115,6 +115,6 @@ export class Productpage {
   }
 
   goBack() {
-    this.router.navigate(['/']);
+    this.location.back();
   }
 }

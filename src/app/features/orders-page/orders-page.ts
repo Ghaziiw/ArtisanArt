@@ -8,6 +8,7 @@ import { OrderService } from '../../core/services/order.service';
 import { AuthService } from '../../core/services/auth.service';
 import { MyOrdersResponse, Order } from '../../core/models';
 import { filter, take } from 'rxjs';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-orders-page',
@@ -25,7 +26,8 @@ export class OrdersPage implements OnInit {
   constructor(
     private orderService: OrderService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -38,7 +40,6 @@ export class OrdersPage implements OnInit {
         this.loadOrders();
       });
   }
-
 
   /**
    * Load user's orders
@@ -65,7 +66,7 @@ export class OrdersPage implements OnInit {
    * Navigate back to homepage
    */
   goBack(): void {
-    this.router.navigate(['/']);
+    this.location.back();
   }
 
   /**
