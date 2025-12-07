@@ -38,6 +38,19 @@
   right: 16px;
 }
 
+.stock-container {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: var(--sign-up-btn);
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-family: 'Outfit';
+  font-size: 14px;
+}
+
 .offer {
   background: var(--price-red);
   color: #fff;

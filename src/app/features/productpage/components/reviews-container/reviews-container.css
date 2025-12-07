@@ -1,7 +1,7 @@
 .reviews-container {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 8px;
   margin-top: 7px;
   background: var(--header-backgrounnd);
   border: 1px solid var(--border);
@@ -93,8 +93,7 @@ textarea:focus {
   border: 1px solid var(--border);
   border-radius: 12px;
   position: relative;  
-  background: var(--card);
-  margin-bottom: 10px;       
+  background: var(--card);    
 }
 
 .avatar {
