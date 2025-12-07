@@ -6,17 +6,17 @@ ArtisanArt suit une architecture modulaire basée sur les principes Angular, ave
 
 ```
 ┌─────────────────────────────────────┐
-│     Presentation Layer              │
-│  (Components & Templates)           │
+│     Presentation Layer                 │
+│  (Components & Templates)              │
 ├─────────────────────────────────────┤
-│     Business Logic Layer            │
-│   (Services & State Management)     │
+│     Business Logic Layer               │
+│   (Services & State Management)        │
 ├─────────────────────────────────────┤
-│     Data Access Layer               │
-│   (HTTP Services & API Calls)       │
+│     Data Access Layer                  │
+│   (HTTP Services & API Calls)          │
 ├─────────────────────────────────────┤
-│     Backend API                     │
-│   (Express Server)                  │
+│     Backend API                        │
+│   (Express Server)                     │
 └─────────────────────────────────────┘
 ```
 
