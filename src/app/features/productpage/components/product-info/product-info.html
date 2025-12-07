@@ -82,3 +82,11 @@
   </div>
 </div>
 }
+
+<div 
+  [hidden]="!showMessage" 
+  class="global-message"
+  [ngClass]="{ 'success-message': message.type === 'success', 'error-message': message.type === 'error', 'hiding': isHiding }"
+>
+  {{ message.text }}
+</div>

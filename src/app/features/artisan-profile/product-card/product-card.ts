@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Product } from '../../../core/models';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-card',
@@ -10,6 +11,8 @@ import { Product } from '../../../core/models';
 })
 export class ProductCard implements OnInit {
   @Input() product!: Product;
+
+  constructor(private router: Router) {}
 
   // Computed properties
   get currentPrice(): number {
@@ -52,5 +55,10 @@ export class ProductCard implements OnInit {
   get halfStar(): number | null {
     const rating = this.product.avgRating || 0;
     return rating % 1 >= 0.5 ? this.fullStars + 1 : null;
+  }
+
+  navigateToProduct(event: Event): void {
+    event.stopPropagation();
+    this.router.navigate(['/product-page', this.product.id]);
   }
 }

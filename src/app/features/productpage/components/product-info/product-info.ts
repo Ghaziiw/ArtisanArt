@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/
 import { CommonModule } from '@angular/common';
 import { Product } from '../../../../core/models';
 import { Offer } from '../../../../core/services/offer.service';
+import { ShoppingCartService } from '../../../../core/services/shopping-cart.service';
 
 @Component({
   selector: 'app-product-info',
@@ -21,6 +22,13 @@ export class ProductInfo {
   starsArray: number[] = [];
   quantity: number = 1;
   selectedImageIndex: number = 0; // Index de l'image sélectionnée
+
+  // Message properties
+  showMessage: boolean = false;
+  message: { type: 'success' | 'error'; text: string } = { type: 'success', text: '' };
+  isHiding = false;
+
+  constructor(private shoppingCartService: ShoppingCartService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.product) {
@@ -64,7 +72,35 @@ export class ProductInfo {
   }
 
   onClick() {
-    this.addProductToCart.emit();
+    this.shoppingCartService.addToCart({
+      productId: this.product.id,
+      quantity: this.quantity,
+    }).subscribe({
+      next: (response) => {
+        this.message = { type: 'success', text: 'Product added to cart successfully!' };
+        this.showMessage = true;
+        this.isHiding = false;
+
+        setTimeout(() => {
+          this.isHiding = true;
+          setTimeout(() => {
+            this.showMessage = false;
+          }, 500); // Durée de l'animation de disparition
+        }, 5000); // Durée d'affichage du message
+      },
+      error: (error) => {
+        this.message = { type: 'error', text: error.error?.message || 'Failed to add to cart' };
+        this.showMessage = true;
+        this.isHiding = false;
+
+        setTimeout(() => {
+          this.isHiding = true;
+          setTimeout(() => {
+            this.showMessage = false;
+          }, 500); // Durée de l'animation de disparition
+        }, 5000); // Durée d'affichage du message
+      },
+    });
   }
 
   // Méthode pour obtenir l'image actuellement sélectionnée

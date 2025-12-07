@@ -1,4 +1,4 @@
-<div class="product-card">
+<div class="product-card" (click)="navigateToProduct($event)">
     <div class="discount-badge" *ngIf="hasDiscount">-{{ discountPercentage }}%</div>
     <img [src]="productImage" [alt]="product.name">
     <div class="category-tag">{{ categoryName }}</div>
