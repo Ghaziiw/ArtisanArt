@@ -65,11 +65,11 @@ La documentation complète est organisée en plusieurs sections :
 1. [Installation et Configuration](./docs/01-INSTALLATION.md)
 2. [Architecture du Projet](./docs/ARCHITECTURE.md)
 3. [Services et API](./docs/SERVICES.md)
-4. [Modèles de Données](./docs/04-MODELS.md)
+4. [Modèles de Données](./docs/MODELS.md)
 5. [Authentification](./docs/05-AUTHENTICATION.md)
 6. [Routing et Navigation](./docs/06-ROUTING.md)
 7. [Styles et Thème](./docs/07-STYLES.md)
-8. [Guide de Développement](./docs/08-DEVELOPMENT.md)
+8. [Guide de Développement](./docs/DEVELOPMENT.md)
 9. [Déploiement](./docs/09-DEPLOYMENT.md)
 
 ## Démarrage rapide
