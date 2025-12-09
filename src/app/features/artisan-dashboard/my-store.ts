@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -13,6 +13,7 @@ import { Craftsman, CreateProductDto, Order, OrdersResponse, OrderStatusRequest,
 import { Category } from '../../core/models';
 import { Footer } from "../../shared/components/footer/footer";
 import { Location } from '@angular/common';
+import { OfferService } from '../../core/services/offer.service';
 
 interface DisplayOrderItem {
   productName: string;
@@ -83,7 +84,7 @@ export class MyStore implements OnInit {
     name: '',
     description: '',
     price: 0,
-    originalPrice: 0,
+    discount: 0,
     stock: 0,
     category: '',
     image: '',
@@ -98,7 +99,9 @@ export class MyStore implements OnInit {
     private craftsmanService: CraftsmanService,
     private orderService: OrderService,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private offerService: OfferService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -261,7 +264,7 @@ export class MyStore implements OnInit {
       name: product.name,
       description: product.description,
       price: product.price,
-      originalPrice: product.offer?.percentage || 0,
+      discount: product.offer?.percentage || 0,
       stock: product.stock,
       category: product.category?.id || '',
       image: product.images?.[0] || '',
@@ -309,6 +312,50 @@ export class MyStore implements OnInit {
           if (index !== -1) {
             this.products[index] = updatedProduct;
           }
+          // Handle offer update or creation
+          if (updatedProduct.offer) {
+            if (this.productForm.discount == 0) {
+              // Delete existing offer
+              this.offerService.deleteOffer(updatedProduct.id).subscribe({
+                next: () => {
+                  console.log('Offer deleted successfully');
+                  this.loadCraftsmanProducts();
+                },
+                error: (err) => {
+                  console.error('Error deleting offer:', err);
+                  this.showAlert('Product updated but offer deletion failed', 'error');
+                }
+              });
+              this.loadCraftsmanProducts();
+            } else {
+              // Update existing offer
+              this.offerService.updateOffer(updatedProduct.id, this.productForm.discount).subscribe({
+                next: (offer) => {
+                  console.log('Offer updated successfully:', offer);
+                  this.loadCraftsmanProducts();
+                },
+                error: (err) => {
+                  console.error('Error updating offer:', err);
+                  this.showAlert('Product updated but offer update failed', 'error');
+                }
+              });
+              this.loadCraftsmanProducts();
+            }
+            this.loadCraftsmanProducts();
+          } else {
+            // Create new offer
+            this.offerService.createOffer(updatedProduct.id, this.productForm.discount).subscribe({
+              next: (offer) => {
+                console.log('Offer created successfully:', offer);
+                this.loadCraftsmanProducts();
+              },
+              error: (err) => {
+                console.error('Error creating offer:', err);
+                this.showAlert('Product updated but offer creation failed', 'error');
+              }
+            });
+            this.loadCraftsmanProducts();
+          }
 
           this.showAlert('Product updated successfully!', 'success');
           this.handleCancelEdit();
@@ -337,12 +384,33 @@ export class MyStore implements OnInit {
 
       this.productService.addProduct(createData).subscribe({
         next: (newProduct) => {
-          // Reload products to have complete data (populated category)
-          this.loadCraftsmanProducts();
-
-          this.showAlert('Product added successfully!', 'success');
-          this.handleCancelEdit();
-          this.isLoading = false;
+          // Create offer first if discount is set
+          if (this.productForm.discount > 0) {
+            this.offerService.createOffer(newProduct.id, this.productForm.discount).subscribe({
+              next: (offer) => {
+                console.log('Offer created successfully:', offer);
+                // Reload products AFTER offer is created
+                this.loadCraftsmanProducts();
+                this.showAlert('Product and offer added successfully!', 'success');
+                this.handleCancelEdit();
+                this.isLoading = false;
+              },
+              error: (err) => {
+                console.error('Error creating offer:', err);
+                // Still reload products even if offer creation fails
+                this.loadCraftsmanProducts();
+                this.showAlert('Product added but offer creation failed', 'error');
+                this.handleCancelEdit();
+                this.isLoading = false;
+              }
+            });
+          } else {
+            // No discount, just reload products
+            this.loadCraftsmanProducts();
+            this.showAlert('Product added successfully!', 'success');
+            this.handleCancelEdit();
+            this.isLoading = false;
+          }
         },
         error: (err) => {
           console.error('Error creating product:', err);
@@ -397,7 +465,7 @@ export class MyStore implements OnInit {
       name: '',
       description: '',
       price: 0,
-      originalPrice: 0,
+      discount: 0,
       stock: 0,
       category: '',
       image: '',

@@ -16,7 +16,7 @@ export interface Product {
     avgRating: number;
     totalComments: number;
   };
-  offer: { percentage: number } | null;
+  offer: {id: string; percentage: number } | null;
   avgRating: number;
   totalComments: number;
   comments: ProductComment[] | null;
