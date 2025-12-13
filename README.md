@@ -96,23 +96,19 @@ Voici un exemple complet de configuration :
 
 ```env
 # Database configuration
-DB_USERNAME=postgres
-DB_PASSWORD=2426
-DB_HOST=localhost
-DB_PORT=5432
-DB_DATABASE=artisanart
-
-# URL complète utilisée par Better Auth et TypeORM
-DATABASE_URL=postgres://postgres:2426@localhost:5432/artisanart
-
+DB_USERNAME = postgres
+DB_PASSWORD = 2426
+DB_HOST = localhost
+DB_PORT = 5432
+DB_DATABASE = artisanart
 
 # Application configuration
-NODE_ENV=development
-PORT=3000
+NODE_ENV = development
+PORT = 3000
 
 # Better Auth configuration
-BETTER_AUTH_SECRET=abcd1234efgh5678
-BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_SECRET = abcd1234efgh5678
+BETTER_AUTH_URL = http://localhost:3000
 
 # Multer configuration
 MULTER_BASE_URL=http://localhost:3000
