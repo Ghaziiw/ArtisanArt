@@ -22,12 +22,13 @@ import { Order } from './modules/order/order.entity';
 import { OrderModule } from './modules/order/order.module';
 import { OrderItem } from './modules/order/order-item.entity';
 import { UploadModule } from './modules/upload/upload.module';
+import { DATABASE_URL } from './config/database.config';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: process.env.DATABASE_URL,
+      url: DATABASE_URL,
       entities: [
         User,
         Craftsman,

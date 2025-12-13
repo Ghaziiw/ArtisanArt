@@ -205,13 +205,54 @@ export class ProductService {
   }
 
   // Retrieve a product by ID with its category and artisan
-  async findOne(id: string): Promise<Product | null> {
-    const product = await this.productRepository.findOne({
-      where: { id },
-      relations: ['category', 'craftsman', 'offer', 'comments', 'category'],
-    });
+  async findOne(id: string): Promise<ProductWithStats | null> {
+    const qb = this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.category', 'category')
+      .leftJoinAndSelect('product.craftsman', 'craftsman')
+      .leftJoinAndSelect('product.offer', 'offer')
+      .leftJoinAndSelect('product.comments', 'comments')
+      .leftJoinAndSelect('comments.user', 'commentUser')
+      .where('product.id = :id', { id });
 
-    return product ? this.removeInvalidOffer(product) : null;
+    // Sous-requête pour avgRating
+    qb.addSelect(
+      (subQuery) =>
+        subQuery
+          .select('AVG(c.mark)', 'avgRating')
+          .from('comments', 'c')
+          .where('c.productId = product.id'),
+      'avgRating',
+    );
+
+    // Sous-requête pour totalComments
+    qb.addSelect(
+      (subQuery) =>
+        subQuery
+          .select('COUNT(c.id)', 'totalComments')
+          .from('comments', 'c')
+          .where('c.productId = product.id'),
+      'totalComments',
+    );
+
+    const raw: { avgRating: number | null; totalComments: number | null } =
+      (await qb.getRawOne()) ?? { avgRating: 0, totalComments: 0 };
+    const entity = await qb.getOne();
+
+    if (!entity) return null;
+
+    this.removeInvalidOffer(entity);
+
+    const result: ProductWithStats = {
+      ...entity,
+      avgRating: Number(raw.avgRating ?? 0),
+      totalComments: Number(raw.totalComments ?? 0),
+      craftsman: await this.craftsmanService.findOneByUserIdWithStats(
+        entity.craftsmanId,
+      ),
+    };
+
+    return result;
   }
 
   // Create a new product with the associated artisan
