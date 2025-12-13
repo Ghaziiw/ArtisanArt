@@ -6,3 +6,4 @@ export * from './craftsman.model';
 export * from './product.model';
 export * from './shopping-cart.model';
 export * from './comment.model';
+export * from './offer.model';

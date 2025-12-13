@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Product } from '../../../../core/models';
-import { Offer } from '../../../../core/services/offer.service';
+import { Offer, Product } from '../../../../core/models';
 import { ShoppingCartService } from '../../../../core/services/shopping-cart.service';
 
 @Component({
