@@ -67,8 +67,8 @@ La documentation complète est organisée en plusieurs sections :
 3. [Services et API](./docs/SERVICES.md)
 4. [Modèles de Données](./docs/MODELS.md)
 5. [Authentification](./docs/AUTHENTICATION.md)
-6. [Routing et Navigation](./docs/06-ROUTING.md)
-7. [Styles et Thème](./docs/07-STYLES.md)
+6. [Routing et Navigation](./docs/ROUTING.md)
+7. [Styles et Thème](./docs/STYLES.md)
 8. [Guide de Développement](./docs/DEVELOPMENT.md)
 9. [Déploiement](./docs/09-DEPLOYMENT.md)
 
