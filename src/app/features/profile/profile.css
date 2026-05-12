@@ -1,0 +1,22 @@
+.title{
+    font-family: 'Outfit';
+    font-size: 16px;
+    color: var(--login-btn-text);
+    align-self: flex-start;
+    margin: 0 0 32px;
+    margin-top: 20px;
+}
+
+
+#profile-edit-container{
+    min-width: 700px;
+    justify-self: center;
+    margin: 0px;
+}
+
+.loading p{
+    font-family: 'Outfit';
+    font-size: 16px;
+    color: var(--login-btn-text);
+    text-align: center;
+}

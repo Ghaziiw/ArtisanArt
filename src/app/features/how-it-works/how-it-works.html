@@ -1,0 +1,23 @@
+<app-header></app-header>
+
+<div class="how-it-works-container">
+  <h1>How ArtisanArt Works</h1>
+  <p class="intro">
+    ArtisanArt is designed to connect you directly with local artisans. Here’s how you can explore,
+    order, and support handcrafted products:
+  </p>
+
+  <div class="steps">
+    <div class="step" *ngFor="let step of steps; let i = index">
+      <div class="step-number">{{ i + 1 }}</div>
+      <div class="step-content">
+        <h2>{{ step.title }}</h2>
+        <p>{{ step.description }}</p>
+      </div>
+    </div>
+  </div>
+
+  <button class="back-home" routerLink="/">Back to Home</button>
+</div>
+
+<app-footer></app-footer>

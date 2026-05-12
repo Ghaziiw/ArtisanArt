@@ -1,0 +1,113 @@
+.main-page {
+  justify-self: center;
+  width: 1200px;
+}
+
+#top-section {
+  justify-content: space-between;
+  margin: 0 0 20px;
+}
+
+#top-titles {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 0 10px;
+  gap: 0;
+  align-items: flex-start;
+}
+
+#top-titles h3 {
+  margin: 0px 0px 10px 0px;
+  font-family: 'Outfit';
+  font-size: 30px;
+  font-weight: 400;
+  color: var(--login-btn-text);
+}
+
+#top-titles p {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--secondary-text-color);
+}
+
+.return-btn {
+  align-self: flex-start;
+  margin-bottom: 20px;
+  height: 35px;
+  width: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--login-btn-text);
+  border-radius: var(--general-border-radius);
+  border: 1px solid var(--login-btn-border);
+  background-color: var(--login-btn-background);
+  cursor: pointer;
+}
+
+.return-btn:hover {
+  background-color: var(--login-btn-background-on-hover);
+}
+
+.empty-cart {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  background: var(--header-backgrounnd);
+  border-radius: 12px;
+  padding: 48px;
+  width: 1166px;
+  max-width: 1166px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--login-btn-border);
+  justify-content: space-between;
+  align-items: center;
+  justify-self: center;
+  font-family: 'Outfit';
+  color: var(--login-btn-text);
+}
+
+.empty-cart > h2 {
+  font-weight: 400;
+  font-family: 'Outfit';
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+.empty-cart > p {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--secondary-text-color);
+}
+
+.keep-shopping-btn {
+  width: 100%;
+  margin-top: 12px;
+  margin-left: 10px;
+  background: var(--sign-up-btn);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.keep-shopping-btn:hover {
+  background: var(--sign-up-btn-on-hover);
+  cursor: pointer;
+}

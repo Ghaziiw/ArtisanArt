@@ -1,0 +1,66 @@
+<app-header></app-header>
+<div class="login-page-container">
+  <div class="hero-section vertical-div">
+      <h1>Log into your account</h1>
+      <h3>Welcome! Please connect to your account</h3>
+  </div>
+  <div class="login-card">
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email" class="form-label">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#935653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail-icon lucide-mail"><path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg>
+            Email
+        </label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          class="form-input"
+          [(ngModel)]="credentials.email"
+          required
+          email
+          #emailInput="ngModel"
+        />
+      </div>
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password" class="form-label">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#935653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lock-icon lucide-lock"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Password
+        </label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          class="form-input"
+          [(ngModel)]="credentials.password"
+          required
+          minlength="8"
+          #passwordInput="ngModel"
+        />
+      </div>
+      <!-- Submit Button -->
+      <button 
+        type="submit" 
+        class="btn-submit"
+        [disabled]="loginForm.invalid"
+      >
+        Se connecter
+      </button>
+      <!-- Error Message (for login errors) -->
+      <div class="login-error" *ngIf="loginError">
+        {{ loginError }}
+      </div>
+      <!-- Sign Up Link -->
+      <div class="sign-up-link">
+        <a href="#" (click)="onSignUpClick($event)" class="sign-up-link">
+          You don't have an account? Sign up now
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<app-footer></app-footer>

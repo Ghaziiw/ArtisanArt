@@ -1,0 +1,378 @@
+<app-header></app-header>
+
+<div class="store-container">
+  <!-- Header -->
+  <div class="store-header">
+    <div class="header-left">
+      <button class="btn-back" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Return
+      </button>
+      <div class="store-info">
+        <img [src]="craftsman?.profileImage || '/assets/images/seller1.jpg'" alt="Store" class="store-avatar">
+        <div>
+          <h1>{{ craftsman?.businessName || 'Ma Boutique' }}</h1>
+          <p>Artisan Dashboard</p>
+        </div>
+      </div>
+    </div>
+    <button class="btn-profile" (click)="goToProfile()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      My Profile
+    </button>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-header">
+        <p>Total Revenue</p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a74f4e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+      </div>
+      <p class="stat-value">${{ stats.totalRevenue.toFixed(2) }}</p>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-header">
+        <p>Total Orders</p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#925653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><polyline points="3.29 7 12 12 20.71 7"/><path d="m7.5 4.27 9 5.15"/></svg>
+      </div>
+      <p class="stat-value">{{ stats.totalOrders }}</p>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-header">
+        <p>Pending</p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <p class="stat-value">{{ stats.pendingOrders }}</p>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-header">
+        <p>Products</p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a74f4e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      </div>
+      <p class="stat-value">{{ stats.totalProducts }}</p>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button 
+      class="tab" 
+      [class.active]="activeTab === 'products'" 
+      (click)="setActiveTab('products')">
+      Products ({{ products.length }})
+    </button>
+    <button 
+      class="tab" 
+      [class.active]="activeTab === 'orders'" 
+      (click)="setActiveTab('orders')">
+      Orders ({{ orders.length }})
+    </button>
+  </div>
+
+  <!-- Products Tab -->
+  <div *ngIf="activeTab === 'products'" class="tab-content">
+    <!-- Add Product Button -->
+    <div *ngIf="!showAddProduct" class="add-product-btn-container">
+      <button class="btn-primary" (click)="handleAddProduct()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        Add Product
+      </button>
+    </div>
+
+    <!-- Product Form -->
+    <div *ngIf="showAddProduct" class="product-form-card">
+      <h3>{{ editingProduct ? 'Update Product' : 'New Product' }}</h3>
+      <form (submit)="handleSubmitProduct($event)" class="product-form">
+        <div class="input-section">
+          <div class="input">
+            <label for="name">Product Name *</label>
+            <input 
+              type="text" 
+              id="name" 
+              [(ngModel)]="productForm.name" 
+              name="name" 
+              required>
+          </div>
+
+          <div class="input">
+            <label for="category">Category *</label>
+              <select name="category" id="category" [(ngModel)]="productForm.category" required>
+                <option value="" disabled selected>Select a category</option>
+                <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+              </select>
+          </div>
+        </div>
+
+        <div class="input description-input">
+          <label for="description">Description *</label>
+          <textarea 
+            id="description" 
+            [(ngModel)]="productForm.description" 
+            name="description" 
+            rows="3" 
+            required></textarea>
+        </div>
+
+        <div class="input-section">
+          <div class="input">
+            <label for="price">Price ($) *</label>
+            <input 
+              type="number" 
+              id="price" 
+              [(ngModel)]="productForm.price" 
+              name="price" 
+              step="0.01" 
+              required>
+          </div>
+
+          <div class="input">
+            <label for="originalPrice">discount %</label>
+            <input 
+              type="number" 
+              id="discount" 
+              [(ngModel)]="productForm.discount" 
+              name="discount" 
+              step="1" min="0" max="100">
+          </div>
+
+          <div class="input">
+            <label for="stock">Stock *</label>
+            <input 
+              type="number" 
+              id="stock" 
+              [(ngModel)]="productForm.stock" 
+              name="stock" 
+              min="0"
+              required>
+          </div>
+        </div>
+
+        <!-- Image Upload Section -->
+        <div class="form-group">
+          <label class="form-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#935653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-camera"><path d="M14.5 4h-5L8 7H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-1.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+            Product Photos (Max 5)
+          </label>
+
+          <div class="file-upload-wrapper" (click)="totalImagesCount < 5 && fileInput.click()">
+            <input 
+              type="file"
+              id="productImages"
+              name="productImages"
+              accept="image/png, image/jpeg, image/jpg"
+              (change)="onFileSelected($event)"
+              #fileInput
+              multiple
+              hidden
+            />
+          
+            <div class="file-upload-box">
+              <!-- Images exist in the product (edit mode) -->
+              <div *ngIf="existingImageUrls.length > 0 || productImages.length > 0" class="images-preview-grid">
+                <!-- Images exist in the product -->
+                <div *ngFor="let imageUrl of existingImageUrls; let i = index" class="image-preview-item">
+                  <img [src]="imageUrl" [alt]="'Existing image ' + (i + 1)" />
+                  <span class="image-badge">Current</span>
+                  <button 
+                    type="button"
+                    class="remove-image-btn" 
+                    (click)="removeExistingImage(i, $event)"
+                    title="Remove">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                  </button>
+                </div>
+                
+                <!-- New images to upload -->
+                <div *ngFor="let imageUrl of productImageUrls; let i = index" class="image-preview-item">
+                  <img [src]="imageUrl" [alt]="'New image ' + (i + 1)" />
+                  <span class="image-badge new">New</span>
+                  <button 
+                    type="button"
+                    class="remove-image-btn" 
+                    (click)="removeNewImage(i, $event)"
+                    title="Remove">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                  </button>
+                </div>
+              </div>
+            
+              <!-- Icône d'upload par défaut quand aucune image -->
+              <div *ngIf="existingImageUrls.length === 0 && productImages.length === 0" class="upload-content">
+                <svg id="upload-svg" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#935653" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-upload"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <p class="upload-text">Click to add image</p>
+                <p class="upload-hint">PNG, JPG up to 1 MB (Max 5 images)</p>
+              </div>
+
+              <!-- Message de compteur -->
+              <p *ngIf="totalImagesCount > 0 && totalImagesCount < 5" class="upload-text">
+                {{ totalImagesCount }}/5 images - Click to add more
+              </p>
+              <p *ngIf="totalImagesCount >= 5" class="upload-text">
+                Limit reached (5/5 images)
+              </p>
+            </div>
+          </div>
+
+          <div class="error-message" *ngIf="fileError || productFormError">
+            {{ fileError || productFormError }}
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary add-product-btn">
+            {{ editingProduct ? 'Save' : 'Add' }}
+          </button>
+          <button type="button" class="btn-secondary" (click)="handleCancelEdit()">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+    <!-- Products List -->
+    <div class="products-list">
+      <div *ngIf="products.length === 0 && !isLoading" class="empty-state">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        <h3>No Products</h3>
+        <p>You don't have any products yet</p>
+      </div>
+
+      <div *ngIf="isLoading" class="empty-state">
+        <p>Loading...</p>
+      </div>
+
+      <div *ngFor="let product of products" class="product-card">
+        <img 
+          [src]="product.images && product.images.length > 0 ? product.images[0] : '/assets/images/chachya.webp'" 
+          [alt]="product.name" 
+          class="product-image">
+        
+        <div class="product-info">
+          <div class="product-header">
+            <div>
+              <h3>{{ product.name }}</h3>
+              <span class="product-category">{{ product.category?.name || 'Uncategorized' }}</span>
+            </div>
+            <div class="product-actions">
+              <button class="btn-icon" (click)="handleEditProduct(product)">
+                <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="currentColor"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" /></svg>
+              </button>
+              <button class="btn-icon btn-delete" (click)="handleDeleteProduct(product.id)">
+                <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="currentColor"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /></svg>
+              </button>
+            </div>
+          </div>
+
+          <p class="product-description">{{ product.description }}</p>
+
+          <div class="product-details">
+            <div class="product-price">
+              <p class="label">Price</p>
+              <div class="price-container">
+                <span class="original-price" *ngIf="product.offer !== null">
+                  ${{ product.price }}
+                </span>
+                <span class="current-price">${{ (product.price * (1 - (product.offer?.percentage ?? 0) / 100)).toFixed(2) }}</span>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="product-stock">
+              <p class="label">Stock</p>
+              <p class="stock-value">{{ product.stock }} units</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Orders Tab -->
+  <div *ngIf="activeTab === 'orders'" class="tab-content">
+    <div *ngIf="orders.length === 0 && !isLoading" class="empty-state">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+      <h3>No Orders</h3>
+      <p>Your customers' orders will appear here</p>
+    </div>
+
+    <div *ngIf="isLoading" class="empty-state">
+      <p>Loading...</p>
+    </div>
+
+    <div *ngFor="let order of orders" class="order-card">
+      <div class="order-header">
+        <div>
+          <div class="order-title">
+            <h3>Order #{{ order.orderNumber }}</h3>
+            <span class="status-badge" [ngClass]="getOrderStatusBadge(order.status).class">
+              {{ getOrderStatusBadge(order.status).text }}
+            </span>
+          </div>
+          <div class="order-customer">
+            <p><strong>Client:</strong> {{ order.user.name }}</p>
+            <p><strong>Email:</strong> {{ order.user.email }}</p>
+            <p><strong>Phone:</strong> {{ order.phone }}</p>
+            <p><strong>Date:</strong> {{ order.createdAt | date: 'dd/MM/yyyy at HH:mm' }}</p>
+            <p><strong>Address:</strong> {{ order.shippingAddress }}</p>
+            <p><strong>State:</strong> {{ order.state }}</p>
+            <p><strong>CIN:</strong> {{ order.cin }}</p>
+          </div>
+        </div>
+        <div class="order-total">
+          <p class="label">Total</p>
+          <p class="total-value">${{ order.totalAmount.toFixed(2) }}</p>
+        </div>
+      </div>
+
+      <div class="order-divider"></div>
+
+      <div class="order-items">
+        <p class="items-title">Items:</p>
+        <div *ngFor="let item of order.items" class="order-item">
+          <span>{{ item.productName }} x{{ item.quantity }}</span>
+          <span class="item-price">${{ (item.price * item.quantity).toFixed(2) }}</span>
+        </div>
+        <div class="order-item delivery">
+          <span>Delivery</span>
+          <span class="item-price">${{ order.deliveryPrice.toFixed(2) }}</span>
+        </div>
+      </div>
+
+      <div
+        *ngIf="order.status !== 'DELIVERED' && order.status !== 'CANCELLED'"
+        class="order-actions"
+      >
+        <div *ngIf="order.status === 'PENDING'" class="pending-actions">
+          <button class="btn-confirm" (click)="updateOrderStatus(order.id, OrderStatusRequest.CONFIRMED)">
+            <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="currentColor"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+            Confirm
+          </button>
+          <button class="btn-cancel" (click)="updateOrderStatus(order.id, OrderStatusRequest.CANCELLED)">
+            <svg xmlns="http://www.w3.org/2000/svg"width="16"height="16"viewBox="0 0 24 24"fill="none"stroke="currentColor"stroke-width="2"stroke-linecap="round"stroke-linejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+            Cancel
+          </button>
+        </div>
+        <button
+          *ngIf="order.status === 'CONFIRMED'"
+          class="btn-primary"
+          (click)="updateOrderStatus(order.id, OrderStatusRequest.SHIPPED)"
+        >
+          Mark as shipped
+        </button>
+        <button
+          *ngIf="order.status === 'SHIPPED'"
+          class="btn-primary"
+          (click)="updateOrderStatus(order.id, OrderStatusRequest.DELIVERED)"
+        >
+          Mark as delivered
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

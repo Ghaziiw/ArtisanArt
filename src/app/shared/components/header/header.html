@@ -1,0 +1,65 @@
+<div id="header-container">
+    <img [src]="'/assets/images/logo.svg'" alt="Website Logo" id="artisanart-logo" (click)="goToHomepage()" style="cursor: pointer;">
+    
+
+    <div class="search-container">
+        <select name="produit-artisan" id="prod-artis" (change)="onSelectChange($event)">
+            <option value="products">Products</option>
+            <option value="artisans">Artisans</option>
+            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
+        </select>
+        <div id="search-bar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search-icon lucide-search"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+            <input
+                type="text"
+                name="search-products"
+                id="search-bar-text"
+                placeholder="Search..."
+                (input)="onSearchInput($event)"
+                (keypress)="onSearchKeyPress($event)"
+            >
+        </div>
+    </div>
+    
+    <div id="right-side-btns">
+        <!-- Admin button - only for admins -->
+        <button id="admin-btn" class="header-button" routerLink="/admin-panel" *ngIf="isAdmin$ | async">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-cog-icon lucide-user-cog"><path d="M10 15H6a4 4 0 0 0-4 4v2"/><path d="m14.305 16.53.923-.382"/><path d="m15.228 13.852-.923-.383"/><path d="m16.852 12.228-.383-.923"/><path d="m16.852 17.772-.383.924"/><path d="m19.148 12.228.383-.923"/><path d="m19.53 18.696-.382-.924"/><path d="m20.772 13.852.924-.383"/><path d="m20.772 16.148.924.383"/><circle cx="18" cy="15" r="3"/><circle cx="9" cy="7" r="4"/></svg>
+            Admin Panel
+        </button>
+
+        <!-- Orders button - only for clients -->
+        <button id="orders-btn" class="header-button" routerLink="/orders-page" *ngIf="isClient$ | async">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-history-icon lucide-history"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></svg>
+            My Orders
+        </button>
+
+        <!-- Shop button - only for artisans -->
+        <button id="shop-btn" class="header-button" routerLink="/my-store" *ngIf="isArtisan$ | async">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-store-icon lucide-store"><path d="M15 21v-5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v5"/><path d="M17.774 10.31a1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.451 0 1.12 1.12 0 0 0-1.548 0 2.5 2.5 0 0 1-3.452 0 1.12 1.12 0 0 0-1.549 0 2.5 2.5 0 0 1-3.77-3.248l2.889-4.184A2 2 0 0 1 7 2h10a2 2 0 0 1 1.653.873l2.895 4.192a2.5 2.5 0 0 1-3.774 3.244"/><path d="M4 10.95V19a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8.05"/></svg>
+            Shop
+        </button>
+        
+        <!-- Cart button - only for authenticated users -->
+        <button id="cart-btn" class="header-button" routerLink="/cart" *ngIf="authService.user$ | async">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart-icon lucide-shopping-cart"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+            Cart
+        </button>
+        
+        <!-- Profile button - only for authenticated users -->
+        <button id="profile-btn" class="header-button" routerLink="/profile" *ngIf="authService.user$ | async as user">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-icon lucide-user"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            Profile
+        </button>
+        
+        <!-- Logout button - only for authenticated users -->
+        <button *ngIf="authService.user$ | async" id="logout-btn" class="header-button" (click)="logout()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
+            Logout
+        </button>
+
+        <!-- Login & Sign-up buttons - only for non-authenticated users -->
+        <button id="login-btn" class="header-button" routerLink="/login" *ngIf="!(authService.user$ | async)">Login</button>
+        <button id="sign-up-btn" class="header-button" routerLink="/signup" *ngIf="!(authService.user$ | async)">Sign-up</button>
+    </div>
+</div>

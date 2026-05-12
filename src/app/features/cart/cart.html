@@ -1,0 +1,165 @@
+<app-header></app-header>
+<div class="main-body">
+  <button class="return-btn" (click)="goBack()">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#935653"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <path d="m15 18-6-6 6-6" />
+    </svg>
+    Return
+  </button>
+
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="empty-cart">
+    <p>Loading cart...</p>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="!isLoading && cartError" class="empty-cart">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="64"
+      height="64"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#925653"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      <circle cx="12" cy="12" r="10" />
+      <path d="m15 9-6 6" />
+      <path d="m9 9 6 6" />
+    </svg>
+    <h2>Error loading cart</h2>
+    <p>{{ cartError }}</p>
+    <button class="keep-shopping-btn" (click)="loadCart()">Try Again</button>
+  </div>
+
+  <!-- Empty cart -->
+  <div *ngIf="!isLoading && !cartError && isCartEmpty" class="empty-cart">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="64"
+      height="64"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="#925653"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="lucide lucide-shopping-cart-icon lucide-shopping-cart"
+    >
+      <circle cx="8" cy="21" r="1" />
+      <circle cx="19" cy="21" r="1" />
+      <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+    </svg>
+    <h2>Your cart is empty!</h2>
+    <p>Add products to your cart to start buying</p>
+    <button class="keep-shopping-btn" (click)="keepShopping()">Keep Shopping</button>
+  </div>
+
+  <!-- Cart with items -->
+  <div *ngIf="!isLoading && !cartError && !isCartEmpty && cartData" class="not-empty-cart">
+    <!-- Left Column - Cart Items -->
+    <div class="cart-items-column">
+      <app-cart-product-card
+        *ngFor="let group of cartData.craftsmanGroups"
+        [craftsmanGroup]="group"
+        (quantityUpdated)="onQuantityUpdated()"
+        (itemRemoved)="onItemRemoved()"
+        class="product-card-div"
+        [orderData]="orderData"
+      >
+      </app-cart-product-card>
+    </div>
+
+    <!-- Right Card - Order Summary -->
+    <div class="card summary-card">
+      <h2 class="summary-title">Order Summary</h2>
+
+      <div class="summary-section">
+        <div class="summary-item">
+          <span class="label">Total Items</span>
+          <span class="value">{{ cartData.totalItems }}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Craftsmen</span>
+          <span class="value">{{ cartData.craftsmanGroups.length }}</span>
+        </div>
+      </div>
+
+      <div class="summary-total">
+        <div class="summary-total-row">
+          <span class="summary-total-label">Grand Total</span>
+          <span class="summary-total-price">${{ cartData.grandTotal.toFixed(2) }}</span>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- User Information Form -->
+      <div class="user-info-section">
+        <h3 class="user-info-title">Your Information</h3>
+
+        <!-- CIN -->
+        <div class="form-group">
+          <label for="cin">CIN</label>
+          <input id="cin" type="text" [(ngModel)]="orderData.cin" placeholder="Enter your CIN" minlength="8" maxlength="8" pattern="[0-9]*" />
+        </div>
+
+        <!-- Location -->
+        <div class="form-group">
+          <label for="location">Location</label>
+          <input
+            id="location"
+            type="text"
+            [(ngModel)]="orderData.location"
+            placeholder="Your address"
+          />
+        </div>
+
+        <!-- State -->
+        <div class="form-group">
+          <label for="state">State</label>
+          <select id="state" [(ngModel)]="orderData.state">
+            <option value=null disabled selected>Select state</option>
+            <option *ngFor="let state of statesArray" [value]="state" >{{ state }}</option>
+          </select>
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input
+            id="phone"
+            type="text"
+            [(ngModel)]="orderData.phone"
+            placeholder="Phone number"
+            minlength="8"
+            maxlength="8"
+            pattern="[0-9]*"
+          />
+        </div>
+      </div>
+
+      <div class="error-message" *ngIf="orderError">
+        {{ orderError }}
+      </div>
+
+      <button class="checkout-btn" (click)="orderAll()">Order All</button>
+
+      <p class="order-note">Order everything together or order separately from each seller</p>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

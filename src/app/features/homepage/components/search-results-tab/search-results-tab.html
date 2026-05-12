@@ -1,0 +1,23 @@
+<div *ngIf="isLoading" class="loading-products">
+  <p>Loading products...</p>
+</div>
+
+<div *ngIf="!isLoading && products.length > 0">
+  <app-item-display *ngFor="let product of products" [product]="product"></app-item-display>
+
+  <div class="pagination">
+    <button (click)="prevPage()" [disabled]="currentPage === 1">Previous</button>
+
+    <button (click)="goToPage(1)" [hidden]="currentPage === 1" style="border: none;">{{ 1 }}</button>
+    <span [hidden]="currentPage === 1">...</span>
+    <button (click)="goToPage(currentPage + 1)">{{ currentPage }}</button>
+    <span [hidden]="currentPage === totalPages">...</span>
+    <button (click)="goToPage(totalPages)" [hidden]="currentPage === totalPages" style="border: none;">{{ totalPages }}</button>
+
+    <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+  </div>
+</div>
+
+<div *ngIf="!isLoading && products.length === 0" class="no-results">
+  <p>No products found with these filters.</p>
+</div>

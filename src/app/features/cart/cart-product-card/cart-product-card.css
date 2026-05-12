@@ -1,0 +1,273 @@
+.card {
+  background: var(--header-backgrounnd);
+  border-radius: var(--general-border-radius);
+  border: 1px solid var(--login-btn-border);
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.cart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--login-btn-border);
+}
+.merchant-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.merchant-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #c85a54;
+}
+
+.merchant-details h3 {
+  font-size: 16px;
+  font-family: 'Outfit';
+  font-weight: 400;
+  color: var(--login-btn-text);
+  margin-bottom: 2px;
+}
+.merchant-details p {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--secondary-text-color);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+.merchant-details p svg {
+  margin-right: 5px;
+}
+
+.product-badge {
+  background: var(--login-btn-background);
+  color: var(--login-btn-text);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 7px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.product-item {
+  display: flex;
+  gap: 20px;
+  padding: 25px 0;
+}
+
+.product-item:first-of-type {
+  border-top: 1px solid #f0f0f0;
+}
+
+.product-image {
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%);
+  border-radius: 8px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.product-image > img {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  object-fit: cover;
+}
+.discount-label {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: var(--login-btn-background);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+}
+.product-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.product-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8px;
+}
+.product-name {
+  font-family: 'Outfit';
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--login-btn-text);
+}
+.product-price {
+  font-weight: 400;
+  color: var(--login-btn-text);
+  font-family: 'Outfit';
+  font-size: 16px;
+}
+.price-info {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.original-price {
+  font-size: 12px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--login-btn-text);
+  text-decoration: line-through;
+}
+.sale-price {
+  color: var(--price-red);
+  font-weight: 400;
+  font-family: 'Outfit';
+  font-size: 16px;
+}
+.product-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+.quantity-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.quantity-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border-color);
+  background: var(--body-background);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 300ms;
+}
+
+.quantity-btn:hover {
+  background-color: var(--color-palette6);
+  transition: all 300ms;
+}
+
+.quantity-input {
+  width: 50px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 14px;
+  background-color: transparent;
+}
+
+.quantity-input:disabled {
+  background-color: transparent;
+  color: var(--secondary-text-color);
+}
+
+.delete-btn {
+  background-color: var(--header-backgrounnd);
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: var(--general-border-radius);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+}
+
+.delete-btn:hover {
+  background-color: var(--login-btn-background-on-hover);
+  transition: all 300ms;
+}
+
+.cart-summary {
+  margin-top: 25px;
+}
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: var(--secondary-text-color);
+}
+.summary-row.total {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--login-btn-border);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--login-btn-text);
+  font-family: 'Outfit';
+}
+
+.total-price {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--secondary-text-color);
+  font-family: 'Outfit';
+}
+
+.checkout-btn {
+  width: 100%;
+  margin-top: 12px;
+  background: var(--sign-up-btn);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.checkout-btn:hover {
+  background: var(--sign-up-btn-on-hover);
+  cursor: pointer;
+}
+
+.error-message {
+  margin-top: 12px;
+  padding: 10px;
+  background-color: #ffe6e6;
+  border: 1px solid #ffcccc;
+  border-radius: 8px;
+  color: #d9534f;
+  font-size: 13px;
+  text-align: center;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 12px;
+}
+
+.product-wrapper {
+  display: block;
+  position: relative;
+  border-bottom: 1px solid var(--login-btn-border);
+}

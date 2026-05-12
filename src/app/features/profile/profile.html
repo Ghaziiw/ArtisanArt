@@ -1,0 +1,14 @@
+<app-header></app-header>
+
+<div class="vertical-div" id="profile-edit-container" *ngIf="user">
+    <p class="title">My Profile</p>
+    <app-profile-pic [user]="user"></app-profile-pic>
+    <app-personal-info [user]="user"></app-personal-info>
+</div>
+
+<div *ngIf="!user" class="loading">
+    <p>Loading profile...</p>
+</div>
+
+
+<app-footer></app-footer>
