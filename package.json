@@ -1,0 +1,26 @@
+{
+  "name": "artisanart",
+  "version": "1.0.0",
+  "description": "<p align=\"center\">\r     <picture>\r         <img src=\"./docs/images/logo.svg\" width=450px>\r     </picture>\r </p>",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm run dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ghaziiw/ArtisanArt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Ghaziiw/ArtisanArt/issues"
+  },
+  "homepage": "https://github.com/Ghaziiw/ArtisanArt#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
